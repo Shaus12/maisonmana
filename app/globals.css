@@ -1,0 +1,269 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: oklch(0.985 0.004 75);
+  --color-paper-deep: oklch(0.965 0.006 75);
+  --color-vellum: oklch(0.93 0.008 70);
+  --color-vellum-deep: oklch(0.90 0.010 70);
+  --color-rule: oklch(0.86 0.010 70);
+  --color-rule-soft: oklch(0.91 0.008 70);
+
+  --color-ink: oklch(0.18 0.012 60);
+  --color-ink-soft: oklch(0.36 0.010 60);
+  --color-ink-mute: oklch(0.55 0.008 65);
+
+  --color-brass: oklch(0.74 0.110 78);
+  --color-brass-deep: oklch(0.58 0.115 65);
+  --color-brass-leaf: oklch(0.88 0.060 82);
+
+  --color-diamond: oklch(0.97 0.005 220);
+  --color-velvet: oklch(0.22 0.025 280);
+  --color-velvet-deep: oklch(0.15 0.020 280);
+  --color-velvet-soft: oklch(0.32 0.030 280);
+
+  --font-display: "Frank Ruhl Libre", "Cormorant Garamond", Georgia, serif;
+  --font-body: "Heebo", "Inter", system-ui, -apple-system, sans-serif;
+  --font-numerals: "Cormorant Garamond", Georgia, serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.875rem;
+  --text-2xl: 2.75rem;
+  --text-3xl: 4.25rem;
+  --text-4xl: 6.5rem;
+
+  --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: light only;
+  }
+
+  html {
+    direction: rtl;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: 380;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--color-paper);
+    min-height: 100dvh;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.005em;
+    color: var(--color-ink);
+  }
+
+  ::selection {
+    background: oklch(0.88 0.060 82 / 0.6);
+    color: var(--color-ink);
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-paper); }
+  ::-webkit-scrollbar-thumb { background: var(--color-rule); border: 3px solid var(--color-paper); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-mute); }
+
+  bdi { unicode-bidi: isolate; }
+
+  /* RTL-friendly focus ring — brass hairline */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--color-brass), 0 0 0 3px oklch(0.74 0.110 78 / 0.18);
+    border-radius: 1px;
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* The brass disc button — used sparingly across the maison */
+  .brass-disc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.875rem;
+    background: transparent;
+    color: var(--color-ink);
+    border: 1px solid var(--color-brass);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    transition: background 520ms var(--ease-quart), color 520ms var(--ease-quart), border-color 520ms var(--ease-quart);
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 0;
+  }
+  .brass-disc:hover {
+    background: var(--color-brass);
+    color: var(--color-paper);
+    border-color: var(--color-brass);
+  }
+  .brass-disc:active { background: var(--color-brass-deep); border-color: var(--color-brass-deep); }
+
+  .brass-disc--solid {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-color: var(--color-ink);
+  }
+  .brass-disc--solid:hover {
+    background: var(--color-brass-deep);
+    border-color: var(--color-brass-deep);
+    color: var(--color-paper);
+  }
+
+  /* Hairline underline that draws on hover */
+  .hairline-link {
+    position: relative;
+    color: var(--color-ink);
+    text-decoration: none;
+    padding-bottom: 2px;
+  }
+  .hairline-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    inset-inline-end: 0;
+    inset-inline-start: 0;
+    height: 1px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 380ms var(--ease-quart);
+  }
+  .hairline-link:hover::after { transform: scaleX(1); }
+
+  /* Editorial paragraph */
+  .editorial p {
+    max-inline-size: 65ch;
+    margin-block-end: 1.25rem;
+  }
+
+  /* The vellum panel — paper laid on paper */
+  .vellum {
+    background: var(--color-vellum);
+    border: 1px solid var(--color-rule);
+    box-shadow: 0 1px 0 oklch(0.86 0.010 70 / 0.4);
+  }
+
+  /* Section frame: top hairline + section label */
+  .section-label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+    font-feature-settings: "ss01";
+  }
+
+  /* Hebrew-safe display title (no tracking) */
+  .display-he {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .display-lat {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+
+  /* Wordmark */
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--color-ink);
+    text-transform: none;
+  }
+
+  /* Numeral display (for prices, carat weights) */
+  .num {
+    font-family: var(--font-numerals);
+    font-feature-settings: "lnum";
+    font-style: italic;
+  }
+
+  /* The brass seal — used on certificate panels */
+  .brass-seal {
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 35% 30%, oklch(0.88 0.080 82), var(--color-brass) 55%, var(--color-brass-deep));
+    box-shadow: inset 0 0 0 1px oklch(0.50 0.110 65 / 0.5),
+                inset 0 -6px 12px oklch(0.50 0.110 65 / 0.25);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    color: oklch(0.20 0.040 65);
+    font-size: 0.875rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* Embossed monogram — used on inquiry sheet */
+  .monogram {
+    display: inline-grid;
+    place-items: center;
+    width: 80px;
+    height: 80px;
+    background: var(--color-paper);
+    color: oklch(0.86 0.010 70);
+    font-family: var(--font-display);
+    font-size: 2rem;
+    text-shadow:
+      1px 1px 0 oklch(1 0 0),
+      -1px -1px 0 oklch(0.82 0.012 70);
+    border: 1px solid var(--color-rule-soft);
+    border-radius: 999px;
+  }
+
+  /* Slow fade-in for first-paint moments */
+  .fade-in {
+    animation: fadeIn 900ms var(--ease-expo) both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in-delayed {
+    animation: fadeIn 900ms var(--ease-expo) 280ms both;
+  }
+
+  /* Crossfade for atelier preview swaps */
+  @keyframes stageCrossfade {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .stage-crossfade {
+    animation: stageCrossfade 520ms var(--ease-quart) both;
+  }
+}
+
+/* Hebrew-safe utilities */
+.hebrew-tight { letter-spacing: 0; }
+.latin-tight { letter-spacing: -0.01em; }
+.optical-rule { background: linear-gradient(to right, transparent, var(--color-rule) 18%, var(--color-rule) 82%, transparent); }
