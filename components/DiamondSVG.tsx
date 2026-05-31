@@ -48,6 +48,8 @@ export function DiamondSVG({ shape, size = 200, className }: Props) {
       {shape === "pear" && <PearCut id={id} hid={hid} />}
       {shape === "marquise" && <MarquiseCut id={id} hid={hid} />}
       {shape === "radiant" && <RadiantCut id={id} hid={hid} />}
+      {shape === "princess" && <PrincessCut id={id} hid={hid} />}
+      {shape === "heart" && <HeartCut id={id} hid={hid} />}
     </svg>
   );
 }
@@ -188,6 +190,51 @@ function RadiantCut({ id, hid }: SubProps) {
       <line x1="22" y1="100" x2="178" y2="100" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
       <line x1="100" y1="30" x2="100" y2="170" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
       <rect x="60" y="48" width="64" height="22" fill={`url(#${hid})`} />
+    </g>
+  );
+}
+
+function PrincessCut({ id, hid }: SubProps) {
+  return (
+    <g>
+      <rect x="24" y="24" width="152" height="152" fill={`url(#${id})`} stroke={FACET_STROKE} strokeWidth="1" />
+      <rect x="56" y="56" width="88" height="88" fill="none" stroke={FACET_STROKE} strokeWidth="0.7" />
+      {/* diagonal facets from corners */}
+      <line x1="24" y1="24" x2="56" y2="56" stroke={FACET_STROKE_SOFT} strokeWidth="0.6" />
+      <line x1="176" y1="24" x2="144" y2="56" stroke={FACET_STROKE_SOFT} strokeWidth="0.6" />
+      <line x1="176" y1="176" x2="144" y2="144" stroke={FACET_STROKE_SOFT} strokeWidth="0.6" />
+      <line x1="24" y1="176" x2="56" y2="144" stroke={FACET_STROKE_SOFT} strokeWidth="0.6" />
+      {/* cross facets */}
+      <line x1="100" y1="24" x2="100" y2="176" stroke={FACET_STROKE_SOFT} strokeWidth="0.5" />
+      <line x1="24" y1="100" x2="176" y2="100" stroke={FACET_STROKE_SOFT} strokeWidth="0.5" />
+      {/* chevron facets */}
+      <line x1="24" y1="100" x2="56" y2="56" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
+      <line x1="24" y1="100" x2="56" y2="144" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
+      <line x1="176" y1="100" x2="144" y2="56" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
+      <line x1="176" y1="100" x2="144" y2="144" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
+      <rect x="56" y="42" width="68" height="22" fill={`url(#${hid})`} />
+    </g>
+  );
+}
+
+function HeartCut({ id, hid }: SubProps) {
+  return (
+    <g>
+      <path
+        d="M100 180 C 40 130, 16 100, 16 70 C 16 44, 36 24, 60 24 C 78 24, 92 34, 100 50 C 108 34, 122 24, 140 24 C 164 24, 184 44, 184 70 C 184 100, 160 130, 100 180 Z"
+        fill={`url(#${id})`} stroke={FACET_STROKE} strokeWidth="1"
+      />
+      <path
+        d="M100 150 C 58 114, 40 92, 40 72 C 40 56, 50 44, 64 44 C 76 44, 86 52, 100 68 C 114 52, 124 44, 136 44 C 150 44, 160 56, 160 72 C 160 92, 142 114, 100 150 Z"
+        fill="none" stroke={FACET_STROKE_SOFT} strokeWidth="0.7"
+      />
+      {/* center line */}
+      <line x1="100" y1="50" x2="100" y2="180" stroke={FACET_STROKE_SOFT} strokeWidth="0.5" />
+      {/* facet lines */}
+      <line x1="100" y1="180" x2="40" y2="72" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
+      <line x1="100" y1="180" x2="160" y2="72" stroke={FACET_STROKE_SOFT} strokeWidth="0.4" />
+      <ellipse cx="80" cy="58" rx="20" ry="14" fill={`url(#${hid})`} />
+      <ellipse cx="120" cy="58" rx="20" ry="14" fill={`url(#${hid})`} />
     </g>
   );
 }

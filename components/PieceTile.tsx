@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function PieceTile({ piece, scale = "md", priority = false }: Props) {
-  const aspect = scale === "lg" ? "aspect-[3/4]" : "aspect-[4/5]";
+  const aspect = scale === "lg" ? "aspect-[4/5]" : "aspect-[4/5]";
 
   return (
     <Link

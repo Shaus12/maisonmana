@@ -134,13 +134,13 @@ export function AtelierConfigurator() {
       {/* ACTIVE PANEL */}
       <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-20">
         {step === "base" && (
-          <Panel title="בחירת בסיס" subtitle="הצורה הראשונה של הטבעת — איך היהלום יושב על האצבע.">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {SETTING_OPTIONS.map((opt) => (
+          <Panel title="בחירת בסיס" subtitle="הצורה של היהלום — היא קובעת את כל האופי של הטבעת.">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+              {SHAPE_OPTIONS.map((opt) => (
                 <OptionCard
                   key={opt.id}
-                  selected={setting.id === opt.id}
-                  onClick={() => { setSetting(opt); advance("base", setStep); }}
+                  selected={shape.id === opt.id}
+                  onClick={() => { setShape(opt); advance("base", setStep); }}
                   title={opt.he}
                   description={opt.description}
                 />
@@ -150,22 +150,8 @@ export function AtelierConfigurator() {
         )}
 
         {step === "diamond" && (
-          <Panel title="בחירת יהלום" subtitle="חיתוך, משקל, צבע, ניקיון.">
-            <Subhead>חיתוך</Subhead>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
-              {SHAPE_OPTIONS.map((opt) => (
-                <OptionCard
-                  key={opt.id}
-                  selected={shape.id === opt.id}
-                  onClick={() => setShape(opt)}
-                  title={opt.he}
-                  description={opt.description}
-                  small
-                />
-              ))}
-            </div>
-
-            <Subhead className="mt-12">משקל קראט</Subhead>
+          <Panel title="בחירת יהלום" subtitle="משקל, צבע, ניקיון.">
+            <Subhead>משקל קראט</Subhead>
             <div className="flex flex-wrap gap-3">
               {CARAT_OPTIONS.map((opt) => (
                 <button

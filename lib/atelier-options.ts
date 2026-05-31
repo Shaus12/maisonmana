@@ -62,13 +62,12 @@ export const SETTING_OPTIONS: SettingOption[] = [
 ];
 
 export const SHAPE_OPTIONS: ShapeOption[] = [
-  { id: "round",    he: "ברילינט עגול", description: "החיתוך הקלאסי. אור מקסימלי." },
-  { id: "oval",     he: "אובל",          description: "מאריך את האצבע, מודרני." },
-  { id: "cushion",  he: "קושן",          description: "מרובע מעוגל, רך וחם." },
-  { id: "emerald",  he: "אמרלד",         description: "מלבני קר, מדרגות פנים." },
-  { id: "pear",     he: "אגס",           description: "טיפה אחת. שואלת שאלה." },
-  { id: "marquise", he: "מרקיזה",        description: "חרב דקה. נוכחת, לא צועקת." },
-  { id: "radiant",  he: "רדיאנט",        description: "ברק של ברילינט בצורת מלבן." },
+  { id: "round",    he: "יהלום עגול",    description: "החיתוך הקלאסי. אור מקסימלי." },
+  { id: "pear",     he: "יהלום טיפה",    description: "טיפה אחת. שואלת שאלה." },
+  { id: "marquise", he: "יהלום מרקיזה",  description: "חרב דקה. נוכחת, לא צועקת." },
+  { id: "princess", he: "יהלום פרינצס",  description: "מרובע חד, ברק מלא." },
+  { id: "heart",    he: "יהלום לב",      description: "הצורה שמדברת בלי מילים." },
+  { id: "emerald",  he: "יהלום אמרלד",   description: "מלבני קר, מדרגות פנים." },
 ];
 
 export const METAL_OPTIONS: MetalOption[] = [

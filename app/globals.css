@@ -261,6 +261,50 @@
   .stage-crossfade {
     animation: stageCrossfade 520ms var(--ease-quart) both;
   }
+
+  /* Hero buttons — pill-shaped, luxury style */
+  .hero-btn-solid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9375rem 2.25rem;
+    background: white;
+    color: var(--color-ink);
+    border: 1px solid white;
+    border-radius: 9999px;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    transition: background 400ms var(--ease-quart), color 400ms var(--ease-quart), border-color 400ms var(--ease-quart);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .hero-btn-solid:hover {
+    background: var(--color-brass);
+    border-color: var(--color-brass);
+    color: white;
+  }
+
+  .hero-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9375rem 2.25rem;
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 9999px;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    transition: background 400ms var(--ease-quart), border-color 400ms var(--ease-quart);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .hero-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
 }
 
 /* Hebrew-safe utilities */

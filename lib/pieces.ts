@@ -8,7 +8,9 @@ export type DiamondShape =
   | "emerald"
   | "pear"
   | "marquise"
-  | "radiant";
+  | "radiant"
+  | "princess"
+  | "heart";
 
 export type Metal = "yellow-gold" | "white-gold" | "rose-gold" | "platinum";
 
@@ -321,9 +323,11 @@ export const SHAPE_LABELS_HE: Record<DiamondShape, string> = {
   cushion: "קושן",
   oval: "אובל",
   emerald: "אמרלד",
-  pear: "אגס",
+  pear: "טיפה",
   marquise: "מרקיזה",
   radiant: "רדיאנט",
+  princess: "פרינצס",
+  heart: "לב",
 };
 
 export const SETTING_LABELS_HE: Record<Setting, string> = {
