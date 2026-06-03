@@ -20,8 +20,12 @@ export function RingSVG({ shape, metal, setting, band, carat, width = 520 }: Pro
   const bandRx = 158;
   const bandRy = 116;
 
-  const bandWidth =
-    band === "pave-band" ? 22 : band === "twisted" ? 18 : band === "knife-edge" ? 14 : 16;
+  let bandWidth = 16;
+  if (["pave-band", "split-shank", "twisted-pave", "scalloped-pave", "vintage-scroll"].includes(band)) bandWidth = 22;
+  else if (["braided", "double-band"].includes(band)) bandWidth = 26;
+  else if (["infinity", "vine", "channel-set", "concave", "convex", "rope"].includes(band)) bandWidth = 20;
+  else if (["twisted", "bypass", "milgrain", "beaded", "hammered"].includes(band)) bandWidth = 18;
+  else if (["knife-edge"].includes(band)) bandWidth = 14;
 
   // Diamond scale by carat (visual only)
   const diamondScale = 0.7 + Math.min(carat, 4.5) * 0.18;
@@ -76,46 +80,139 @@ export function RingSVG({ shape, metal, setting, band, carat, width = 520 }: Pro
           strokeWidth={Math.max(2, bandWidth / 4)}
         />
 
+        {/* --- DYNAMIC BAND DETAILS --- */}
         {band === "twisted" && (
-          <path
-            d={`M ${cx - bandRx + 4} ${cy + 2} A ${bandRx - 4} ${bandRy - 4} 0 0 0 ${cx + bandRx - 4} ${cy + 2}`}
-            fill="none"
-            stroke={metal.ring}
-            strokeWidth="2"
-            strokeDasharray="6 6"
-            opacity="0.85"
-          />
+          <path d={`M ${cx - bandRx + 4} ${cy + 2} A ${bandRx - 4} ${bandRy - 4} 0 0 0 ${cx + bandRx - 4} ${cy + 2}`} fill="none" stroke={metal.ring} strokeWidth="2" strokeDasharray="6 6" opacity="0.85" />
         )}
 
-        {band === "pave-band" && (
+        {(band === "pave-band" || band === "twisted-pave" || band === "channel-set" || band === "scalloped-pave") && (
           <g opacity="0.95">
-            {Array.from({ length: 22 }).map((_, i) => {
-              const t = i / 21;
+            {band === "channel-set" && (
+               <>
+                 <ellipse cx={cx} cy={cy} rx={bandRx - bandWidth/2 + 2} ry={bandRy - bandWidth/2 + 2} fill="none" stroke={metal.glow} strokeWidth="1.5" />
+                 <ellipse cx={cx} cy={cy} rx={bandRx + bandWidth/2 - 2} ry={bandRy + bandWidth/2 - 2} fill="none" stroke={metal.glow} strokeWidth="1.5" />
+               </>
+            )}
+            {band === "twisted-pave" && (
+               <path d={`M ${cx - bandRx + 4} ${cy + 2} A ${bandRx - 4} ${bandRy - 4} 0 0 0 ${cx + bandRx - 4} ${cy + 2}`} fill="none" stroke={metal.ring} strokeWidth="3" strokeDasharray="8 8" opacity="0.85" />
+            )}
+            {Array.from({ length: 26 }).map((_, i) => {
+              const t = i / 25;
               const angle = Math.PI + t * Math.PI;
               const x = cx + Math.cos(angle) * bandRx;
               const y = cy + Math.sin(angle) * bandRy;
+              if (y > cy + 20) return null; // Don't draw stones at the very bottom
               return (
-                <circle
-                  key={i}
-                  cx={x}
-                  cy={y}
-                  r="2.6"
-                  fill="oklch(0.97 0.005 240)"
-                  stroke="oklch(0.6 0.020 240 / 0.6)"
-                  strokeWidth="0.4"
-                />
+                <circle key={i} cx={x} cy={y} r={band === "scalloped-pave" ? "3" : "2.6"} fill="oklch(0.97 0.005 240)" stroke="oklch(0.6 0.020 240 / 0.6)" strokeWidth="0.4" />
               );
             })}
           </g>
         )}
 
         {band === "knife-edge" && (
-          <path
-            d={`M ${cx - bandRx + 6} ${cy + 1} A ${bandRx - 6} ${bandRy - 6} 0 0 0 ${cx + bandRx - 6} ${cy + 1}`}
-            fill="none"
-            stroke={metal.glow}
-            strokeWidth="0.8"
-          />
+          <path d={`M ${cx - bandRx + 6} ${cy + 1} A ${bandRx - 6} ${bandRy - 6} 0 0 0 ${cx + bandRx - 6} ${cy + 1}`} fill="none" stroke={metal.glow} strokeWidth="0.8" />
+        )}
+
+        {band === "double-band" && (
+          <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke="oklch(0 0 0 / 0.5)" strokeWidth="3" />
+        )}
+
+        {band === "milgrain" && (
+          <>
+            <ellipse cx={cx} cy={cy} rx={bandRx - bandWidth/2 + 1.5} ry={bandRy - bandWidth/2 + 1.5} fill="none" stroke={metal.ring} strokeWidth="1.5" strokeDasharray="2 2" />
+            <ellipse cx={cx} cy={cy} rx={bandRx + bandWidth/2 - 1.5} ry={bandRy + bandWidth/2 - 1.5} fill="none" stroke={metal.ring} strokeWidth="1.5" strokeDasharray="2 2" />
+          </>
+        )}
+
+        {band === "beaded" && (
+          <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke={metal.glow} strokeWidth="6" strokeDasharray="0 10" strokeLinecap="round" opacity="0.6" />
+        )}
+
+        {band === "rope" && (
+          <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke="oklch(0 0 0 / 0.25)" strokeWidth="4" strokeDasharray="6 4" />
+        )}
+
+        {band === "infinity" && (
+          <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke={metal.glow} strokeWidth="2" strokeDasharray="15 15" opacity="0.6" />
+        )}
+
+        {band === "braided" && (
+          <>
+            <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke="oklch(0 0 0 / 0.2)" strokeWidth="4" strokeDasharray="12 12" />
+            <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke={metal.glow} strokeWidth="2" strokeDasharray="12 12" strokeDashoffset="6" />
+          </>
+        )}
+
+        {band === "hammered" && (
+           <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke={metal.glow} strokeWidth="4" strokeDasharray="5 15 10 5 20 10" opacity="0.4" />
+        )}
+
+        {band === "concave" && (
+           <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke="oklch(0 0 0 / 0.15)" strokeWidth="6" />
+        )}
+
+        {band === "convex" && (
+           <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke={metal.glow} strokeWidth="6" opacity="0.4" />
+        )}
+
+        {band === "split-shank" && (
+          <path d={`M ${cx - bandRx} ${cy} Q ${cx - bandRx + 10} ${cy - bandRy/2} ${cx - 15} ${cy - bandRy} 
+                   M ${cx + bandRx} ${cy} Q ${cx + bandRx - 10} ${cy - bandRy/2} ${cx + 15} ${cy - bandRy}`} 
+                fill="none" stroke="oklch(0 0 0 / 0.6)" strokeWidth="3" />
+        )}
+
+        {band === "bypass" && (
+          <path d={`M ${cx - 30} ${cy - bandRy + 15} C ${cx - 10} ${cy - bandRy + 5} ${cx} ${cy - bandRy - 10} ${cx + 15} ${cy - bandRy - 15}
+                   M ${cx + 30} ${cy - bandRy + 15} C ${cx + 10} ${cy - bandRy + 5} ${cx} ${cy - bandRy - 10} ${cx - 15} ${cy - bandRy - 15}`} 
+                fill="none" stroke="oklch(0 0 0 / 0.5)" strokeWidth="3" />
+        )}
+
+        {band === "tapered" && (
+           <path d={`M ${cx - 20} ${cy - bandRy - 10} L ${cx - 10} ${cy - bandRy + 20} L ${cx - 40} ${cy - bandRy + 20} Z
+                    M ${cx + 20} ${cy - bandRy - 10} L ${cx + 10} ${cy - bandRy + 20} L ${cx + 40} ${cy - bandRy + 20} Z`} 
+                 fill="oklch(0 0 0 / 0.2)" />
+        )}
+
+        {band === "reverse-tapered" && (
+           <path d={`M ${cx - 20} ${cy - bandRy + 20} L ${cx - 10} ${cy - bandRy - 10} L ${cx - 30} ${cy - bandRy - 10} Z
+                    M ${cx + 20} ${cy - bandRy + 20} L ${cx + 10} ${cy - bandRy - 10} L ${cx + 30} ${cy - bandRy - 10} Z`} 
+                 fill="oklch(0 0 0 / 0.2)" />
+        )}
+
+        {band === "chevron" && (
+           <path d={`M ${cx - 20} ${cy - bandRy + 10} L ${cx} ${cy - bandRy + 25} L ${cx + 20} ${cy - bandRy + 10}`} 
+                 fill="none" stroke={metal.glow} strokeWidth="3" />
+        )}
+
+        {band === "vine" && (
+          <g opacity="0.8">
+            <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke={metal.ring} strokeWidth="2" strokeDasharray="20 10" />
+            {Array.from({ length: 12 }).map((_, i) => {
+              const t = i / 11;
+              const angle = Math.PI + t * Math.PI;
+              const x = cx + Math.cos(angle) * (bandRx - 2);
+              const y = cy + Math.sin(angle) * (bandRy - 2);
+              return <ellipse key={i} cx={x} cy={y} rx="4" ry="2" fill={metal.glow} transform={`rotate(${angle * 180 / Math.PI} ${x} ${y})`} />;
+            })}
+          </g>
+        )}
+
+        {band === "euro-shank" && (
+           <path d={`M ${cx - bandRx + 10} ${cy + bandRy - 20} L ${cx - 20} ${cy + bandRy + 10} L ${cx + 20} ${cy + bandRy + 10} L ${cx + bandRx - 10} ${cy + bandRy - 20}`} 
+                 fill="none" stroke="url(#bandFill)" strokeWidth={bandWidth} strokeLinejoin="round" />
+        )}
+
+        {band === "vintage-scroll" && (
+          <g opacity="0.7">
+             <ellipse cx={cx} cy={cy} rx={bandRx} ry={bandRy} fill="none" stroke="oklch(0 0 0 / 0.4)" strokeWidth="1" strokeDasharray="3 3" />
+             {Array.from({ length: 16 }).map((_, i) => {
+                const t = i / 15;
+                const angle = Math.PI + t * Math.PI;
+                const x = cx + Math.cos(angle) * bandRx;
+                const y = cy + Math.sin(angle) * bandRy;
+                return <circle key={i} cx={x} cy={y} r="3" fill="none" stroke={metal.glow} strokeWidth="1.5" />;
+             })}
+          </g>
         )}
       </g>
 

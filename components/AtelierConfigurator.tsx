@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { RingSVG } from "./RingSVG";
+import { Ring3D } from "./Ring3D";
 import {
   SETTING_OPTIONS,
   SHAPE_OPTIONS,
@@ -74,14 +74,13 @@ export function AtelierConfigurator() {
             Atelier · Live Preview
           </p>
 
-          <div key={stageKey} className="stage-crossfade">
-            <RingSVG
+          <div key={stageKey} className="stage-crossfade w-full max-w-3xl mx-auto mt-4">
+            <Ring3D
               shape={shape.id}
               metal={metal}
               setting={setting.id}
               band={band.id}
               carat={carat}
-              width={560}
             />
           </div>
 

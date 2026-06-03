@@ -23,7 +23,7 @@ export type MetalOption = {
 };
 
 export type BandOption = {
-  id: "classic" | "knife-edge" | "twisted" | "pave-band";
+  id: "classic" | "knife-edge" | "twisted" | "pave-band" | "split-shank" | "bypass" | "twisted-pave" | "infinity" | "braided" | "milgrain" | "tapered" | "reverse-tapered" | "chevron" | "vine" | "double-band" | "euro-shank" | "channel-set" | "scalloped-pave" | "beaded" | "vintage-scroll" | "concave" | "convex" | "rope" | "hammered";
   he: string;
   description: string;
 };
@@ -106,6 +106,26 @@ export const BAND_OPTIONS: BandOption[] = [
   { id: "knife-edge",  he: "סכין",         description: "קו מרכזי מחודד, ברק חד מהצד." },
   { id: "twisted",     he: "מסולסלת",     description: "שני חוטים זהב שזורים בעדינות." },
   { id: "pave-band",   he: "פאווה",        description: "יהלומי מיקרו לאורך כל המעטפת." },
+  { id: "split-shank", he: "זרוע מפוצלת",  description: "הלהקה מתפצלת לקראת היהלום." },
+  { id: "bypass",      he: "עוטפת (Bypass)", description: "זרועות חופפות שעוטפות את המרכז." },
+  { id: "twisted-pave",he: "מסולסלת פאווה", description: "חוטי זהב שזורים עם יהלומים זעירים." },
+  { id: "infinity",    he: "אינסוף",       description: "לולאות זהב המשתלבות ללא קצה." },
+  { id: "braided",     he: "צמה",          description: "קליעת זהב צפופה ומורכבת." },
+  { id: "milgrain",    he: "מילגריין",     description: "שוליים מעוטרים בכדוריות זהב זעירות." },
+  { id: "tapered",     he: "הולכת וצרה",   description: "הלהקה הופכת צרה יותר ליד היהלום." },
+  { id: "reverse-tapered", he: "הולכת ומתרחבת", description: "הלהקה מתרחבת לקראת המרכז." },
+  { id: "chevron",     he: "שברון (V)",    description: "זווית עדינה שמוסיפה חדות." },
+  { id: "vine",        he: "מטפסת",        description: "עיצוב טבעי המזכיר ענפים ועלים." },
+  { id: "double-band", he: "להקה כפולה",   description: "שתי טבעות זהב מקבילות." },
+  { id: "euro-shank",  he: "בסיס אירופאי", description: "תחתית שטוחה למניעת סיבוב הטבעת." },
+  { id: "channel-set", he: "שיבוץ מסילה",  description: "יהלומים נחים בתעלה שקועה." },
+  { id: "scalloped-pave", he: "פאווה מסולסל", description: "שוליים גליים עם שיבוץ עשיר." },
+  { id: "beaded",      he: "פנינים",       description: "להקה עשויה כדוריות זהב רציפות." },
+  { id: "vintage-scroll", he: "וינטג'",    description: "פיתוחים עתיקים ומלאי אופי." },
+  { id: "concave",     he: "קעורה",        description: "שקע מתון לאורך הלהקה." },
+  { id: "convex",      he: "קמורה",        description: "מראה מלא ובולט במיוחד." },
+  { id: "rope",        he: "חבל",          description: "טקסטורה מסובבת חזקה ובולטת." },
+  { id: "hammered",    he: "מרוקעת",       description: "טקסטורה אורגנית הנעשית בהקשות פטיש." },
 ];
 
 export const CARAT_OPTIONS: CaratOption[] = [
@@ -150,7 +170,7 @@ export function estimatePriceILS(opts: {
   const clarityMul = { FL: 1.40, IF: 1.30, VVS1: 1.20, VVS2: 1.12, VS1: 1.04, VS2: 0.96 }[opts.clarity];
   const caratPremium = Math.pow(opts.carat, 1.32);
   const settingAdd = { solitaire: 6500, "three-stone": 14000, "hidden-halo": 11500, pave: 13000, bezel: 7500 }[opts.setting];
-  const bandAdd = { classic: 0, "knife-edge": 1200, twisted: 2400, "pave-band": 8500 }[opts.band];
+  const bandAdd = { classic: 0, "knife-edge": 1200, twisted: 2400, "pave-band": 8500, "split-shank": 1500, bypass: 1800, "twisted-pave": 9500, infinity: 3200, braided: 2800, milgrain: 2000, tapered: 500, "reverse-tapered": 500, chevron: 1200, vine: 3800, "double-band": 3000, "euro-shank": 800, "channel-set": 6500, "scalloped-pave": 9000, beaded: 1500, "vintage-scroll": 4000, concave: 900, convex: 1100, rope: 2100, hammered: 1000 }[opts.band];
   const metalAdd = { "yellow-gold": 0, "white-gold": 0, "rose-gold": 0, platinum: 4500 }[opts.metal];
   const raw = basePerCarat * colorMul * clarityMul * caratPremium + settingAdd + bandAdd + metalAdd;
   return Math.round(raw / 500) * 500;
