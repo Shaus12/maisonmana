@@ -18,7 +18,7 @@ export default async function InquiryPage({
 
   return (
     <section className="bg-paper">
-      <div className="mx-auto max-w-[1440px] px-6 pt-16 pb-12 md:px-12 md:pt-24 md:pb-16">
+      <div className="mx-auto max-w-[1440px] px-6 pt-28 pb-12 md:px-12 md:pt-36 md:pb-16">
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-5">
             <p className="section-label">פנייה</p>

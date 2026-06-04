@@ -155,9 +155,15 @@ export const CLARITY_OPTIONS = [
   { value: "VS2"  as const, he: "VS2" },
 ];
 
+export const ORIGIN_OPTIONS = [
+  { id: "natural", he: "יהלום טבעי", description: "נוצר בטבע, נדיר וחד פעמי." },
+  { id: "lab-grown", he: "יהלום מעבדה", description: "זהה לחלוטין אופטית וכימית, נוצר במעבדה." }
+];
+
 // Rough indicative price per carat by clarity/color tier (for live preview only).
 // Real pricing is always confirmed at consultation.
 export function estimatePriceILS(opts: {
+  origin: "natural" | "lab-grown";
   carat: number;
   color: typeof COLOR_OPTIONS[number]["value"];
   clarity: typeof CLARITY_OPTIONS[number]["value"];
@@ -165,7 +171,7 @@ export function estimatePriceILS(opts: {
   setting: SettingOption["id"];
   band: BandOption["id"];
 }): number {
-  const basePerCarat = 32000;
+  const basePerCarat = opts.origin === "lab-grown" ? 4500 : 32000;
   const colorMul = { D: 1.32, E: 1.20, F: 1.10, G: 1.00, H: 0.92 }[opts.color];
   const clarityMul = { FL: 1.40, IF: 1.30, VVS1: 1.20, VVS2: 1.12, VS1: 1.04, VS2: 0.96 }[opts.clarity];
   const caratPremium = Math.pow(opts.carat, 1.32);
