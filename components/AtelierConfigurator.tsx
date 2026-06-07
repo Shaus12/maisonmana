@@ -12,7 +12,6 @@ import {
   CARAT_OPTIONS,
   COLOR_OPTIONS,
   CLARITY_OPTIONS,
-  ORIGIN_OPTIONS,
   estimatePriceILS,
   type SettingOption,
   type ShapeOption,
@@ -235,13 +234,15 @@ export function AtelierConfigurator() {
                 >
                   <ShapeIcon shape={opt.id} />
                   <span className="text-[0.8125rem] tracking-[0.01em] leading-tight">
-                    {opt.he.replace("יהלום ", "")}
+                    {locale === "he" ? opt.he : opt.en}
                   </span>
                 </button>
               ))}
             </div>
             {shape && (
-              <p className="mt-3 text-[0.8125rem] text-ink-mute">{shape.description}</p>
+              <p className="mt-3 text-[0.8125rem] text-ink-mute">
+                {locale === "he" ? shape.description : shape.descriptionEn}
+              </p>
             )}
 
             {/* ── 2. Setting ── */}
@@ -253,13 +254,13 @@ export function AtelierConfigurator() {
                   selected={setting.id === opt.id}
                   onClick={() => setSetting(opt)}
                 >
-                  {opt.he}
+                  {locale === "he" ? opt.he : opt.en}
                 </Pill>
               ))}
             </div>
             {setting && (
               <p className="mt-3 text-[0.8125rem] text-ink-mute leading-snug">
-                {setting.description}
+                {locale === "he" ? setting.description : setting.descriptionEn}
               </p>
             )}
 
@@ -289,7 +290,7 @@ export function AtelierConfigurator() {
                       metal.id === opt.id ? "text-ink" : "text-ink-mute group-hover:text-ink-soft"
                     }`}
                   >
-                    {opt.he}
+                    {locale === "he" ? opt.he : opt.en}
                   </span>
                 </button>
               ))}
@@ -310,7 +311,7 @@ export function AtelierConfigurator() {
                       : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
                   }`}
                 >
-                  {opt.he}
+                  {locale === "he" ? opt.he : opt.en}
                 </button>
               ))}
             </div>
@@ -324,7 +325,9 @@ export function AtelierConfigurator() {
               </button>
             )}
             {band && (
-              <p className="mt-3 text-[0.8125rem] text-ink-mute">{band.description}</p>
+              <p className="mt-3 text-[0.8125rem] text-ink-mute">
+                {locale === "he" ? band.description : band.descriptionEn}
+              </p>
             )}
 
             {/* ── 5. Diamond Specs ── */}
