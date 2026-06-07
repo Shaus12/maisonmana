@@ -1,13 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { PieceTile } from "@/components/PieceTile";
 import { VideoHero } from "@/components/VideoHero";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { PIECES } from "@/lib/pieces";
+import { useLanguage } from "@/components/LanguageProvider";
 
 const HOME_FEATURED = ["anna-solitaire", "tennis-classique", "adria-tear"];
 
 export default function Home() {
+  const { t } = useLanguage();
+
   const featured = HOME_FEATURED.map(
     (slug) => PIECES.find((p) => p.slug === slug)!
   );
@@ -21,17 +26,17 @@ export default function Home() {
       <section className="bg-paper">
         <div className="mx-auto grid max-w-[1440px] gap-10 px-6 py-14 md:grid-cols-12 md:gap-12 md:px-12 md:py-40">
           <ScrollReveal className="md:col-span-3">
-            <p className="section-label">בית המאזון</p>
+            <p className="section-label">{t("statement_label")}</p>
           </ScrollReveal>
           <div className="md:col-span-8 md:col-start-5">
             <ScrollReveal delay={1}>
-              <blockquote className="display-he text-[1.625rem] leading-[1.55] text-ink md:text-[2rem]">
-                &ldquo;מאזון מנא נבנה על שלושה כללים: שלא נמכור דבר שלא נלבש בעצמנו; שלא נחפוז להציע מה שלא הקשבנו לו; ושכל יהלום שיוצא מן הסדנה יישא תעודה, ושם, ושעה.&rdquo;
+              <blockquote className="display-lat text-[1.375rem] leading-[1.55] text-ink md:text-[1.75rem]">
+                {t("statement_quote")}
               </blockquote>
             </ScrollReveal>
             <ScrollReveal delay={2}>
               <p className="mt-7 text-ink-mute text-[0.875rem] tracking-[0.04em]">
-                — אנרי מנא, צורף ומייסד, 2016
+                {t("statement_attribution")}
               </p>
             </ScrollReveal>
           </div>
@@ -45,13 +50,13 @@ export default function Home() {
           <ScrollReveal>
             <header className="flex items-end justify-between gap-8 pb-10 md:pb-16 border-b border-rule">
               <div>
-                <p className="section-label">חלון התצוגה</p>
-                <h2 className="display-he mt-4 text-[2rem] leading-[1.1] text-ink md:text-[2.625rem]">
-                  שלוש יצירות שנבחרו לעונה
+                <p className="section-label">{t("pieces_label")}</p>
+                <h2 className="display-lat mt-4 text-[1.75rem] leading-[1.1] text-ink md:text-[2.625rem]">
+                  {t("pieces_heading")}
                 </h2>
               </div>
               <Link href="/collections/rings" className="hairline-link text-[0.875rem] whitespace-nowrap text-ink-mute">
-                לכל האוספים
+                {t("pieces_link")}
               </Link>
             </header>
           </ScrollReveal>
@@ -62,7 +67,7 @@ export default function Home() {
                 <PieceTile piece={featured[0]} scale="lg" priority />
               </div>
               <p className="mt-5 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
-                סוליטר עגול שתי קראט על להקה דקה מפלטינה. הטבעת שאליה חוזרים אחרי שמסתכלים בכל השאר.
+                {t("pieces_desc_0")}
               </p>
             </ScrollReveal>
             <ScrollReveal delay={2} className="md:col-span-5 md:col-start-7 md:mt-28">
@@ -70,7 +75,7 @@ export default function Home() {
                 <PieceTile piece={featured[1]} scale="lg" />
               </div>
               <p className="mt-5 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
-                שבעים ושתיים אבנים ביד אחת של אומן. הקלאסי שכולם רוצים להעתיק ואף אחד לא מצליח.
+                {t("pieces_desc_1")}
               </p>
             </ScrollReveal>
             <ScrollReveal delay={3} className="md:col-span-5 md:col-start-2 md:mt-14">
@@ -78,14 +83,14 @@ export default function Home() {
                 <PieceTile piece={featured[2]} scale="lg" />
               </div>
               <p className="mt-5 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
-                יהלום אגס תלוי על שלוש מצולות. נוטה קלות קדימה, כדי לתפוס את האור הראשון של הבוקר.
+                {t("pieces_desc_2")}
               </p>
             </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* ── 4. THE ATELIER — VELVET BREAK ────────────────────────── */}
+      {/* ── 4. THE STUDIO — VELVET BREAK ─────────────────────────── */}
       <section className="relative overflow-hidden bg-velvet text-paper">
         <div
           aria-hidden
@@ -98,14 +103,16 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-[1440px] gap-12 px-6 py-16 md:grid-cols-12 md:gap-12 md:px-12 md:py-44">
           <div className="md:col-span-5 md:col-start-1">
             <ScrollReveal>
-              <p className="section-label" style={{ color: "oklch(0.74 0.110 78)" }}>חדר היצירה</p>
-              <h2 className="display-he mt-6 text-[2.625rem] leading-[1.07] text-paper md:text-[3.75rem]">
-                האטלייה
+              <p className="section-label" style={{ color: "oklch(0.74 0.110 78)" }}>
+                {t("studio_label")}
+              </p>
+              <h2 className="display-lat mt-6 text-[2.25rem] leading-[1.07] text-paper md:text-[3.75rem]">
+                {t("studio_heading")}
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={1}>
               <p className="mt-8 max-w-md text-[1.0625rem] leading-relaxed" style={{ color: "oklch(0.985 0.004 75 / 0.82)" }}>
-                עיצוב מלא של טבעת כלולות בהזמנה אישית — בסיס, יהלום, מתכת, להקה. הבחירה שלך הופכת לתעודה אחת, ולפגישה אחת עם הצורף שיוציא אותה לפועל.
+                {t("studio_body")}
               </p>
               <div className="mt-10">
                 <Link
@@ -117,7 +124,7 @@ export default function Home() {
                     borderColor: "oklch(0.74 0.110 78 / 0.75)",
                   }}
                 >
-                  לכניסה לאטלייה
+                  {t("studio_cta")}
                 </Link>
               </div>
             </ScrollReveal>
@@ -127,32 +134,32 @@ export default function Home() {
             <ScrollReveal delay={2}>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { num: "א", label: "בסיס" },
-                  { num: "ב", label: "יהלום" },
-                  { num: "ג", label: "מתכת" },
+                  { key: "studio_step_a" as const, label: "A" },
+                  { key: "studio_step_b" as const, label: "B" },
+                  { key: "studio_step_c" as const, label: "C" },
                 ].map((step) => (
                   <div
-                    key={step.num}
+                    key={step.key}
                     className="border bg-velvet-soft/25 px-5 py-7 md:py-10 text-center backdrop-blur-sm"
                     style={{ borderColor: "oklch(0.985 0.004 75 / 0.16)" }}
                   >
                     <span
-                      className="display-he text-[2.5rem] leading-none"
+                      className="display-lat text-[2rem] leading-none"
                       style={{ color: "oklch(0.74 0.110 78)" }}
                     >
-                      {step.num}
+                      {step.label}
                     </span>
                     <span
                       className="mt-3 block text-[0.625rem] tracking-[0.22em] uppercase"
                       style={{ color: "oklch(0.985 0.004 75 / 0.65)" }}
                     >
-                      {step.label}
+                      {t(step.key)}
                     </span>
                   </div>
                 ))}
               </div>
               <p className="mt-5 text-[0.8125rem] tracking-[0.04em]" style={{ color: "oklch(0.985 0.004 75 / 0.50)" }}>
-                שלב רביעי: להקה. סיום בפגישה פרטית עם הצורף.
+                {t("studio_step_4")}
               </p>
             </ScrollReveal>
           </div>
@@ -166,7 +173,7 @@ export default function Home() {
             <figure className="vellum relative aspect-[4/5] overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1400&q=85"
-                alt="תליון יהלום על שרשרת דקה"
+                alt="Diamond pendant on a fine chain"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover transition-transform duration-[1400ms] ease-out hover:scale-[1.03]"
@@ -180,18 +187,18 @@ export default function Home() {
 
           <div className="md:col-span-5 md:col-start-8 md:self-center">
             <ScrollReveal direction="right">
-              <p className="section-label">מראה</p>
-              <h2 className="display-he mt-6 text-[2.5rem] leading-[1.08] text-ink md:text-[3.5rem]">
-                המראה
+              <p className="section-label">{t("mirror_label")}</p>
+              <h2 className="display-lat mt-6 text-[2.25rem] leading-[1.08] text-ink md:text-[3.5rem]">
+                {t("mirror_heading")}
               </h2>
             </ScrollReveal>
             <ScrollReveal direction="right" delay={1}>
               <p className="mt-8 max-w-md text-[1.0625rem] leading-relaxed text-ink-soft">
-                צילום אחד שלך, מהמצלמה או מהגלריה, ויצירה אחת מן הקטלוג — והמראה מציגה כיצד הן נראות יחד. הצילום לא יוצא מן המכשיר שלך. דבר אינו נשלח, דבר אינו נשמר.
+                {t("mirror_body")}
               </p>
               <div className="mt-10">
                 <Link href="/mirror" className="brass-disc">
-                  לכניסה למראה
+                  {t("mirror_cta")}
                 </Link>
               </div>
             </ScrollReveal>
@@ -204,23 +211,19 @@ export default function Home() {
       <section className="bg-paper-deep">
         <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-14 md:grid-cols-12 md:px-12 md:py-36">
           <ScrollReveal className="md:col-span-4">
-            <p className="section-label">בית המאזון</p>
-            <h2 className="display-he mt-6 text-[2rem] leading-[1.1] text-ink md:text-[2.5rem]">
-              צפייה בתיאום מראש
+            <p className="section-label">{t("showroom_label")}</p>
+            <h2 className="display-lat mt-6 text-[1.875rem] leading-[1.1] text-ink md:text-[2.5rem]">
+              {t("showroom_heading")}
             </h2>
           </ScrollReveal>
           <div className="md:col-span-6 md:col-start-6">
             <ScrollReveal delay={1} className="editorial">
-              <p>
-                בית מאזון מנא ממוקם בבורסת היהלומים שברמת גן, בקומה שלישית, מאחורי דלת ללא שלט. הכניסה היא בליווי, והפגישה היא של עד שעתיים: בה תתקבלי בכוס תה, יוצגו לך שלוש יצירות שנבחרו לפי שאלון מוקדם, וניתן לך הזמן לראות, למדוד, ולחזור.
-              </p>
-              <p className="text-ink-soft">
-                אם רכישה תהיה — היא תיעשה אחרי. אם לא — לא קרה דבר.
-              </p>
+              <p>{t("showroom_body")}</p>
+              <p className="text-ink-soft">{t("showroom_note")}</p>
             </ScrollReveal>
             <ScrollReveal delay={2}>
               <Link href="/inquiry" className="brass-disc brass-disc--solid mt-8 inline-flex">
-                לקביעת המועד
+                {t("showroom_cta")}
               </Link>
             </ScrollReveal>
           </div>

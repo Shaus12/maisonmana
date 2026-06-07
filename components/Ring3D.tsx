@@ -329,8 +329,8 @@ export function Ring3D({
     <div className="w-full h-[40vh] min-h-[240px] md:h-[60vh] md:min-h-[380px] relative rounded-lg overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing">
       <React.Suspense
         fallback={
-          <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest font-serif">
-            טוען סטודיו תלת-ממד...
+          <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest">
+            Loading 3D Studio…
           </div>
         }
       >
@@ -376,8 +376,8 @@ export function Ring3D({
         </Canvas>
       </React.Suspense>
 
-      <div className="absolute bottom-6 left-0 right-0 text-center text-[0.65rem] text-[#E1D1C1]/40 pointer-events-none font-serif tracking-[0.2em] uppercase">
-        גרור לסובב · 3D Atelier
+      <div className="absolute bottom-6 left-0 right-0 text-center text-[0.65rem] text-[#E1D1C1]/40 pointer-events-none tracking-[0.2em] uppercase">
+        Drag to rotate · 3D Studio
       </div>
     </div>
   );

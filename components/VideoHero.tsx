@@ -1,8 +1,11 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useLanguage } from "./LanguageProvider";
 
 export function VideoHero() {
+  const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -15,15 +18,11 @@ export function VideoHero() {
       });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(raf);
-    };
+    return () => { window.removeEventListener("scroll", handleScroll); cancelAnimationFrame(raf); };
   }, []);
 
   return (
     <section className="relative h-[100dvh] overflow-hidden bg-velvet-deep">
-      {/* Video — starts scaled up to allow parallax room */}
       <video
         ref={videoRef}
         src="/hero.mp4"
@@ -35,7 +34,7 @@ export function VideoHero() {
         style={{ willChange: "transform", transform: "scale(1.12)" }}
       />
 
-      {/* Primary scrim — warm charcoal from bottom */}
+      {/* Warm charcoal gradient scrim */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
@@ -45,76 +44,46 @@ export function VideoHero() {
         }}
       />
 
-      {/* Side vignette — towards inline-end (visual left in RTL) */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to inline-end, oklch(0.12 0.010 60 / 0.50) 0%, transparent 55%)",
-        }}
-      />
-
-      {/* Top gradient — lets masthead be readable */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to bottom, oklch(0.12 0.010 60 / 0.40) 0%, transparent 22%)",
-        }}
-      />
-
-      {/* Text block — bottom start (right in RTL = natural Hebrew start) */}
+      {/* Text block — bottom start */}
       <div className="absolute bottom-0 start-0 px-6 pb-14 md:px-14 md:pb-20 max-w-3xl">
         <p
           className="section-label fade-in"
           style={{ color: "oklch(0.74 0.110 78)", letterSpacing: "0.20em" }}
         >
-          מאזון מנא · תל אביב · מאז 2016
+          {t("hero_tagline")}
         </p>
-
         <h1
-          className="display-he mt-5 leading-[1.0] fade-in"
-          style={{
-            color: "oklch(0.985 0.004 75)",
-            fontSize: "clamp(2.8rem, 7vw, 6.5rem)",
-          }}
+          className="display-lat mt-5 leading-[1.0] fade-in"
+          style={{ color: "oklch(0.985 0.004 75)", fontSize: "clamp(2.5rem, 7vw, 6rem)" }}
         >
-          מקום אחד.
-          <br />
-          זוג אחד.
-          <br />
-          תכשיט אחד.
+          {t("hero_h1_1")}<br />
+          {t("hero_h1_2")}<br />
+          {t("hero_h1_3")}
         </h1>
-
-        <div className="mt-10 flex flex-wrap items-center gap-6 fade-in-delayed">
+        <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 fade-in-delayed">
           <Link
             href="/inquiry"
-            className="brass-disc text-[0.9375rem]"
+            className="brass-disc text-[0.875rem] sm:text-[0.9375rem]"
             style={{
               borderColor: "oklch(0.74 0.110 78 / 0.85)",
               color: "oklch(0.985 0.004 75)",
               background: "transparent",
             }}
           >
-            לקביעת צפייה פרטית
+            {t("hero_cta_view")}
           </Link>
           <Link
             href="/collections/rings"
-            className="text-[0.9375rem] hairline-link fade-in-delayed"
+            className="text-[0.8125rem] tracking-[0.08em] uppercase transition-opacity hover:opacity-70"
             style={{ color: "oklch(0.985 0.004 75 / 0.65)" }}
           >
-            לצפייה באוספים
+            {t("hero_cta_collections")}
           </Link>
         </div>
       </div>
 
-      {/* Scroll indicator — bottom end */}
-      <div
-        className="absolute bottom-10 end-8 md:end-14 flex flex-col items-center gap-2"
-        aria-hidden
-      >
+      {/* Scroll indicator */}
+      <div className="absolute bottom-10 end-8 md:end-14 flex flex-col items-center gap-2" aria-hidden>
         <div
           className="w-px h-12 scroll-line"
           style={{

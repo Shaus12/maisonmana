@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useLanguage } from "./LanguageProvider";
 
-type NavItem = { href: string; he: string };
+type NavItem = { href: string; label: string };
 
 export function MobileNav({ items, isLight = false }: { items: NavItem[]; isLight?: boolean }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -18,11 +20,11 @@ export function MobileNav({ items, isLight = false }: { items: NavItem[]; isLigh
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className={`masthead-mobile-btn display-he text-[0.9375rem]${isLight ? "" : ""}`}
+        className="masthead-mobile-btn text-[0.9375rem]"
         aria-expanded={open}
-        aria-label="פתיחת תפריט"
+        aria-label="Open menu"
       >
-        תפריט
+        {t("nav_menu")}
       </button>
 
       {open && (
@@ -37,34 +39,34 @@ export function MobileNav({ items, isLight = false }: { items: NavItem[]; isLigh
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="display-he text-[0.875rem] text-ink-mute hover:text-ink transition-colors"
-                aria-label="סגירת תפריט"
+                className="text-[0.875rem] text-ink-mute hover:text-ink transition-colors tracking-[0.04em]"
+                aria-label="Close menu"
               >
-                סגירה
+                {t("nav_close")}
               </button>
             </div>
             <div className="optical-rule h-px w-full" />
 
             {/* Nav items */}
-            <nav aria-label="ניווט נייד" className="flex flex-1 flex-col justify-center gap-6 px-8">
+            <nav aria-label="Mobile navigation" className="flex flex-1 flex-col justify-center gap-6 px-8">
               {items.map((item, i) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="display-he text-[2.25rem] leading-none text-ink hover:text-ink-soft transition-colors"
+                  className="display-lat text-[2rem] leading-none text-ink hover:text-ink-soft transition-colors"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
-                  {item.he}
+                  {item.label}
                 </Link>
               ))}
             </nav>
 
             {/* Footer */}
             <div className="px-8 pb-10 text-ink-mute text-[0.8125rem] leading-relaxed">
-              <p>בית מאזון מנא</p>
-              <p>בורסת היהלומים, רמת גן</p>
-              <p className="mt-2 text-[0.75rem]">בתיאום מראש בלבד</p>
+              <p>{t("mobile_footer_1")}</p>
+              <p>{t("mobile_footer_2")}</p>
+              <p className="mt-2 text-[0.75rem]">{t("mobile_footer_3")}</p>
             </div>
           </div>
         </div>

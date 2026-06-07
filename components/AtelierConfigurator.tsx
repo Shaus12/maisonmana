@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Ring3D } from "./Ring3D";
+import { useLanguage } from "./LanguageProvider";
 import {
   SETTING_OPTIONS,
   SHAPE_OPTIONS,
@@ -100,6 +101,7 @@ const POPULAR_BAND_IDS = [
 ] as const;
 
 export function AtelierConfigurator() {
+  const { t, locale } = useLanguage();
   const [setting, setSetting]   = useState<SettingOption>(SETTING_OPTIONS[0]);
   const [shape,   setShape]     = useState<ShapeOption>(SHAPE_OPTIONS[0]);
   const [origin,  setOrigin]    = useState<"natural" | "lab-grown">("lab-grown");
@@ -116,8 +118,15 @@ export function AtelierConfigurator() {
     [origin, carat, color, clarity, metal.id, setting.id, band.id]
   );
 
-  const summaryShort  = `${shape.he} · ${carat.toFixed(2)} ct · ${metal.he}`;
-  const summaryFull   = `${setting.he} · ${shape.he} (${origin === "natural" ? "טבעי" : "מעבדה"}) · ${carat.toFixed(2)} ct · ${color}/${clarity} · ${metal.he} · להקה ${band.he}`;
+  // Use locale-aware labels
+  const shapeName   = locale === "he" ? shape.he   : shape.id.charAt(0).toUpperCase() + shape.id.slice(1);
+  const settingName = locale === "he" ? setting.he : setting.id.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  const metalName   = locale === "he" ? metal.he   : metal.id.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  const bandName    = locale === "he" ? band.he     : band.id.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  const originLabel = origin === "natural" ? t("conf_origin_nat") : t("conf_origin_lab");
+
+  const summaryShort = `${shapeName} · ${carat.toFixed(2)} ct · ${metalName}`;
+  const summaryFull  = `${settingName} · ${shapeName} (${originLabel}) · ${carat.toFixed(2)} ct · ${color}/${clarity} · ${metalName} · ${bandName}`;
   const stageKey      = `${setting.id}-${shape.id}-${metal.id}-${band.id}-${carat}`;
   const displayedBands = showAllBands
     ? BAND_OPTIONS
@@ -142,7 +151,7 @@ export function AtelierConfigurator() {
                       !showSkeleton ? "bg-ink text-paper" : "text-ink-mute hover:text-ink-soft"
                     }`}
                   >
-                    טבעת משובצת
+                    {t("viewer_gem")}
                   </button>
                   <button
                     type="button"
@@ -151,7 +160,7 @@ export function AtelierConfigurator() {
                       showSkeleton ? "bg-ink text-paper" : "text-ink-mute hover:text-ink-soft"
                     }`}
                   >
-                    שלד בלבד
+                    {t("viewer_skeleton")}
                   </button>
                 </div>
               </div>
@@ -180,18 +189,18 @@ export function AtelierConfigurator() {
                 <div className="mt-3 flex items-end justify-between gap-3 flex-wrap">
                   <div>
                     <p className="text-[0.625rem] uppercase tracking-[0.12em] text-ink-mute mb-1">
-                      הערכת מחיר ראשונית
+                      {t("conf_price_label")}
                     </p>
                     <p className="num not-italic text-[1.5rem] md:text-[1.875rem] leading-none text-ink">
                       <bdi dir="ltr">
                         {formatPriceILS(estimate).replace(' ש"ח', "")}
                       </bdi>
                       <span className="ms-1.5 font-body text-[0.875rem] text-ink-mute">
-                        ש"ח
+                        {t("currency")}
                       </span>
                     </p>
                     <p className="mt-1 text-[0.6875rem] text-ink-mute leading-snug max-w-[18rem]">
-                      המחיר הסופי נקבע בפגישה, לאחר אישור מודל שעווה.
+                      {t("conf_price_note")}
                     </p>
                   </div>
 
@@ -199,7 +208,7 @@ export function AtelierConfigurator() {
                     href={{ pathname: "/inquiry", query: { bespoke: summaryFull } }}
                     className="brass-disc brass-disc--solid whitespace-nowrap"
                   >
-                    לשליחה לאטלייה
+                    {t("conf_send")}
                   </Link>
                 </div>
               </div>
@@ -210,7 +219,7 @@ export function AtelierConfigurator() {
           <div className="md:col-span-6 px-6 pb-20 md:px-12 md:pb-36">
 
             {/* ── 1. Diamond Shape ── */}
-            <SectionHead step={1}>צורת היהלום</SectionHead>
+            <SectionHead step={1}>{t("conf_shape")}</SectionHead>
             <div className="grid grid-cols-3 gap-3">
               {SHAPE_OPTIONS.map((opt) => (
                 <button
@@ -236,7 +245,7 @@ export function AtelierConfigurator() {
             )}
 
             {/* ── 2. Setting ── */}
-            <SectionHead step={2}>שיבוץ</SectionHead>
+            <SectionHead step={2}>{t("conf_setting")}</SectionHead>
             <div className="flex flex-wrap gap-2.5">
               {SETTING_OPTIONS.map((opt) => (
                 <Pill
@@ -255,7 +264,7 @@ export function AtelierConfigurator() {
             )}
 
             {/* ── 3. Metal ── */}
-            <SectionHead step={3}>מתכת</SectionHead>
+            <SectionHead step={3}>{t("conf_metal")}</SectionHead>
             <div className="flex gap-7">
               {METAL_OPTIONS.map((opt) => (
                 <button
@@ -287,7 +296,7 @@ export function AtelierConfigurator() {
             </div>
 
             {/* ── 4. Band ── */}
-            <SectionHead step={4}>להקה</SectionHead>
+            <SectionHead step={4}>{t("conf_band")}</SectionHead>
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
               {displayedBands.map((opt) => (
                 <button
@@ -311,7 +320,7 @@ export function AtelierConfigurator() {
                 onClick={() => setShowAllBands(true)}
                 className="mt-3 text-[0.8125rem] text-ink-mute hairline-link"
               >
-                הצג את כל הסגנונות ({BAND_OPTIONS.length - displayedBands.length} נוספים)
+                {t("conf_show_all_bands")} ({BAND_OPTIONS.length - displayedBands.length} {t("conf_more")})
               </button>
             )}
             {band && (
@@ -319,32 +328,34 @@ export function AtelierConfigurator() {
             )}
 
             {/* ── 5. Diamond Specs ── */}
-            <SectionHead step={5}>מפרט היהלום</SectionHead>
+            <SectionHead step={5}>{t("conf_specs")}</SectionHead>
 
             {/* Origin */}
             <div className="flex gap-3 mb-8">
-              {ORIGIN_OPTIONS.map((opt) => (
+              {(["lab-grown", "natural"] as const).map((id) => (
                 <button
-                  key={opt.id}
+                  key={id}
                   type="button"
-                  onClick={() => setOrigin(opt.id as "natural" | "lab-grown")}
-                  aria-pressed={origin === opt.id}
+                  onClick={() => setOrigin(id)}
+                  aria-pressed={origin === id}
                   className={`flex-1 border px-4 py-3.5 text-start transition-all duration-[280ms] ${
-                    origin === opt.id
+                    origin === id
                       ? "border-ink bg-paper-deep text-ink"
                       : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
                   }`}
                 >
-                  <span className="block text-[0.875rem] leading-snug">{opt.he}</span>
+                  <span className="block text-[0.875rem] leading-snug">
+                    {id === "lab-grown" ? t("conf_origin_lab") : t("conf_origin_nat")}
+                  </span>
                   <span className="mt-1 block text-[0.75rem] text-ink-mute leading-snug">
-                    {opt.description}
+                    {id === "lab-grown" ? t("conf_origin_lab_desc") : t("conf_origin_nat_desc")}
                   </span>
                 </button>
               ))}
             </div>
 
             {/* Carat */}
-            <p className="section-label mb-3">משקל קראט</p>
+            <p className="section-label mb-3">{t("conf_carat")}</p>
             <div className="flex flex-wrap gap-2">
               {CARAT_OPTIONS.map((opt) => (
                 <Pill
@@ -360,7 +371,7 @@ export function AtelierConfigurator() {
             {/* Color + Clarity */}
             <div className="mt-8 grid grid-cols-2 gap-8">
               <div>
-                <p className="section-label mb-3">צבע</p>
+                <p className="section-label mb-3">{t("conf_color")}</p>
                 <div className="flex flex-wrap gap-2">
                   {COLOR_OPTIONS.map((opt) => (
                     <button
@@ -380,7 +391,7 @@ export function AtelierConfigurator() {
                 </div>
               </div>
               <div>
-                <p className="section-label mb-3">ניקיון</p>
+                <p className="section-label mb-3">{t("conf_clarity")}</p>
                 <div className="flex flex-wrap gap-2">
                   {CLARITY_OPTIONS.map((opt) => (
                     <button
@@ -403,7 +414,7 @@ export function AtelierConfigurator() {
 
             {/* Full summary row */}
             <div className="mt-16 border-t border-rule pt-10">
-              <p className="section-label mb-2">סיכום</p>
+              <p className="section-label mb-2">{t("conf_summary_label")}</p>
               <p className="text-[0.9375rem] text-ink leading-relaxed">{summaryFull}</p>
             </div>
           </div>

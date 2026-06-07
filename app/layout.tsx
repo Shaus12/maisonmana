@@ -2,25 +2,27 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonmana.co.il"),
   title: {
-    default: "Maison Mana — תכשיטי כלולות בעבודת יד · תל אביב",
+    default: "Maison Mana — Bespoke Engagement Rings · Tel Aviv",
     template: "%s · Maison Mana",
   },
   description:
-    "מאזון מנא היא בית תכשיטים פרטי בתל אביב המתמחה בטבעות אירוסין, צמידי טניס ויצירות בהזמנה אישית. צפייה בבית המאזון בתיאום מראש בלבד.",
+    "Maison Mana is a private jewellery house in Tel Aviv specialising in engagement rings, tennis bracelets, and bespoke pieces. Viewings by appointment only.",
   openGraph: {
     type: "website",
-    locale: "he_IL",
+    locale: "en_US",
     siteName: "Maison Mana",
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl">
+    // dir and lang are updated client-side by LanguageProvider
+    <html lang="en" dir="ltr">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -34,11 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:bg-paper focus:text-ink focus:px-3 focus:py-2 focus:border focus:border-rule"
         >
-          דלגי לתוכן הראשי
+          Skip to content
         </a>
-        <Masthead />
-        <main id="main">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <Masthead />
+          <main id="main">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );
