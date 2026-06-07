@@ -19,7 +19,7 @@ export default function Home() {
 
       {/* ── 2. MAISON STATEMENT ──────────────────────────────────── */}
       <section className="bg-paper">
-        <div className="mx-auto grid max-w-[1440px] gap-10 px-6 py-28 md:grid-cols-12 md:gap-12 md:px-12 md:py-40">
+        <div className="mx-auto grid max-w-[1440px] gap-10 px-6 py-14 md:grid-cols-12 md:gap-12 md:px-12 md:py-40">
           <ScrollReveal className="md:col-span-3">
             <p className="section-label">בית המאזון</p>
           </ScrollReveal>
@@ -41,9 +41,9 @@ export default function Home() {
 
       {/* ── 3. SIGNATURE PIECES ──────────────────────────────────── */}
       <section className="bg-paper">
-        <div className="mx-auto max-w-[1440px] px-6 py-28 md:px-12 md:py-36">
+        <div className="mx-auto max-w-[1440px] px-6 py-14 md:px-12 md:py-36">
           <ScrollReveal>
-            <header className="flex items-end justify-between gap-8 pb-16 border-b border-rule">
+            <header className="flex items-end justify-between gap-8 pb-10 md:pb-16 border-b border-rule">
               <div>
                 <p className="section-label">חלון התצוגה</p>
                 <h2 className="display-he mt-4 text-[2rem] leading-[1.1] text-ink md:text-[2.625rem]">
@@ -56,7 +56,7 @@ export default function Home() {
             </header>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 gap-x-6 gap-y-20 pt-16 md:grid-cols-12">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-12 pt-10 md:gap-y-20 md:grid-cols-12 md:pt-16">
             <ScrollReveal delay={1} className="md:col-span-5 md:col-start-1">
               <div className="piece-tile-wrap">
                 <PieceTile piece={featured[0]} scale="lg" priority />
@@ -95,7 +95,7 @@ export default function Home() {
               "radial-gradient(ellipse 80% 60% at 50% -5%, oklch(0.38 0.038 280 / 0.75), transparent 62%)",
           }}
         />
-        <div className="relative mx-auto grid max-w-[1440px] gap-16 px-6 py-36 md:grid-cols-12 md:gap-12 md:px-12 md:py-44">
+        <div className="relative mx-auto grid max-w-[1440px] gap-12 px-6 py-16 md:grid-cols-12 md:gap-12 md:px-12 md:py-44">
           <div className="md:col-span-5 md:col-start-1">
             <ScrollReveal>
               <p className="section-label" style={{ color: "oklch(0.74 0.110 78)" }}>חדר היצירה</p>
@@ -133,7 +133,7 @@ export default function Home() {
                 ].map((step) => (
                   <div
                     key={step.num}
-                    className="border bg-velvet-soft/25 px-5 py-10 text-center backdrop-blur-sm"
+                    className="border bg-velvet-soft/25 px-5 py-7 md:py-10 text-center backdrop-blur-sm"
                     style={{ borderColor: "oklch(0.985 0.004 75 / 0.16)" }}
                   >
                     <span
@@ -161,7 +161,7 @@ export default function Home() {
 
       {/* ── 5. THE MIRROR ────────────────────────────────────────── */}
       <section className="bg-paper">
-        <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-32 md:grid-cols-12 md:gap-12 md:px-12 md:py-40">
+        <div className="mx-auto grid max-w-[1440px] gap-10 px-6 py-16 md:grid-cols-12 md:gap-12 md:px-12 md:py-40">
           <ScrollReveal direction="scale" className="md:col-span-6 md:col-start-1">
             <figure className="vellum relative aspect-[4/5] overflow-hidden">
               <Image
@@ -202,7 +202,7 @@ export default function Home() {
 
       {/* ── 6. SHOWROOM ──────────────────────────────────────────── */}
       <section className="bg-paper-deep">
-        <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-28 md:grid-cols-12 md:px-12 md:py-36">
+        <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-14 md:grid-cols-12 md:px-12 md:py-36">
           <ScrollReveal className="md:col-span-4">
             <p className="section-label">בית המאזון</p>
             <h2 className="display-he mt-6 text-[2rem] leading-[1.1] text-ink md:text-[2.5rem]">

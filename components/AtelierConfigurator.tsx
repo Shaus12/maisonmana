@@ -52,7 +52,7 @@ function ShapeIcon({ shape }: { shape: string }) {
 // ── Section header ────────────────────────────────────────────
 function SectionHead({ step, children }: { step: number; children: React.ReactNode }) {
   return (
-    <div className="flex items-baseline gap-4 border-t border-rule pt-10 mb-6">
+    <div className="flex items-baseline gap-4 border-t border-rule pt-7 mb-5 md:pt-10 md:mb-6">
       <span
         className="display-he text-[1.375rem] leading-none"
         style={{ color: "oklch(0.74 0.110 78)" }}
@@ -129,11 +129,8 @@ export function AtelierConfigurator() {
         <div className="md:grid md:grid-cols-11">
 
           {/* ── LEFT: Sticky 3D Preview ──────────────────────── */}
-          <div
-            className="md:col-span-5 md:sticky md:top-[5.5rem] md:self-start"
-            style={{ height: "calc(100dvh - 5.5rem)" }}
-          >
-            <div className="flex h-full flex-col border-b md:border-b-0 md:border-e border-rule">
+          <div className="md:col-span-5 md:sticky md:top-[5.5rem] md:self-start md:[height:calc(100dvh-5.5rem)]">
+            <div className="flex flex-col border-b md:border-b-0 md:border-e border-rule h-full">
 
               {/* Skeleton toggle */}
               <div className="flex justify-center border-b border-rule px-6 py-3">
@@ -162,7 +159,7 @@ export function AtelierConfigurator() {
               {/* 3D stage */}
               <div
                 key={stageKey}
-                className="stage-crossfade min-h-0 flex-1 overflow-hidden px-4 py-2"
+                className="stage-crossfade min-h-0 flex-1 overflow-hidden px-4 py-2 [min-height:260px] md:[min-height:0]"
               >
                 <Ring3D
                   shape={shape.id}
@@ -175,17 +172,17 @@ export function AtelierConfigurator() {
               </div>
 
               {/* Live summary + CTA */}
-              <div className="border-t border-rule px-8 py-6 bg-paper-deep">
+              <div className="border-t border-rule px-6 py-5 md:px-8 md:py-6 bg-paper-deep">
                 <p className="text-[0.6875rem] text-ink-mute tracking-[0.09em] uppercase">
                   {summaryShort}
                 </p>
 
-                <div className="mt-3 flex items-end justify-between gap-4 flex-wrap">
+                <div className="mt-3 flex items-end justify-between gap-3 flex-wrap">
                   <div>
                     <p className="text-[0.625rem] uppercase tracking-[0.12em] text-ink-mute mb-1">
                       הערכת מחיר ראשונית
                     </p>
-                    <p className="num not-italic text-[1.875rem] leading-none text-ink">
+                    <p className="num not-italic text-[1.5rem] md:text-[1.875rem] leading-none text-ink">
                       <bdi dir="ltr">
                         {formatPriceILS(estimate).replace(' ש"ח', "")}
                       </bdi>
@@ -210,7 +207,7 @@ export function AtelierConfigurator() {
           </div>
 
           {/* ── RIGHT: Scrollable Options ─────────────────────── */}
-          <div className="md:col-span-6 px-8 pb-28 md:px-12 md:pb-36">
+          <div className="md:col-span-6 px-6 pb-20 md:px-12 md:pb-36">
 
             {/* ── 1. Diamond Shape ── */}
             <SectionHead step={1}>צורת היהלום</SectionHead>

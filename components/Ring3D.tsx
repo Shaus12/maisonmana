@@ -326,7 +326,7 @@ export function Ring3D({
   showSkeleton?: boolean;
 }) {
   return (
-    <div className="w-full h-[60vh] min-h-[400px] relative rounded-lg overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing">
+    <div className="w-full h-[40vh] min-h-[240px] md:h-[60vh] md:min-h-[380px] relative rounded-lg overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing">
       <React.Suspense
         fallback={
           <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest font-serif">
