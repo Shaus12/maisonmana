@@ -46,8 +46,11 @@
     color-scheme: light only;
   }
 
+  /* Direction is driven by the html[dir] attribute set by LanguageProvider */
+  html[dir="rtl"] { direction: rtl; }
+  html[dir="ltr"] { direction: ltr; }
+
   html {
-    direction: rtl;
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-body);
