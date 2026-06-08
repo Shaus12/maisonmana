@@ -20,8 +20,8 @@ export function PieceTile({ piece, scale = "md", priority = false }: Props) {
       <figure className="vellum relative overflow-hidden">
         <div className={`relative ${aspect} w-full overflow-hidden bg-paper-deep`}>
           <Image
-            src={piece.image}
-            alt={piece.imageAlt}
+            src={piece.images[0]}
+            alt={piece.nameLat}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.035]"

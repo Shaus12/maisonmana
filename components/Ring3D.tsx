@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, MeshTransmissionMaterial, Float, ContactShadows, PresentationControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { DiamondShape } from "@/lib/pieces";
-import type { MetalOption, SettingOption, BandOption } from "@/lib/atelier-options";
+import type { MetalOption, JewelryType } from "@/lib/atelier-options";
 
 // ─────────────────────────────────────────────────────────────
 // Constants — ring geometry
@@ -50,27 +50,23 @@ function createBandGeometry(band: string): THREE.BufferGeometry {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Diamond mesh
+// Diamond Mesh Component (Supports all 10 shapes & custom colors)
 // ─────────────────────────────────────────────────────────────
-function Diamond({ carat, shape }: { carat: number; shape: DiamondShape }) {
-  const size = 0.4 + carat * 0.1;
-
+function Diamond({ size, shape, color, rotation = [0, 0, 0] }: { size: number; shape: DiamondShape; color: string; rotation?: [number, number, number] }) {
   const geometry = useMemo<THREE.BufferGeometry>(() => {
     switch (shape) {
       case "princess":
-        // Octahedron — pointed top and bottom, square profile
         return new THREE.OctahedronGeometry(size * 0.85, 0);
 
       case "emerald":
-        // Flat rectangular step cut
         return new THREE.BoxGeometry(size * 0.9, size * 0.55, size * 0.7);
 
       case "pear": {
         const s = new THREE.Shape();
         s.moveTo(0, size);
-        s.quadraticCurveTo( size * 0.8,  size * 0.2,  size * 0.5, -size * 0.5);
-        s.quadraticCurveTo( 0,          -size * 0.8, -size * 0.5, -size * 0.5);
-        s.quadraticCurveTo(-size * 0.8,  size * 0.2,  0,           size);
+        s.quadraticCurveTo(size * 0.8, size * 0.2, size * 0.5, -size * 0.5);
+        s.quadraticCurveTo(0, -size * 0.8, -size * 0.5, -size * 0.5);
+        s.quadraticCurveTo(-size * 0.8, size * 0.2, 0, size);
         return new THREE.ExtrudeGeometry(s, {
           depth: size * 0.45, bevelEnabled: true,
           bevelSegments: 2, steps: 1, bevelSize: 0.05, bevelThickness: 0.05,
@@ -80,8 +76,8 @@ function Diamond({ carat, shape }: { carat: number; shape: DiamondShape }) {
       case "marquise": {
         const s = new THREE.Shape();
         s.moveTo(0, size);
-        s.quadraticCurveTo( size * 0.7, 0, 0, -size);
-        s.quadraticCurveTo(-size * 0.7, 0, 0,  size);
+        s.quadraticCurveTo(size * 0.7, 0, 0, -size);
+        s.quadraticCurveTo(-size * 0.7, 0, 0, size);
         return new THREE.ExtrudeGeometry(s, {
           depth: size * 0.38, bevelEnabled: true,
           bevelSegments: 2, steps: 1, bevelSize: 0.05, bevelThickness: 0.05,
@@ -92,48 +88,44 @@ function Diamond({ carat, shape }: { carat: number; shape: DiamondShape }) {
         const s = new THREE.Shape();
         const hx = 0, hy = 0;
         s.moveTo(hx + 0.25 * size, hy + 0.25 * size);
-        s.bezierCurveTo(hx + 0.25 * size, hy + 0.25 * size, hx + 0.2 * size, hy,              hx,              hy);
-        s.bezierCurveTo(hx - 0.3 * size,  hy,              hx - 0.3 * size, hy + 0.35 * size, hx - 0.3 * size, hy + 0.35 * size);
-        s.bezierCurveTo(hx - 0.3 * size,  hy + 0.55 * size, hx - 0.1 * size, hy + 0.77 * size, hx + 0.25 * size, hy + 0.95 * size);
-        s.bezierCurveTo(hx + 0.6 * size,  hy + 0.77 * size, hx + 0.8 * size, hy + 0.55 * size, hx + 0.8 * size, hy + 0.35 * size);
-        s.bezierCurveTo(hx + 0.8 * size,  hy + 0.35 * size, hx + 0.8 * size, hy,               hx + 0.5 * size, hy);
-        s.bezierCurveTo(hx + 0.35 * size, hy,               hx + 0.25 * size, hy + 0.25 * size, hx + 0.25 * size, hy + 0.25 * size);
+        s.bezierCurveTo(hx + 0.25 * size, hy + 0.25 * size, hx + 0.2 * size, hy, hx, hy);
+        s.bezierCurveTo(hx - 0.3 * size, hy, hx - 0.3 * size, hy + 0.35 * size, hx - 0.3 * size, hy + 0.35 * size);
+        s.bezierCurveTo(hx - 0.3 * size, hy + 0.55 * size, hx - 0.1 * size, hy + 0.77 * size, hx + 0.25 * size, hy + 0.95 * size);
+        s.bezierCurveTo(hx + 0.6 * size, hy + 0.77 * size, hx + 0.8 * size, hy + 0.55 * size, hx + 0.8 * size, hy + 0.35 * size);
+        s.bezierCurveTo(hx + 0.8 * size, hy + 0.35 * size, hx + 0.8 * size, hy, hx + 0.5 * size, hy);
+        s.bezierCurveTo(hx + 0.35 * size, hy, hx + 0.25 * size, hy + 0.25 * size, hx + 0.25 * size, hy + 0.25 * size);
         return new THREE.ExtrudeGeometry(s, {
           depth: size * 0.38, bevelEnabled: true,
           bevelSegments: 2, steps: 1, bevelSize: 0.05, bevelThickness: 0.05,
         });
       }
 
+      case "oval":
+        return new THREE.CylinderGeometry(size, 0, size * 1.2, 16, 2);
+
+      case "cushion":
+        return new THREE.CylinderGeometry(size, 0, size * 1.2, 4, 2);
+
+      case "radiant":
+        return new THREE.BoxGeometry(size * 1.1, size * 0.6, size * 0.9);
+
+      case "asscher":
+        return new THREE.BoxGeometry(size * 0.95, size * 0.6, size * 0.95);
+
       case "round":
       default:
-        // Inverted cone = round brilliant silhouette (table on top, culet below)
         return new THREE.CylinderGeometry(size, 0, size * 1.2, 16, 2);
     }
   }, [shape, size]);
 
-  // ── Positioning ──────────────────────────────────────────────
-  // For CylinderGeometry(size, 0, size*1.2):
-  //   top (table/widest) = posY + size*0.6
-  //   bottom (culet)     = posY - size*0.6
-  // We place the culet exactly at BAND_TOP_Y so the stone
-  // appears to emerge from the setting rather than floating.
-  //
-  // For extruded shapes their local Y runs roughly [-size*0.8 … +size].
-  // Bottom of shape ≈ posY - size*0.8 → set to BAND_TOP_Y.
-
-  const isExtruded = ["pear", "marquise", "heart"].includes(shape);
-
-  // All shapes face the camera (no rotation needed):
-  // — Round/princess/emerald: cylinder/box show side profile ✓
-  // — Extruded shapes in XY plane: face visible from camera at z=4 ✓
-  const rotation: [number, number, number] = [0, 0, 0];
-
-  const positionY = isExtruded
-    ? BAND_TOP_Y + size * 0.8   // bottom of extruded shape at band top
-    : BAND_TOP_Y + size * 0.6;  // culet of round/princess/emerald at band top
+  const scale: [number, number, number] = useMemo(() => {
+    if (shape === "oval") return [1.35, 1, 0.95];
+    if (shape === "cushion") return [1.1, 1, 1.1];
+    return [1, 1, 1];
+  }, [shape]);
 
   return (
-    <mesh position={[0, positionY, 0]} rotation={rotation} castShadow geometry={geometry}>
+    <mesh castShadow geometry={geometry} scale={scale} rotation={rotation}>
       <MeshTransmissionMaterial
         backside
         backsideThickness={0.1}
@@ -146,7 +138,7 @@ function Diamond({ carat, shape }: { carat: number; shape: DiamondShape }) {
         iridescence={1}
         iridescenceIOR={1}
         iridescenceThicknessRange={[0, 1400]}
-        color="#ffffff"
+        color={color}
         clearcoat={1}
         transmission={1}
         ior={2.42}
@@ -157,33 +149,38 @@ function Diamond({ carat, shape }: { carat: number; shape: DiamondShape }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Ring model — band + setting + pave
+// Ring Model
 // ─────────────────────────────────────────────────────────────
 function RingModel({
-  band, metalId, setting, carat, showSkeleton,
+  band, metalId, setting, carat, showSkeleton, diamondColor, shape
 }: {
   band: string;
   metalId: string;
   setting: string;
   carat: number;
   showSkeleton: boolean;
+  diamondColor: string;
+  shape: DiamondShape;
 }) {
-  const color  = getMetalColor(metalId);
-  const size   = 0.4 + carat * 0.1;
+  const color = getMetalColor(metalId);
+  const size = 0.4 + carat * 0.1;
   const ringRef = useRef<THREE.Group>(null);
   const geometry = useMemo(() => createBandGeometry(band), [band]);
 
-  // Prong dimensions scale with stone size
-  const prongHeight = 0.35 + size * 0.65;   // taller for larger stones
-  const prongTopY   = size * 0.45;           // prong midpoint inside-to-top shifts up
+  const prongHeight = 0.35 + size * 0.65;
+  const prongTopY = size * 0.45;
+
+  const isExtruded = ["pear", "marquise", "heart"].includes(shape);
+  const diamondRotation: [number, number, number] = isExtruded
+    ? [-Math.PI / 2, 0, 0]
+    : [0, 0, 0];
+  const diamondPositionY = isExtruded
+    ? BAND_TOP_Y + size * 0.18
+    : BAND_TOP_Y + size * 0.6;
 
   return (
     <group ref={ringRef} dispose={null}>
-
-      {/* ── Band ─────────────────────────────────────────── */}
-      {/* NO rotation — torus lies in XY plane (vertical ring).
-          Top of ring = BAND_TOP_Y = 1.12.
-          Setting group and diamond are both calibrated to this Y. */}
+      {/* Band */}
       <mesh castShadow receiveShadow geometry={geometry}>
         <meshStandardMaterial
           color={color}
@@ -194,16 +191,15 @@ function RingModel({
         />
       </mesh>
 
-      {/* ── Pave stones on band ──────────────────────────── */}
+      {/* Pave stones on band */}
       {["pave-band", "twisted-pave", "scalloped-pave", "channel-set"].includes(band) && (
         <group>
           {Array.from({ length: 20 }).map((_, i) => {
-            // Positions along the top arc of the VERTICAL ring (XY plane)
             const angle = (i / 19) * Math.PI - Math.PI / 2;
             const r = band === "channel-set" ? 0.98 : 1.05;
             const px = Math.cos(angle) * r;
             const py = Math.sin(angle) * r;
-            if (py < 0.2) return null;   // top half only
+            if (py < 0.2) return null;
             return (
               <mesh key={i} position={[px, py, 0]} rotation={[Math.PI / 2, angle, 0]}>
                 <cylinderGeometry args={[0.04, showSkeleton ? 0.04 : 0, 0.02, 8]} />
@@ -217,11 +213,9 @@ function RingModel({
         </group>
       )}
 
-      {/* ── Setting — sits at band top ────────────────────── */}
-      {/* BAND_TOP_Y = 1.12 — inner base of the setting matches ring surface */}
+      {/* Setting */}
       <group position={[0, BAND_TOP_Y - 0.05, 0]}>
-
-        {/* Prongs (solitaire / three-stone / hidden-halo / pave) */}
+        {/* Prongs */}
         {setting !== "bezel" && (
           [-1, 1].flatMap(x =>
             [-1, 1].map(z => (
@@ -237,7 +231,7 @@ function RingModel({
           )
         )}
 
-        {/* Bezel — wraps around the stone base */}
+        {/* Bezel */}
         {setting === "bezel" && (
           <mesh position={[0, size * 0.15, 0]}>
             <cylinderGeometry args={[size * 0.68, size * 0.58, size * 0.55, 32]} />
@@ -245,7 +239,7 @@ function RingModel({
           </mesh>
         )}
 
-        {/* Hidden halo — small pave ring just below the stone girdle */}
+        {/* Hidden halo */}
         {setting === "hidden-halo" && (
           <group position={[0, size * 0.5, 0]}>
             <mesh rotation={[Math.PI / 2, 0, 0]}>
@@ -271,7 +265,7 @@ function RingModel({
           </group>
         )}
 
-        {/* Three-stone — side stones flanking the main stone */}
+        {/* Three-stone */}
         {setting === "three-stone" && (
           <>
             {[-1, 1].map(side => (
@@ -303,26 +297,266 @@ function RingModel({
           </>
         )}
       </group>
+
+      {/* Main stone */}
+      {!showSkeleton && (
+        <group position={[0, diamondPositionY, 0]}>
+          <Diamond size={size} shape={shape} color={diamondColor} rotation={diamondRotation} />
+        </group>
+      )}
     </group>
   );
 }
 
 // ─────────────────────────────────────────────────────────────
-// Exported component
+// Necklace Model
+// ─────────────────────────────────────────────────────────────
+function NecklaceModel({
+  metalId, carat, showSkeleton, diamondColor, shape
+}: {
+  metalId: string;
+  carat: number;
+  showSkeleton: boolean;
+  diamondColor: string;
+  shape: DiamondShape;
+}) {
+  const color = getMetalColor(metalId);
+  const size = 0.4 + carat * 0.1;
+  const isExtruded = ["pear", "marquise", "heart"].includes(shape);
+  const diamondRotation: [number, number, number] = isExtruded
+    ? [0, 0, 0]
+    : [Math.PI / 2, 0, 0];
+
+  const chainCurve = useMemo(() => {
+    return new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-1.8, 1.2, 0),
+      new THREE.Vector3(-0.9, 0.1, 0.1),
+      new THREE.Vector3(0, -0.4, 0.15),
+      new THREE.Vector3(0.9, 0.1, 0.1),
+      new THREE.Vector3(1.8, 1.2, 0),
+    ]);
+  }, []);
+
+  return (
+    <group position={[0, 0.2, 0]}>
+      {/* Chain */}
+      <mesh castShadow receiveShadow>
+        <tubeGeometry args={[chainCurve, 64, 0.016, 8, false]} />
+        <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+      </mesh>
+
+      {/* Pendant Setting */}
+      <group position={[0, -0.42, 0.15]}>
+        {/* Bail Loop */}
+        <mesh position={[0, 0.08, -0.02]} rotation={[0, 0, 0]}>
+          <torusGeometry args={[0.06, 0.014, 8, 16]} />
+          <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+        </mesh>
+
+        {/* Basket */}
+        <mesh position={[0, -0.08, 0]}>
+          <cylinderGeometry args={[size * 0.55, size * 0.45, size * 0.25, 16]} />
+          <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+        </mesh>
+
+        {/* Prongs */}
+        {[-1, 1].flatMap(x =>
+          [-1, 1].map(z => (
+            <mesh
+              key={`p-${x}-${z}`}
+              position={[x * size * 0.36, size * 0.05, z * size * 0.36]}
+              rotation={[-x * 0.1, 0, -z * 0.1]}
+            >
+              <cylinderGeometry args={[0.018, 0.012, size * 0.55]} />
+              <meshStandardMaterial color={color} metalness={1} roughness={0.05} />
+            </mesh>
+          ))
+        )}
+
+        {/* Diamond */}
+        {!showSkeleton && (
+          <group position={[0, size * 0.06, 0.02]}>
+            <Diamond size={size} shape={shape} color={diamondColor} rotation={diamondRotation} />
+          </group>
+        )}
+      </group>
+    </group>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Bracelet Model (Tennis Bracelet)
+// ─────────────────────────────────────────────────────────────
+function BraceletModel({
+  metalId, carat, showSkeleton, diamondColor
+}: {
+  metalId: string;
+  carat: number;
+  showSkeleton: boolean;
+  diamondColor: string;
+}) {
+  const color = getMetalColor(metalId);
+
+  return (
+    <group rotation={[Math.PI / 2.3, 0, 0]} position={[0, -0.2, 0]}>
+      {/* Bracelet Band */}
+      <mesh castShadow receiveShadow>
+        <torusGeometry args={[1.35, 0.05, 16, 96]} />
+        <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+      </mesh>
+
+      {/* Tennis Diamonds */}
+      {Array.from({ length: 32 }).map((_, i) => {
+        const angle = (i / 32) * Math.PI * 2;
+        const bx = Math.cos(angle) * 1.35;
+        const bz = Math.sin(angle) * 1.35;
+
+        return (
+          <group key={i} position={[bx, 0, bz]} rotation={[0, -angle, 0]}>
+            {/* Setting basket */}
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.065, 0.05, 0.06, 8]} />
+              <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+            </mesh>
+
+            {/* Diamond */}
+            {!showSkeleton && (
+              <mesh position={[0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+                <cylinderGeometry args={[0.055, 0, 0.065, 8]} />
+                <MeshTransmissionMaterial
+                  color={diamondColor}
+                  transmission={0.9}
+                  ior={2.42}
+                  roughness={0}
+                  thickness={0.05}
+                />
+              </mesh>
+            )}
+          </group>
+        );
+      })}
+    </group>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Earrings Model (Studs or Hoops)
+// ─────────────────────────────────────────────────────────────
+function EarringsModel({
+  metalId, setting, carat, showSkeleton, diamondColor, shape
+}: {
+  metalId: string;
+  setting: string;
+  carat: number;
+  showSkeleton: boolean;
+  diamondColor: string;
+  shape: DiamondShape;
+}) {
+  const color = getMetalColor(metalId);
+  const size = 0.4 + carat * 0.1;
+  const isExtruded = ["pear", "marquise", "heart"].includes(shape);
+  const diamondRotation: [number, number, number] = isExtruded
+    ? [0, 0, 0]
+    : [Math.PI / 2, 0, 0];
+
+  return (
+    <group position={[0, 0.2, 0]}>
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 0.9, 0, 0]}>
+          {setting === "hoop" ? (
+            <>
+              {/* Hoop Ring */}
+              <mesh rotation={[0, Math.PI / 2, 0]}>
+                <torusGeometry args={[0.45, 0.035, 12, 48]} />
+                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+              </mesh>
+
+              {/* Front Pavé Diamonds */}
+              {Array.from({ length: 8 }).map((_, idx) => {
+                const angle = (idx / 7) * Math.PI - Math.PI / 2; // front half
+                const hx = Math.cos(angle) * 0.45;
+                const hy = Math.sin(angle) * 0.45;
+                return (
+                  <mesh key={idx} position={[0, hy, hx]} rotation={[0, 0, angle]}>
+                    <cylinderGeometry args={[0.025, 0, 0.03, 8]} />
+                    <MeshTransmissionMaterial
+                      color={diamondColor}
+                      transmission={0.9}
+                      ior={2.42}
+                      roughness={0}
+                      thickness={0.02}
+                    />
+                  </mesh>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {/* Stud Setting */}
+              {/* backing post */}
+              <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -0.15]}>
+                <cylinderGeometry args={[0.012, 0.012, 0.25]} />
+                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+              </mesh>
+              <mesh position={[0, 0, -0.25]}>
+                <cylinderGeometry args={[0.06, 0.06, 0.02]} />
+                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+              </mesh>
+
+              {/* Basket */}
+              <mesh position={[0, 0, -0.02]}>
+                <cylinderGeometry args={[size * 0.55, size * 0.45, size * 0.25, 16]} />
+                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+              </mesh>
+
+              {/* Prongs */}
+              {[-1, 1].flatMap(px =>
+                [-1, 1].map(pz => (
+                  <mesh
+                    key={`prong-${px}-${pz}`}
+                    position={[px * size * 0.36, pz * size * 0.36, size * 0.15]}
+                    rotation={[-px * 0.1, 0, -pz * 0.1]}
+                  >
+                    <cylinderGeometry args={[0.018, 0.012, size * 0.55]} />
+                    <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+                  </mesh>
+                ))
+              )}
+
+              {/* Stud Diamond */}
+              {!showSkeleton && (
+                <group position={[0, 0, size * 0.12]}>
+                  <Diamond size={size} shape={shape} color={diamondColor} rotation={diamondRotation} />
+                </group>
+              )}
+            </>
+          )}
+        </group>
+      ))}
+    </group>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Exported 3D Component
 // ─────────────────────────────────────────────────────────────
 export function Ring3D({
+  jewelryType = "ring",
   shape,
   metal,
   setting,
   band,
   carat,
+  diamondColor = "#ffffff",
   showSkeleton = false,
 }: {
+  jewelryType?: JewelryType;
   shape: DiamondShape;
   metal: MetalOption;
   setting: string;
   band: string;
   carat: number;
+  diamondColor?: string;
   showSkeleton?: boolean;
 }) {
   return (
@@ -335,9 +569,13 @@ export function Ring3D({
         }
       >
         <Canvas
+          key={jewelryType}
           shadows
           dpr={[1, 2]}
-          camera={{ position: [0, 0.8, 4.2], fov: 42 }}
+          camera={{
+            position: jewelryType === "ring" ? [0, 0.6, 3.2] : [0, 0.8, 4.0],
+            fov: jewelryType === "ring" ? 38 : 42
+          }}
         >
           <color attach="background" args={["#161314"]} />
 
@@ -353,14 +591,44 @@ export function Ring3D({
             snap={true}
           >
             <Float rotationIntensity={0.15} floatIntensity={0.08} speed={1.4}>
-              <RingModel
-                band={band}
-                metalId={metal.id}
-                setting={setting}
-                carat={carat}
-                showSkeleton={showSkeleton}
-              />
-              {!showSkeleton && <Diamond carat={carat} shape={shape} />}
+              {jewelryType === "ring" && (
+                <RingModel
+                  band={band}
+                  metalId={metal.id}
+                  setting={setting}
+                  carat={carat}
+                  showSkeleton={showSkeleton}
+                  diamondColor={diamondColor}
+                  shape={shape}
+                />
+              )}
+              {jewelryType === "necklace" && (
+                <NecklaceModel
+                  metalId={metal.id}
+                  carat={carat}
+                  showSkeleton={showSkeleton}
+                  diamondColor={diamondColor}
+                  shape={shape}
+                />
+              )}
+              {jewelryType === "bracelet" && (
+                <BraceletModel
+                  metalId={metal.id}
+                  carat={carat}
+                  showSkeleton={showSkeleton}
+                  diamondColor={diamondColor}
+                />
+              )}
+              {jewelryType === "earring" && (
+                <EarringsModel
+                  metalId={metal.id}
+                  setting={setting}
+                  carat={carat}
+                  showSkeleton={showSkeleton}
+                  diamondColor={diamondColor}
+                  shape={shape}
+                />
+              )}
             </Float>
           </PresentationControls>
 

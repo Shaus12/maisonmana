@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { MobileNav } from "./MobileNav";
 import { useLanguage } from "./LanguageProvider";
 
 export function Masthead() {
   const { t, locale, toggle } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 72);
@@ -15,6 +17,9 @@ export function Masthead() {
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
+
+  const isHome = pathname === "/";
+  const showSolid = scrolled || !isHome;
 
   const NAV = [
     { href: "/",                label: t("nav_home") },
@@ -25,7 +30,7 @@ export function Masthead() {
   ];
 
   return (
-    <header className={`masthead-fixed${scrolled ? " is-scrolled" : ""}`}>
+    <header className={`masthead-fixed${showSolid ? " is-scrolled" : ""}`}>
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 md:px-12 md:py-6">
 
         {/* Wordmark */}
@@ -73,7 +78,7 @@ export function Masthead() {
           >
             {locale === "en" ? "עב" : "EN"}
           </button>
-          <MobileNav items={NAV} isLight={!scrolled} />
+          <MobileNav items={NAV} isLight={!showSolid} />
         </div>
       </div>
     </header>

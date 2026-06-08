@@ -340,7 +340,7 @@ export function Mirror() {
                   }`}
                   aria-pressed={piece.slug === p.slug}
                 >
-                  <img src={p.image} alt={p.imageAlt} className="absolute inset-0 h-full w-full object-cover" />
+                  <img src={p.images[0]} alt={p.nameLat} className="absolute inset-0 h-full w-full object-cover" />
                   <span className="absolute inset-x-0 bottom-0 bg-ink/70 px-2 py-1 text-end text-[0.6875rem] text-paper">
                     {p.nameHe}
                   </span>

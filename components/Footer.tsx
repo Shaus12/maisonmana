@@ -44,6 +44,11 @@ export function Footer() {
                 salon@maisonmana.co.il
               </a>
             </li>
+            <li>
+              <a href="https://wa.me/972507099933" target="_blank" rel="noopener noreferrer" className="hairline-link">
+                WhatsApp · +972 50-709-9933
+              </a>
+            </li>
           </ul>
         </div>
       </div>

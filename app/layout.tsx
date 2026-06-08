@@ -3,6 +3,7 @@ import "./globals.css";
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonmana.co.il"),
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Masthead />
           <main id="main">{children}</main>
           <Footer />
+          <WhatsAppButton />
         </LanguageProvider>
       </body>
     </html>

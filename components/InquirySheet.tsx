@@ -27,7 +27,7 @@ export function InquirySheet({ presetPiece, presetBespoke }: Props) {
           הבקשה התקבלה באטלייה.
         </h2>
         <p className="mt-6 text-ink-soft text-[1.0625rem] leading-relaxed">
-          נחזור אליך תוך יום עסקים אחד לתיאום הפגישה. אם הצורך דחוף — ניתן להתקשר ישירות.
+          נחזור אליך תוך יום עסקים אחד לתיאום הפגישה. אם הצורך דחוף — ניתן להתקשר ישירות לטלפון <a href="tel:+972507099933" className="underline font-bold text-ink">+972 50-709-9933</a>.
         </p>
         <p className="mt-10 text-[0.6875rem] tracking-[0.18em] uppercase text-ink-mute display-lat">
           Reference&nbsp;·&nbsp;<bdi dir="ltr">{state.reference}</bdi>

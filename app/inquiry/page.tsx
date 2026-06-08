@@ -48,7 +48,9 @@ function InquiryContent() {
         <ContactBlock label={t("contact_private")}>
           <a href="mailto:salon@maisonmana.co.il" className="hairline-link">salon@maisonmana.co.il</a>
           <br />
-          <a href="https://wa.me/972500000000" className="hairline-link">WhatsApp · Private Enquiry</a>
+          <a href="https://wa.me/972507099933" target="_blank" rel="noopener noreferrer" className="hairline-link">
+            WhatsApp · +972 50-709-9933
+          </a>
         </ContactBlock>
       </div>
     </section>

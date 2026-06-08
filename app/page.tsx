@@ -2,93 +2,173 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { PieceTile } from "@/components/PieceTile";
 import { VideoHero } from "@/components/VideoHero";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { PIECES } from "@/lib/pieces";
 import { useLanguage } from "@/components/LanguageProvider";
 
-const HOME_FEATURED = ["anna-solitaire", "tennis-classique", "adria-tear"];
-
 export default function Home() {
-  const { t } = useLanguage();
-
-  const featured = HOME_FEATURED.map(
-    (slug) => PIECES.find((p) => p.slug === slug)!
-  );
+  const { t, locale } = useLanguage();
+  const isHe = locale === "he";
 
   return (
     <>
       {/* ── 1. FULLSCREEN VIDEO HERO ─────────────────────────────── */}
       <VideoHero />
 
-      {/* ── 2. MAISON STATEMENT ──────────────────────────────────── */}
-      <section className="bg-paper">
-        <div className="mx-auto grid max-w-[1440px] gap-10 px-6 py-14 md:grid-cols-12 md:gap-12 md:px-12 md:py-40">
-          <ScrollReveal className="md:col-span-3">
-            <p className="section-label">{t("statement_label")}</p>
-          </ScrollReveal>
-          <div className="md:col-span-8 md:col-start-5">
-            <ScrollReveal delay={1}>
-              <blockquote className="display-lat text-[1.375rem] leading-[1.55] text-ink md:text-[1.75rem]">
-                {t("statement_quote")}
-              </blockquote>
-            </ScrollReveal>
-            <ScrollReveal delay={2}>
-              <p className="mt-7 text-ink-mute text-[0.875rem] tracking-[0.04em]">
-                {t("statement_attribution")}
-              </p>
-            </ScrollReveal>
-          </div>
-        </div>
-        <div className="optical-rule h-px w-full" />
-      </section>
+      {/* ── 3. CAMPAIGN SECTIONS (SPLIT-SCREEN EDITORIAL ZIG-ZAG) ── */}
+      {(() => {
+        const campaignSections = [
+          {
+            id: "necklaces",
+            categoryUrl: "/collections/necklaces",
+            bgImage: "/panther-1.jpg",
+            archImage: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=85",
+            titleEn: "NECKLACES",
+            titleHe: "שרשראות",
+            subtitleEn: "A Dialogue of Elegance",
+            subtitleHe: "דיאלוג של אלגנטיות",
+            descEn: "Celebrate every milestone with a diamond necklace that captures the light.",
+            descHe: "לחגוג כל רגע משמעותי עם שרשרת יהלום הלוכדת את האור.",
+            buttonEn: "SHOP NECKLACES",
+            buttonHe: "לרכישת שרשראות",
+            bgClass: "bg-[#F5F2EA]",
+          },
+          {
+            id: "rings",
+            categoryUrl: "/collections/rings",
+            bgImage: "/rings-campaign.png",
+            archImage: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=85",
+            titleEn: "RINGS",
+            titleHe: "טבעות",
+            subtitleEn: "A Circle of Perfection",
+            subtitleHe: "עיגול של שלמות",
+            descEn: "Celebrate every milestone with a bespoke ring that tells your unique story.",
+            descHe: "לחגוג כל רגע משמעותי עם טבעת בעיצוב אישי המספרת את הסיפור הייחודי שלך.",
+            buttonEn: "SHOP RINGS",
+            buttonHe: "לרכישת טבעות",
+            bgClass: "bg-[#EAE4D6]",
+          },
+          {
+            id: "earrings",
+            categoryUrl: "/collections/earrings",
+            bgImage: "/earrings-campaign.jpg",
+            archImage: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=85",
+            titleEn: "EARRINGS",
+            titleHe: "עגילים",
+            subtitleEn: "Strength & Symmetry",
+            subtitleHe: "עוצמה וסימטריה",
+            descEn: "Celebrate every milestone with hand-selected diamonds set in Tel Aviv.",
+            descHe: "לחגוג כל רגע משמעותי עם יהלומים שנבחרו ידנית ושובצו בתל אביב.",
+            buttonEn: "SHOP EARRINGS",
+            buttonHe: "לרכישת עגילים",
+            bgClass: "bg-[#E6DEC9]",
+          },
+          {
+            id: "bracelets",
+            categoryUrl: "/collections/bracelets",
+            bgImage: "/panther-3.jpg",
+            archImage: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=800&q=85",
+            titleEn: "BRACELETS",
+            titleHe: "צמידים",
+            subtitleEn: "Strength & Continuity",
+            subtitleHe: "עוצמה והמשכיות",
+            descEn: "Celebrate every milestone with a tennis bracelet wrapping the wrist in light.",
+            descHe: "לחגוג כל רגע משמעותי עם צמיד טניס העוטף את פרק היד באור.",
+            buttonEn: "SHOP BRACELETS",
+            buttonHe: "לרכישת צמידים",
+            bgClass: "bg-[#DFDCD4]",
+          },
+        ];
 
-      {/* ── 3. SIGNATURE PIECES ──────────────────────────────────── */}
-      <section className="bg-paper">
-        <div className="mx-auto max-w-[1440px] px-6 py-14 md:px-12 md:py-36">
-          <ScrollReveal>
-            <header className="flex items-end justify-between gap-8 pb-10 md:pb-16 border-b border-rule">
-              <div>
-                <p className="section-label">{t("pieces_label")}</p>
-                <h2 className="display-lat mt-4 text-[1.75rem] leading-[1.1] text-ink md:text-[2.625rem]">
-                  {t("pieces_heading")}
-                </h2>
-              </div>
-              <Link href="/collections/rings" className="hairline-link text-[0.875rem] whitespace-nowrap text-ink-mute">
-                {t("pieces_link")}
-              </Link>
-            </header>
-          </ScrollReveal>
+        return campaignSections.map((section, idx) => {
+          const isEven = idx % 2 === 0;
+          return (
+            <section
+              key={section.id}
+              className="grid grid-cols-1 md:grid-cols-2 min-h-[90vh] md:min-h-screen relative w-full overflow-hidden border-b border-rule/30"
+            >
+              {/* Left Column in Grid flow (Parallax Background Image + Title) */}
+              <div className={`relative w-full h-[55vh] md:h-auto overflow-hidden group ${isEven ? "md:order-1" : "md:order-2"}`}>
+                <Image
+                  src={section.bgImage}
+                  alt={isHe ? section.titleHe : section.titleEn}
+                  fill
+                  sizes="(max-w-768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-[2000ms] ease-spring group-hover:scale-105"
+                  priority={idx === 0}
+                />
+                <div className="absolute inset-0 bg-black/20" />
+                
+                {/* Brand Monogram Watermark at top-left of image */}
+                <div className="absolute top-8 start-8 md:top-12 md:start-12 text-white/50 text-[0.625rem] tracking-[0.25em] uppercase font-body">
+                  MAISON MANA · STUDIO
+                </div>
 
-          <div className="grid grid-cols-1 gap-x-6 gap-y-12 pt-10 md:gap-y-20 md:grid-cols-12 md:pt-16">
-            <ScrollReveal delay={1} className="md:col-span-5 md:col-start-1">
-              <div className="piece-tile-wrap">
-                <PieceTile piece={featured[0]} scale="lg" priority />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                  <ScrollReveal direction="scale">
+                    <h2 className="display-lat text-white text-[3rem] md:text-[5rem] tracking-[0.12em] leading-none uppercase select-none">
+                      {isHe ? section.titleHe : section.titleEn}
+                    </h2>
+                  </ScrollReveal>
+                  <ScrollReveal delay={1}>
+                    <p className="font-body text-white/95 text-xs md:text-sm tracking-[0.22em] uppercase mt-4 select-none">
+                      {isHe ? section.subtitleHe : section.subtitleEn}
+                    </p>
+                  </ScrollReveal>
+                </div>
+
+                {/* Social Watermark at bottom-left of image */}
+                <div className="absolute bottom-8 start-8 md:bottom-12 md:start-12 text-white/40 text-[0.625rem] tracking-[0.2em] font-body">
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
+                </div>
               </div>
-              <p className="mt-5 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
-                {t("pieces_desc_0")}
-              </p>
-            </ScrollReveal>
-            <ScrollReveal delay={2} className="md:col-span-5 md:col-start-7 md:mt-28">
-              <div className="piece-tile-wrap">
-                <PieceTile piece={featured[1]} scale="lg" />
+
+              {/* Right Column in Grid flow (Arched Product Showcase + CTA) */}
+              <div className={`${section.bgClass} flex flex-col items-center justify-center text-center p-8 md:p-16 min-h-[45vh] md:h-auto relative ${isEven ? "md:order-2" : "md:order-1"}`}>
+                <ScrollReveal direction="scale" className="flex flex-col items-center justify-center">
+                  {/* Arched Frame */}
+                  <div className="relative w-[150px] h-[210px] md:w-[240px] md:h-[330px] overflow-hidden rounded-t-full shadow-2xl border border-white/10 transition-transform duration-[800ms] ease-spring hover:scale-[1.03]">
+                    <Image
+                      src={section.archImage}
+                      alt={isHe ? section.titleHe : section.titleEn}
+                      fill
+                      sizes="(max-w-768px) 100vw, 25vw"
+                      className="object-cover"
+                    />
+                  </div>
+                </ScrollReveal>
+
+                <ScrollReveal delay={1} className="flex flex-col items-center justify-center">
+                  <p className="mt-8 text-ink-soft text-sm md:text-[1.0625rem] leading-relaxed max-w-xs font-body">
+                    {isHe ? section.descHe : section.descEn}
+                  </p>
+                </ScrollReveal>
+
+                <ScrollReveal delay={2} className="flex flex-col items-center justify-center mt-6">
+                  <Link
+                    href={section.categoryUrl}
+                    className="inline-block border border-ink/30 hover:border-ink hover:bg-ink hover:text-paper px-8 py-3 rounded-full text-xs md:text-sm font-medium tracking-widest uppercase transition-all duration-300"
+                  >
+                    {isHe ? section.buttonHe : section.buttonEn}
+                  </Link>
+                </ScrollReveal>
+
+                {/* Subtle scroll hint down arrow */}
+                {idx < 3 && (
+                  <div className="absolute bottom-6 flex flex-col items-center gap-1 opacity-40 pointer-events-none">
+                    <span className="text-[0.5625rem] tracking-[0.2em] uppercase text-ink-mute">
+                      {isHe ? "גללי למטה" : "Scroll"}
+                    </span>
+                    <svg className="w-3 h-3 text-ink-mute animate-bounce mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                  </div>
+                )}
               </div>
-              <p className="mt-5 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
-                {t("pieces_desc_1")}
-              </p>
-            </ScrollReveal>
-            <ScrollReveal delay={3} className="md:col-span-5 md:col-start-2 md:mt-14">
-              <div className="piece-tile-wrap">
-                <PieceTile piece={featured[2]} scale="lg" />
-              </div>
-              <p className="mt-5 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
-                {t("pieces_desc_2")}
-              </p>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
+            </section>
+          );
+        });
+      })()}
 
       {/* ── 4. THE STUDIO — VELVET BREAK ─────────────────────────── */}
       <section className="relative overflow-hidden bg-velvet text-paper">
