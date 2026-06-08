@@ -2,8 +2,17 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Ring3D } from "./Ring3D";
+import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
+
+const Ring3D = dynamic(() => import("./Ring3D").then((mod) => mod.Ring3D), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.2em] text-ink-mute">
+      Loading 3D preview...
+    </div>
+  ),
+});
 import {
   SETTING_OPTIONS,
   SHAPE_OPTIONS,
