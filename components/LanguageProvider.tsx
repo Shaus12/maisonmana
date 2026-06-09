@@ -22,7 +22,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 // ─────────────────────────────────────────────────────────────
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocale] = useState<Locale>("he");
 
   // Restore saved preference
   useEffect(() => {

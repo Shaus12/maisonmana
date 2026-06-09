@@ -71,7 +71,7 @@ export function VideoHero() {
             {t("hero_cta_view")}
           </Link>
           <Link
-            href="/collections/rings"
+            href="/collections"
             className="text-[0.8125rem] tracking-[0.08em] uppercase transition-opacity hover:opacity-70"
             style={{ color: "oklch(0.985 0.004 75 / 0.65)" }}
           >

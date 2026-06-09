@@ -5,6 +5,7 @@ import Link from "next/link";
 import { VideoHero } from "@/components/VideoHero";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { useLanguage } from "@/components/LanguageProvider";
+import { RealStoriesSection } from "@/components/RealStoriesSection";
 
 export default function Home() {
   const { t, locale } = useLanguage();
@@ -245,6 +246,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── REAL STORIES ─────────────────────────────────────────── */}
+      <RealStoriesSection />
 
       {/* ── 5. THE MIRROR ────────────────────────────────────────── */}
       <section className="bg-paper">
