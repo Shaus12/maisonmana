@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment, MeshTransmissionMaterial, Float, ContactShadows, PresentationControls } from "@react-three/drei";
+import { Environment, Float, ContactShadows, PresentationControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { DiamondShape } from "@/lib/pieces";
 import type { MetalOption, JewelryType } from "@/lib/atelier-options";
@@ -32,21 +32,21 @@ function getMetalColor(metalId: string): string {
 // ─────────────────────────────────────────────────────────────
 function createBandGeometry(band: string): THREE.BufferGeometry {
   if (["twisted", "twisted-pave", "braided", "rope"].includes(band))
-    return new THREE.TorusKnotGeometry(BAND_RADIUS, 0.10, 128, 16, 2, 3);
+    return new THREE.TorusKnotGeometry(BAND_RADIUS, 0.09, 48, 8, 2, 3);
 
   if (band === "knife-edge")
-    return new THREE.TorusGeometry(BAND_RADIUS, 0.15, 4, 64);
+    return new THREE.TorusGeometry(BAND_RADIUS, 0.15, 4, 32);
 
   if (["split-shank", "bypass"].includes(band))
-    return new THREE.TorusGeometry(BAND_RADIUS, 0.18, 32, 64);
+    return new THREE.TorusGeometry(BAND_RADIUS, 0.18, 16, 32);
 
   if (band === "chevron")
-    return new THREE.TorusGeometry(BAND_RADIUS, 0.12, 16, 16);
+    return new THREE.TorusGeometry(BAND_RADIUS, 0.12, 12, 16);
 
   if (band === "concave")
-    return new THREE.TorusGeometry(BAND_RADIUS, 0.12, 12, 64);
+    return new THREE.TorusGeometry(BAND_RADIUS, 0.12, 8, 32);
 
-  return new THREE.TorusGeometry(BAND_RADIUS, BAND_TUBE, 64, 128);
+  return new THREE.TorusGeometry(BAND_RADIUS, BAND_TUBE, 24, 64);
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -126,23 +126,15 @@ function Diamond({ size, shape, color, rotation = [0, 0, 0] }: { size: number; s
 
   return (
     <mesh castShadow geometry={geometry} scale={scale} rotation={rotation}>
-      <MeshTransmissionMaterial
-        backside
-        backsideThickness={0.1}
-        thickness={size}
-        chromaticAberration={0.15}
-        anisotropy={0.1}
-        distortion={0.2}
-        distortionScale={0.3}
-        temporalDistortion={0}
-        iridescence={1}
-        iridescenceIOR={1}
-        iridescenceThicknessRange={[0, 1400]}
+      <meshPhysicalMaterial
         color={color}
-        clearcoat={1}
-        transmission={1}
-        ior={2.42}
         roughness={0}
+        metalness={0.05}
+        transmission={1.0}
+        ior={2.42}
+        thickness={size}
+        clearcoat={1}
+        clearcoatRoughness={0}
       />
     </mesh>
   );
@@ -205,7 +197,7 @@ function RingModel({
                 <cylinderGeometry args={[0.04, showSkeleton ? 0.04 : 0, 0.02, 8]} />
                 {showSkeleton
                   ? <meshBasicMaterial color="#111" />
-                  : <MeshTransmissionMaterial color="#ffffff" transmission={0.9} ior={2.4} roughness={0} thickness={0.1} />
+                  : <meshPhysicalMaterial color="#ffffff" transmission={0.9} ior={2.42} roughness={0} thickness={0.05} />
                 }
               </mesh>
             );
@@ -257,7 +249,7 @@ function RingModel({
                   <cylinderGeometry args={[0.018, showSkeleton ? 0.018 : 0, 0.01, 8]} />
                   {showSkeleton
                     ? <meshBasicMaterial color="#111" />
-                    : <MeshTransmissionMaterial color="#ffffff" transmission={0.9} ior={2.4} roughness={0} thickness={0.1} />
+                    : <meshPhysicalMaterial color="#ffffff" transmission={0.9} ior={2.42} roughness={0} thickness={0.05} />
                   }
                 </mesh>
               );
@@ -277,7 +269,7 @@ function RingModel({
                 {!showSkeleton && (
                   <mesh>
                     <octahedronGeometry args={[size * 0.32, 0]} />
-                    <MeshTransmissionMaterial color="#ffffff" transmission={1} ior={2.42} roughness={0} />
+                    <meshPhysicalMaterial color="#ffffff" transmission={1} ior={2.42} roughness={0} thickness={0.08} />
                   </mesh>
                 )}
                 {[-1, 1].flatMap(sx =>
@@ -423,12 +415,12 @@ function BraceletModel({
             {!showSkeleton && (
               <mesh position={[0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry args={[0.055, 0, 0.065, 8]} />
-                <MeshTransmissionMaterial
+                <meshPhysicalMaterial
                   color={diamondColor}
                   transmission={0.9}
                   ior={2.42}
                   roughness={0}
-                  thickness={0.05}
+                  thickness={0.03}
                 />
               </mesh>
             )}
@@ -479,12 +471,12 @@ function EarringsModel({
                 return (
                   <mesh key={idx} position={[0, hy, hx]} rotation={[0, 0, angle]}>
                     <cylinderGeometry args={[0.025, 0, 0.03, 8]} />
-                    <MeshTransmissionMaterial
+                    <meshPhysicalMaterial
                       color={diamondColor}
                       transmission={0.9}
                       ior={2.42}
                       roughness={0}
-                      thickness={0.02}
+                      thickness={0.015}
                     />
                   </mesh>
                 );
@@ -560,7 +552,7 @@ export function Ring3D({
   showSkeleton?: boolean;
 }) {
   return (
-    <div className="w-full h-[40vh] min-h-[240px] md:h-[60vh] md:min-h-[380px] relative rounded-lg overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing">
+    <div className="w-[94%] mx-auto h-[35vh] min-h-[260px] md:w-full md:h-[60vh] md:min-h-[380px] relative rounded-xl overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing shadow-inner">
       <React.Suspense
         fallback={
           <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest">
@@ -571,7 +563,7 @@ export function Ring3D({
         <Canvas
           key={jewelryType}
           shadows
-          dpr={[1, 2]}
+          dpr={[1, 1.5]}
           camera={{
             position: jewelryType === "ring" ? [0, 0.6, 3.2] : [0, 0.8, 4.0],
             fov: jewelryType === "ring" ? 38 : 42
@@ -584,7 +576,7 @@ export function Ring3D({
           <spotLight position={[-5, 4, -4]} angle={0.22} penumbra={1} intensity={0.9} color="#E1D1C1" />
 
           <PresentationControls
-            global
+            global={false}
             rotation={[0.12, -Math.PI / 4, 0]}
             polar={[-Math.PI / 3, Math.PI / 3]}
             azimuth={[-Math.PI, Math.PI]}

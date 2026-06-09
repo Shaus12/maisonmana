@@ -42,7 +42,6 @@ export default async function ProductPage({ params }: { params: Promise<{ catego
             <h1 className="font-display text-[3.5rem] md:text-[4.5rem] text-ink leading-[1.0] mb-6 tracking-tight">
               {product.name}
             </h1>
-            <p className="text-2xl text-ink font-body mb-8">₪{product.price.toLocaleString()}</p>
             
             <div className="h-px w-12 bg-rule mb-8" />
 
@@ -80,7 +79,7 @@ export default async function ProductPage({ params }: { params: Promise<{ catego
                 {category === "rings" ? "Customize in Atelier" : "Inquire Now"}
               </Link>
               <p className="text-center text-xs text-ink-mute uppercase tracking-widest mt-4">
-                Handcrafted in Tel Aviv
+                Handcrafted in our workshop
               </p>
             </div>
           </div>

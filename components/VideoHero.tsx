@@ -53,12 +53,10 @@ export function VideoHero() {
           {t("hero_tagline")}
         </p>
         <h1
-          className="display-lat mt-5 leading-[1.0] fade-in"
+          className="display-lat mt-5 leading-[1.1] fade-in"
           style={{ color: "oklch(0.985 0.004 75)", fontSize: "clamp(2.5rem, 7vw, 6rem)" }}
         >
-          {t("hero_h1_1")}<br />
-          {t("hero_h1_2")}<br />
-          {t("hero_h1_3")}
+          {t("hero_h1")}
         </h1>
         <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 fade-in-delayed">
           <Link

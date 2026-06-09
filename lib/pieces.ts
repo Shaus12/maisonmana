@@ -93,7 +93,7 @@ export const PIECES: Piece[] = [
     narrativeHe: "סוליטר עגול שתי קראט על להקה דקה מפלטינה. הטבעת שאליה חוזרים.",
     narrativeEn: "A round two-carat solitaire on a fine platinum band. The ring you return to.",
     images: [
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1400&q=85",
+      "/ring-close.jpg",
     ],
   },
   {
@@ -113,7 +113,7 @@ export const PIECES: Piece[] = [
     narrativeHe: "שבעים ושתיים אבנים ביד אחת של אומן.",
     narrativeEn: "Seventy-two stones set by a single craftsman's hand.",
     images: [
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1400&q=85",
+      "/bracelet-1.jpg",
     ],
   },
   {

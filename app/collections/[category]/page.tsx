@@ -30,7 +30,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             {title}
           </h1>
           <p className="text-ink-soft text-lg leading-relaxed font-body">
-            Every piece is made to order in our Tel Aviv atelier, pairing structural integrity with lab-grown diamonds of uncompromising quality.
+            Every piece is made to order in our atelier, pairing structural integrity with lab-grown diamonds of uncompromising quality.
           </p>
         </header>
 
@@ -56,7 +56,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                   </div>
                   <div className="mt-6">
                     <h2 className="font-display text-2xl text-ink mb-1 group-hover:text-ink-soft transition-colors">{product.name}</h2>
-                    <p className="text-ink-mute text-sm font-medium tracking-wide">From ₪{product.price.toLocaleString()}</p>
                   </div>
                 </Link>
               </div>

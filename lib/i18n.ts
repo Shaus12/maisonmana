@@ -11,20 +11,18 @@ export const strings = {
     nav_contact:     "Contact",
     nav_menu:        "Menu",
     nav_close:       "Close",
-    masthead_sub:    "Studio · Tel Aviv",
+    masthead_sub:    "Studio",
 
     // ── Hero ─────────────────────────────────────────────────
-    hero_tagline:          "Maison Mana · Tel Aviv · Since 2016",
-    hero_h1_1:             "One Place.",
-    hero_h1_2:             "One Couple.",
-    hero_h1_3:             "One Jewel.",
+    hero_tagline:          "Maison Mana",
+    hero_h1:               "wear your legacy",
     hero_cta_view:         "Book a Private Viewing",
     hero_cta_collections:  "View Collections",
 
     // ── Maison statement ─────────────────────────────────────
     statement_label:       "The Maison",
     statement_quote:       "“Maison Mana was built on three rules: never sell what we wouldn’t wear ourselves; never rush to propose what we haven’t listened to; and every diamond that leaves the workshop shall carry a certificate, a name, and a time.”",
-    statement_attribution: "— Henri Mana, Goldsmith & Founder, 2016",
+    statement_attribution: "— Henri Mana, Goldsmith & Founder",
 
     // ── Campaign ─────────────────────────────────────────────
     campaign_label:        "The Campaign",
@@ -33,7 +31,7 @@ export const strings = {
     campaign_item_1_title: "Chiaroscuro Grace",
     campaign_item_1_desc:  "Contrasting the purity of brilliant-cut diamonds against the midnight silhouette of the panther. Classic, yet untethered.",
     campaign_item_2_title: "The Ornate Salon",
-    campaign_item_2_desc:  "Captured behind closed doors in the Tel Aviv atelier. A private viewing of high jewelry in its natural environment.",
+    campaign_item_2_desc:  "Captured behind closed doors in the atelier. A private viewing of high jewelry in its natural environment.",
     campaign_item_3_title: "The Golden Vault",
     campaign_item_3_desc:  "Poised atop the gilded structures of the Diamond Exchange. A statement of strength, symmetry, and eternal value.",
 
@@ -133,18 +131,16 @@ export const strings = {
     nav_contact:     "יצירת קשר",
     nav_menu:        "תפריט",
     nav_close:       "סגירה",
-    masthead_sub:    "אטלייה · תל אביב",
+    masthead_sub:    "אטלייה",
 
-    hero_tagline:          "מאזון מנא · תל אביב · מאז 2016",
-    hero_h1_1:             "מקום אחד.",
-    hero_h1_2:             "זוג אחד.",
-    hero_h1_3:             "תכשיט אחד.",
+    hero_tagline:          "מאזון מנא",
+    hero_h1:               "wear your legacy",
     hero_cta_view:         "לקביעת צפייה פרטית",
     hero_cta_collections:  "לצפייה באוספים",
 
     statement_label:       "בית המאזון",
     statement_quote:       "“מאזון מנא נבנה על שלושה כללים: שלא נמכור דבר שלא נלבש בעצמנו; שלא נחפוז להציע מה שלא הקשבנו לו; ושכל יהלום שיוצא מן הסדנה יישא תעודה, ושם, ושעה.”",
-    statement_attribution: "— אנרי מנא, צורף ומייסד, 2016",
+    statement_attribution: "— אנרי מנא, צורף ומייסד",
 
     campaign_label:        "הקמפיין",
     campaign_heading:      "הפנתר והיהלום",
@@ -152,7 +148,7 @@ export const strings = {
     campaign_item_1_title: "חן הקונטרסט",
     campaign_item_1_desc:  "ניגוד בין הטוהר של יהלומים בחיתוך בריליאנט לבין צללית חצות של הפנתר. קלאסי, אך חופשי.",
     campaign_item_2_title: "הסלון המעוטר",
-    campaign_item_2_desc:  "מאחורי דלתות סגורות באטלייה בתל אביב. הצגה פרטית של תכשיטי עילית בסביבתם הטבעית.",
+    campaign_item_2_desc:  "מאחורי דלתות סגורות באטלייה. הצגה פרטית של תכשיטי עילית בסביבתם הטבעית.",
     campaign_item_3_title: "כיפת הזהב",
     campaign_item_3_desc:  "משקיף מראש מבני הזהב של בורסת היהלומים. הצהרה של עוצמה, סימטריה וערך נצחי.",
 

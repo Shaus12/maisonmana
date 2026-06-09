@@ -153,7 +153,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "r-01", nameEn: "Classic Solitaire", nameHe: "סוליטר קלאסי",
     category: "rings", collectionSlug: "bridal", priceILS: 32_000,
-    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=85",
+    image: "/ring-close.jpg",
     descriptionEn: "A timeless round solitaire on a fine platinum band.",
     descriptionHe: "סוליטר עגול נצחי על להקת פלטינה דקה.",
     metalOptions: ["yellow-gold", "white-gold", "rose-gold", "platinum"],
@@ -174,10 +174,28 @@ export const PRODUCTS: Product[] = [
   {
     id: "b-01", nameEn: "Tennis Classique", nameHe: "טניס קלאסיק",
     category: "bracelets", collectionSlug: "diamond", priceILS: 210_000,
-    image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=800&q=85",
+    image: "/bracelet-1.jpg",
     descriptionEn: "Seventy-two brilliant rounds, matched by hand.",
     descriptionHe: "שבעים ושתיים עגולים בוהקים, ממוינים ביד.",
     metalOptions: ["white-gold", "yellow-gold", "rose-gold"],
+    certificate: "IGI",
+  },
+  {
+    id: "b-02", nameEn: "Bespoke Tennis Bangle", nameHe: "צמיד טניס בהתאמה",
+    category: "bracelets", collectionSlug: "diamond", priceILS: 185_000,
+    image: "/bracelet-2.jpg",
+    descriptionEn: "A classic white gold tennis bangle encrusted with ideal cut diamonds.",
+    descriptionHe: "צמיד קשיח קלאסי מזהב לבן משובץ ביהלומים בחיתוך אידיאלי.",
+    metalOptions: ["white-gold", "yellow-gold"],
+    certificate: "IGI",
+  },
+  {
+    id: "b-03", nameEn: "Bezel-Set Tennis Bracelet", nameHe: "צמיד טניס שיבוץ כוסית",
+    category: "bracelets", collectionSlug: "diamond", priceILS: 240_000,
+    image: "/bracelet-3.jpg",
+    descriptionEn: "Individually bezel-set brilliant cut diamonds in 18k yellow gold.",
+    descriptionHe: "יהלומים עגולים בשיבוץ כוסית אינדיבידואלי בזהב צהוב 18K.",
+    metalOptions: ["yellow-gold", "white-gold"],
     certificate: "IGI",
   },
   {

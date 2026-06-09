@@ -268,18 +268,15 @@ export function AtelierConfigurator() {
                 <div className="mt-3 flex items-end justify-between gap-3 flex-wrap">
                   <div>
                     <p className="text-[0.625rem] uppercase tracking-[0.12em] text-ink-mute mb-1">
-                      {t("conf_price_label")}
+                      {locale === "he" ? "הצעת מחיר" : "Pricing"}
                     </p>
-                    <p className="num not-italic text-[1.5rem] md:text-[1.875rem] leading-none text-ink">
-                      <bdi dir="ltr">
-                        {formatPriceILS(estimate).replace(' ש"ח', "")}
-                      </bdi>
-                      <span className="ms-1.5 font-body text-[0.875rem] text-ink-mute">
-                        {t("currency")}
-                      </span>
+                    <p className="font-display text-[1.5rem] md:text-[1.875rem] leading-none text-ink">
+                      {locale === "he" ? "לפי דרישה" : "Upon Request"}
                     </p>
-                    <p className="mt-1 text-[0.6875rem] text-ink-mute leading-snug max-w-[18rem]">
-                      {t("conf_price_note")}
+                    <p className="mt-1.5 text-[0.6875rem] text-ink-mute leading-snug max-w-[18rem]">
+                      {locale === "he"
+                        ? "*המחיר הסופי ייקבע בהתאם לבחירת האבן והמפרט המדויק."
+                        : "*Final price is determined based on exact stone specifications."}
                     </p>
                   </div>
 

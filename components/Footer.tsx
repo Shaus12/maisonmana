@@ -8,7 +8,7 @@ export function Footer() {
         <div className="md:col-span-2">
           <p className="display-lat text-[2rem] leading-none text-ink">Maison Mana</p>
           <p className="mt-2 text-[0.6875rem] tracking-[0.22em] text-ink-mute uppercase">
-            Atelier · Tel Aviv
+            Atelier
           </p>
           <p className="mt-8 max-w-md text-ink-soft text-[0.9375rem] leading-relaxed">
             בית פרטי לתכשיטי כלולות. כל יצירה נעשית בידיים, בבורסת היהלומים שברמת גן, על פי בקשת לקוח.
