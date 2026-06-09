@@ -565,8 +565,15 @@ export function Ring3D({
           shadows
           dpr={[1, 1.5]}
           camera={{
-            position: jewelryType === "ring" ? [0, 0.6, 3.2] : [0, 0.8, 4.0],
-            fov: jewelryType === "ring" ? 38 : 42
+            position:
+              jewelryType === "ring"
+                ? [0, 0.2, 4.5]
+                : jewelryType === "necklace"
+                ? [0, -0.25, 3.2]
+                : jewelryType === "bracelet"
+                ? [0, -0.1, 4.8]
+                : [0, 0, 4.2], // earring
+            fov: 38
           }}
         >
           <color attach="background" args={["#161314"]} />
