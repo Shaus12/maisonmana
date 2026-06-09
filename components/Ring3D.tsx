@@ -567,12 +567,12 @@ export function Ring3D({
           camera={{
             position:
               jewelryType === "ring"
-                ? [0, 0.2, 4.5]
+                ? [0, 0.2, 5.2]
                 : jewelryType === "necklace"
-                ? [0, -0.25, 3.2]
+                ? [0, -0.25, 3.8]
                 : jewelryType === "bracelet"
-                ? [0, -0.1, 4.8]
-                : [0, 0, 4.2], // earring
+                ? [0, -0.1, 5.2]
+                : [0, 0, 4.6], // earring
             fov: 38
           }}
         >
