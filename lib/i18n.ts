@@ -121,6 +121,26 @@ export const strings = {
     mobile_footer_1: "Maison Mana",
     mobile_footer_2: "Diamond Exchange, Ramat Gan",
     mobile_footer_3: "By appointment only",
+
+    // ── Collections category page ─────────────────────────────
+    col_label_rings:     "Rings",
+    col_label_necklaces: "Necklaces",
+    col_label_earrings:  "Earrings",
+    col_title_rings:     "Engagement Rings",
+    col_title_necklaces: "Bespoke Necklaces",
+    col_title_earrings:  "Diamond Earrings",
+    col_body:            "Every piece is made to order in our Tel Aviv atelier, pairing structural integrity with lab-grown diamonds of uncompromising quality.",
+    col_from:            "From",
+
+    // ── Product detail page ───────────────────────────────────
+    col_breadcrumb_home:  "Home",
+    col_specifications:   "Specifications",
+    col_metals:           "Metals",
+    col_shapes:           "Shapes",
+    col_settings:         "Settings",
+    col_cta_atelier:      "Customize in Atelier",
+    col_cta_inquiry:      "Inquire Now",
+    col_handcrafted:      "Handcrafted in Tel Aviv",
   },
 
   he: {
@@ -227,6 +247,26 @@ export const strings = {
     mobile_footer_1: "בית מאזון מנא",
     mobile_footer_2: "בורסת היהלומים, רמת גן",
     mobile_footer_3: "בתיאום מראש בלבד",
+
+    // ── Collections category page ─────────────────────────────
+    col_label_rings:     "טבעות",
+    col_label_necklaces: "שרשראות",
+    col_label_earrings:  "עגילים",
+    col_title_rings:     "טבעות אירוסין",
+    col_title_necklaces: "שרשראות ייחודיות",
+    col_title_earrings:  "עגילי יהלומים",
+    col_body:            "כל יצירה נעשית לפי הזמנה באטלייה שלנו בתל אביב, בשילוב יהלומי מעבדה ברמה שאין בה פשרות.",
+    col_from:            "החל מ",
+
+    // ── Product detail page ───────────────────────────────────
+    col_breadcrumb_home:  "בית",
+    col_specifications:   "מפרט",
+    col_metals:           "מתכות",
+    col_shapes:           "צורות",
+    col_settings:         "שיבוצים",
+    col_cta_atelier:      "התאמה אישית באטלייה",
+    col_cta_inquiry:      "לפנייה",
+    col_handcrafted:      "עבודת יד, תל אביב",
   },
 } satisfies Record<Locale, Record<string, string>>;
 

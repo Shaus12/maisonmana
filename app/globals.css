@@ -340,8 +340,8 @@
   border-bottom: 1px solid transparent;
 }
 .masthead-fixed.is-scrolled {
-  background: oklch(0.985 0.004 75 / 0.93);
-  border-bottom-color: var(--color-rule);
+  background: oklch(0.14 0.006 75 / 0.96);
+  border-bottom-color: oklch(0.30 0.010 75 / 0.6);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -350,27 +350,27 @@
   transition: color 520ms var(--ease-quart);
   color: var(--color-paper);
 }
-.is-scrolled .masthead-wordmark { color: var(--color-ink); }
+.is-scrolled .masthead-wordmark { color: oklch(0.94 0.018 82); }
 
 .masthead-sub {
   transition: color 520ms var(--ease-quart);
   color: oklch(0.985 0.004 75 / 0.52);
 }
-.is-scrolled .masthead-sub { color: var(--color-ink-mute); }
+.is-scrolled .masthead-sub { color: oklch(0.70 0.016 80); }
 
 .masthead-nav-link {
   transition: color 280ms var(--ease-quart);
   color: oklch(0.985 0.004 75 / 0.68);
 }
 .masthead-nav-link:hover { color: var(--color-paper); }
-.is-scrolled .masthead-nav-link { color: var(--color-ink-soft); }
-.is-scrolled .masthead-nav-link:hover { color: var(--color-ink); }
+.is-scrolled .masthead-nav-link { color: oklch(0.78 0.016 80); }
+.is-scrolled .masthead-nav-link:hover { color: oklch(0.94 0.018 82); }
 
 .masthead-mobile-btn {
   transition: color 520ms var(--ease-quart);
   color: var(--color-paper);
 }
-.is-scrolled .masthead-mobile-btn { color: var(--color-ink); }
+.is-scrolled .masthead-mobile-btn { color: oklch(0.94 0.018 82); }
 
 /* ─── Scroll reveal system ───────────────────────────────────────────── */
 .reveal {

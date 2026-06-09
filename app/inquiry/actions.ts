@@ -30,12 +30,8 @@ export async function submitInquiry(
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return { status: "error", message: "כתובת הדוא״ל אינה תקינה.", field: "email" };
 
-  // Brief artificial latency to communicate considered handling
-  await new Promise((r) => setTimeout(r, 700));
-
-  // v1: log to server console; in production this connects to the salon CRM / WhatsApp.
   const reference = `MM-${Date.now().toString(36).toUpperCase().slice(-6)}`;
-  console.log("[Maison Mana · Inquiry]", {
+  const payload = {
     reference,
     receivedAt: new Date().toISOString(),
     intent,
@@ -46,7 +42,21 @@ export async function submitInquiry(
     piece: piece || null,
     bespoke: bespoke || null,
     message,
-  });
+  };
+
+  try {
+    await fetch(
+      "https://n8n.srv877545.hstgr.cloud/webhook/3d30f03a-5a30-4e3e-b175-a3e4fb4dd294",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+  } catch (err) {
+    // Log but don't surface webhook errors to the user
+    console.error("[Maison Mana · Webhook] failed to deliver", err);
+  }
 
   return { status: "ok", reference };
 }
