@@ -6,9 +6,11 @@ export const strings = {
     // ── Masthead ─────────────────────────────────────────────
     nav_home:        "Home",
     nav_collections: "Collections",
-    nav_studio:      "The Studio",
+    nav_studio:      "Personal Preview",
+    nav_diamonds:    "Diamonds",
     nav_mirror:      "The Mirror",
-    nav_contact:     "Contact",
+    nav_about:       "Story",
+    nav_contact:     "Appointment",
     nav_menu:        "Menu",
     nav_close:       "Close",
     masthead_sub:    "Studio",
@@ -67,9 +69,9 @@ export const strings = {
     showroom_cta:     "Book a Viewing",
 
     // ── Studio page ───────────────────────────────────────────
-    studio_page_label:   "The Studio",
-    studio_page_heading: "The Studio",
-    studio_page_body:    "Four steps: setting, diamond, metal, band. The steps can be taken in any order and repeated until the ring looks right to you. At the end, the piece is sent to the atelier and a private appointment is arranged where a wax model will be presented for final approval before work begins.",
+    studio_page_label:   "Personal Preview",
+    studio_page_heading: "The Atelier",
+    studio_page_body:    "Choose the direction, see an initial visual preview, and send the summary to the atelier for a private consultation.",
 
     // ── Mirror page ───────────────────────────────────────────
     mirror_page_label:         "Mirror",
@@ -139,16 +141,18 @@ export const strings = {
     col_shapes:           "Shapes",
     col_settings:         "Settings",
     col_cta_atelier:      "Customize in Atelier",
-    col_cta_inquiry:      "Inquire Now",
+    col_cta_inquiry:      "Private Inquiry",
     col_handcrafted:      "Handcrafted in Tel Aviv",
   },
 
   he: {
     nav_home:        "הבית",
     nav_collections: "האוספים",
-    nav_studio:      "האטלייה",
+    nav_studio:      "הדמיה אישית",
+    nav_diamonds:    "יהלומים",
     nav_mirror:      "המראה",
-    nav_contact:     "יצירת קשר",
+    nav_about:       "הסיפור",
+    nav_contact:     "תיאום פגישה",
     nav_menu:        "תפריט",
     nav_close:       "סגירה",
     masthead_sub:    "אטלייה",
@@ -196,12 +200,12 @@ export const strings = {
     showroom_label:   "בית המאזון",
     showroom_heading: "צפייה בתיאום מראש",
     showroom_body:    "בית מאזון מנא ממוקם בבורסת היהלומים שברמת גן, בקומה שלישית, מאחורי דלת ללא שלט. הכניסה היא בליווי, והפגישה היא של עד שעתיים: בה תתקבלי בכוס תה, יוצגו לך שלוש יצירות שנבחרו לפי שאלון מוקדם, וניתן לך הזמן לראות, למדוד, ולחזור.",
-    showroom_note:    "אם רכישה תהיה — היא תיעשה אחרי. אם לא — לא קרה דבר.",
+    showroom_note:    "אם תרצי להמשיך — זה יקרה אחרי הפגישה. ואם לא — נשאיר את הרגע כפי שהיה.",
     showroom_cta:     "לקביעת המועד",
 
-    studio_page_label:   "חדר היצירה",
+    studio_page_label:   "הדמיה אישית",
     studio_page_heading: "האטלייה",
-    studio_page_body:    "ארבעה צעדים: בסיס, יהלום, מתכת, להקה. הצעדים נעשים בכל סדר, ויכולים להישנות עד שהטבעת נראית לך נכון. בסיום, היצירה נשלחת לאטלייה ומתואמת לפגישה פרטית בה היא תוצג מודל-שעווה לאישור סופי, לפני שמתחילים לעבוד עליה.",
+    studio_page_body:    "בחרו כיוון, ראו הדמיה ראשונית ושלחו את סיכום הבחירות לאטלייה לקראת פגישה פרטית.",
 
     mirror_page_label:         "מראה",
     mirror_page_heading:       "המראה",
@@ -265,7 +269,7 @@ export const strings = {
     col_shapes:           "צורות",
     col_settings:         "שיבוצים",
     col_cta_atelier:      "התאמה אישית באטלייה",
-    col_cta_inquiry:      "לפנייה",
+    col_cta_inquiry:      "לפנייה פרטית",
     col_handcrafted:      "עבודת יד, תל אביב",
   },
 } satisfies Record<Locale, Record<string, string>>;

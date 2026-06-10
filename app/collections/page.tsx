@@ -3,15 +3,18 @@ import Link from "next/link";
 import { CollectionsIntro } from "@/components/collections/CollectionsIntro";
 import { CollectionIndex } from "@/components/collections/CollectionIndex";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "אוספים | Maison MANA",
-  description: "עולמות התכשיטים של Maison MANA — מטבעות אירוסין ועיצוב אישי ועד תכשיטי יהלומים, פריטי חתימה ויצירות חד־פעמיות.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "אוספים | Maison Mana",
+  description:
+    "אוספי התכשיטים של Maison Mana — טבעות אירוסין, תכשיטי יהלומים, High Jewelry, עיצוב אישי ופריטי חתימה.",
+  path: "/collections",
+});
 
 export default function CollectionsPage() {
   return (
-    <main className="min-h-screen bg-paper pt-12 md:pt-20">
+    <div className="min-h-screen bg-paper pt-12 md:pt-20">
       {/* Editorial Intro */}
       <CollectionsIntro />
 
@@ -46,6 +49,6 @@ export default function CollectionsPage() {
           </ScrollReveal>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

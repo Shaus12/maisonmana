@@ -4,19 +4,29 @@ import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { jewelryStoreJsonLd, websiteJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonmana.co.il"),
   title: {
-    default: "Maison Mana — Bespoke Engagement Rings · Tel Aviv",
-    template: "%s · Maison Mana",
+    default: "Maison Mana | בית תכשיטים פרטי לטבעות אירוסין ותכשיטי יהלומים",
+    template: "%s",
   },
   description:
-    "Maison Mana is a private jewellery house in Tel Aviv specialising in engagement rings, tennis bracelets, and bespoke pieces. Viewings by appointment only.",
+    "Maison Mana הוא בית תכשיטים פרטי המתמחה בטבעות אירוסין, תכשיטי יהלומים ועיצוב אישי בפגישה פרטית.",
+  alternates: {
+    canonical: "/",
+  },
+  verification: {
+    google: "vJQdRnts0ZbOer0kiPrqb8DaIs5brUIeZBAu2TtpGyA",
+  },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "he_IL",
     siteName: "Maison Mana",
+    title: "Maison Mana | בית תכשיטים פרטי לטבעות אירוסין ותכשיטי יהלומים",
+    description:
+      "Maison Mana הוא בית תכשיטים פרטי המתמחה בטבעות אירוסין, תכשיטי יהלומים ועיצוב אישי בפגישה פרטית.",
   },
 };
 
@@ -33,6 +43,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-paper text-ink antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jewelryStoreJsonLd) }}
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:bg-paper focus:text-ink focus:px-3 focus:py-2 focus:border focus:border-rule"

@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useActionState, useMemo, useState } from "react";
+import { useFormStatus } from "react-dom";
 import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
+import { submitInquiry, type InquiryState } from "@/app/inquiry/actions";
 
 const Ring3D = dynamic(() => import("./Ring3D").then((mod) => mod.Ring3D), {
   ssr: false,
@@ -128,8 +129,11 @@ const POPULAR_BAND_IDS = [
   "split-shank", "bypass", "milgrain", "chevron",
 ] as const;
 
+const initialInquiryState: InquiryState = { status: "idle" };
+
 export function AtelierConfigurator() {
   const { t, locale } = useLanguage();
+  const [leadState, leadAction] = useActionState(submitInquiry, initialInquiryState);
   const [jewelryType, setJewelryType] = useState<JewelryType>("ring");
   const [setting, setSetting]         = useState<SettingOption>(SETTING_OPTIONS[0]);
   const [earringSetting, setEarringSetting] = useState(EARRING_SETTING_OPTIONS[0]);
@@ -280,12 +284,12 @@ export function AtelierConfigurator() {
                     </p>
                   </div>
 
-                  <Link
-                    href={{ pathname: "/inquiry", query: { bespoke: summaryFull } }}
+                  <a
+                    href="#atelier-lead"
                     className="brass-disc brass-disc--solid whitespace-nowrap"
                   >
                     {t("conf_send")}
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
@@ -559,9 +563,145 @@ export function AtelierConfigurator() {
               <p className="section-label mb-2">{t("conf_summary_label")}</p>
               <p className="text-[0.9375rem] text-ink leading-relaxed">{summaryFull}</p>
             </div>
+
+            <div id="atelier-lead" className="scroll-mt-28 mt-16 border-t border-rule pt-10">
+              {leadState.status === "ok" ? (
+                <div className="vellum px-6 py-10 text-center">
+                  <p className="section-label">Maison Mana</p>
+                  <h2 className="display-he mt-4 text-[2rem] leading-tight text-ink">
+                    הבקשה התקבלה באטלייה.
+                  </h2>
+                  <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
+                    נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית.
+                  </p>
+                  <p className="mt-8 text-[0.6875rem] tracking-[0.18em] uppercase text-ink-mute display-lat">
+                    Reference&nbsp;·&nbsp;<bdi dir="ltr">{leadState.reference}</bdi>
+                  </p>
+                </div>
+              ) : (
+                <form action={leadAction} className="vellum px-6 py-8 md:px-8 md:py-10">
+                  <input type="hidden" name="intent" value="bespoke" />
+                  <input type="hidden" name="bespoke" value={summaryFull} />
+                  <header className="mb-8">
+                    <p className="section-label">פגישה פרטית</p>
+                    <h2 className="display-he mt-3 text-[1.875rem] leading-tight text-ink">
+                      שליחת ההדמיה לאטלייה
+                    </h2>
+                    <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
+                      הפרטים יישלחו יחד עם סיכום הבחירות כדי שנוכל להכין שיחה מדויקת.
+                    </p>
+                  </header>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <AtelierField
+                      name="name"
+                      label="שם מלא"
+                      required
+                      autoComplete="name"
+                      error={leadState.status === "error" && leadState.field === "name" ? leadState.message : undefined}
+                    />
+                    <AtelierField
+                      name="phone"
+                      label="טלפון"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      dir="ltr"
+                      error={leadState.status === "error" && leadState.field === "phone" ? leadState.message : undefined}
+                    />
+                    <AtelierField
+                      name="email"
+                      label="דוא״ל"
+                      type="email"
+                      autoComplete="email"
+                      dir="ltr"
+                      error={leadState.status === "error" && leadState.field === "email" ? leadState.message : undefined}
+                    />
+                    <AtelierField
+                      name="preferred"
+                      label="מועד מבוקש"
+                      placeholder="לדוגמה: שלישי בערב"
+                    />
+                  </div>
+
+                  <label className="mt-8 block">
+                    <span className="section-label mb-3 block">הערות קצרות</span>
+                    <textarea
+                      name="message"
+                      rows={3}
+                      placeholder="מה חשוב שנדע לפני הפגישה?"
+                      className="block w-full resize-y border-0 border-b border-rule bg-transparent py-3 text-[1rem] leading-relaxed text-ink placeholder:text-ink-mute focus:border-brass focus:outline-none"
+                    />
+                  </label>
+
+                  {leadState.status === "error" && !leadState.field && (
+                    <p className="mt-5 text-[0.875rem] italic text-ink-soft">{leadState.message}</p>
+                  )}
+
+                  <div className="mt-8 flex flex-wrap items-center justify-between gap-5">
+                    <p className="max-w-sm text-[0.75rem] leading-relaxed text-ink-mute">
+                      הפרטים משמשים לתיאום הפגישה בלבד.
+                    </p>
+                    <AtelierSubmitButton />
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function AtelierField({
+  name,
+  label,
+  type = "text",
+  required = false,
+  autoComplete,
+  inputMode,
+  dir,
+  placeholder,
+  error,
+}: {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  autoComplete?: string;
+  inputMode?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"];
+  dir?: "ltr" | "rtl";
+  placeholder?: string;
+  error?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="section-label mb-3 block">
+        {label}
+        {required && <span className="ms-1 text-brass">·</span>}
+      </span>
+      <input
+        type={type}
+        name={name}
+        required={required}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        dir={dir}
+        placeholder={placeholder}
+        className={`block w-full border-0 border-b bg-transparent py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none ${
+          error ? "border-ink-soft" : "border-rule focus:border-brass"
+        }`}
+      />
+      {error && <p className="mt-2 text-[0.8125rem] italic text-ink-soft">{error}</p>}
+    </label>
+  );
+}
+
+function AtelierSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button type="submit" disabled={pending} className="brass-disc brass-disc--solid">
+      {pending ? "נשלח…" : "לתיאום פגישה"}
+    </button>
   );
 }

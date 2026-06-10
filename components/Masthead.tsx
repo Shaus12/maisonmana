@@ -22,11 +22,10 @@ export function Masthead() {
   const showSolid = scrolled || !isHome;
 
   const NAV = [
-    { href: "/",                label: t("nav_home") },
     { href: "/collections", label: t("nav_collections") },
-    { href: "/atelier",         label: t("nav_studio") },
-    { href: "/mirror",          label: t("nav_mirror") },
-    { href: "/inquiry",         label: t("nav_contact") },
+    { href: "/atelier", label: t("nav_studio") },
+    { href: "/mirror", label: t("nav_mirror") },
+    { href: "/inquiry", label: t("nav_contact") },
   ];
 
   return (

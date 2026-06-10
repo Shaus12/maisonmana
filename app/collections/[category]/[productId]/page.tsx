@@ -47,7 +47,7 @@ export default function ProductPage() {
           <div className="md:col-span-7 relative aspect-[4/5] bg-vellum rounded-[1rem] overflow-hidden fade-in-cascade-1">
             <Image
               src={product.image}
-              alt={product.name}
+              alt={product.imageAlt}
               fill
               className="object-cover"
               priority
@@ -70,9 +70,9 @@ export default function ProductPage() {
             </p>
 
             <div className="pt-8 border-t border-rule mb-12">
-              <h3 className="font-display text-xl text-ink mb-6">
+              <h2 className="font-display text-xl text-ink mb-6">
                 {t("col_specifications")}
-              </h3>
+              </h2>
               <ul className="text-ink-soft space-y-3 text-sm font-body">
                 <li className="flex justify-between border-b border-rule-soft pb-2">
                   <span className="text-ink-mute uppercase tracking-wider text-xs">

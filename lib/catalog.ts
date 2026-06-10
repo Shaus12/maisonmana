@@ -143,6 +143,7 @@ export interface Product {
   image: string;
   descriptionEn: string;
   descriptionHe: string;
+  imageAltHe: string;
   metalOptions: string[];
   shapeOptions?: string[];
   certificate?: "GIA" | "IGI" | "HRD";
@@ -156,6 +157,7 @@ export const PRODUCTS: Product[] = [
     image: "/ring-close.jpg",
     descriptionEn: "A timeless round solitaire on a fine platinum band.",
     descriptionHe: "סוליטר עגול נצחי על להקת פלטינה דקה.",
+    imageAltHe: "טבעת אירוסין סוליטר עם יהלום עגול על רקע בהיר של Maison Mana",
     metalOptions: ["yellow-gold", "white-gold", "rose-gold", "platinum"],
     shapeOptions: ["round", "oval", "princess", "emerald", "pear", "marquise", "cushion"],
     certificate: "GIA",
@@ -166,6 +168,7 @@ export const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1599643478514-4a11029cbb3b?auto=format&fit=crop&w=800&q=85",
     descriptionEn: "A pavé band leading to a centre stone with a hidden halo below.",
     descriptionHe: "להקת פאווה המובילה לאבן מרכזית עם הילה נסתרת מתחת.",
+    imageAltHe: "טבעת אירוסין בשיבוץ פאווה עם הילה נסתרת של Maison Mana",
     metalOptions: ["yellow-gold", "white-gold", "platinum"],
     shapeOptions: ["round", "oval", "cushion"],
     certificate: "GIA",
@@ -177,6 +180,7 @@ export const PRODUCTS: Product[] = [
     image: "/bracelet-1.jpg",
     descriptionEn: "Seventy-two brilliant rounds, matched by hand.",
     descriptionHe: "שבעים ושתיים עגולים בוהקים, ממוינים ביד.",
+    imageAltHe: "צמיד טניס קלאסי משובץ יהלומים עגולים של Maison Mana",
     metalOptions: ["white-gold", "yellow-gold", "rose-gold"],
     certificate: "IGI",
   },
@@ -186,6 +190,7 @@ export const PRODUCTS: Product[] = [
     image: "/bracelet-2.jpg",
     descriptionEn: "A classic white gold tennis bangle encrusted with ideal cut diamonds.",
     descriptionHe: "צמיד קשיח קלאסי מזהב לבן משובץ ביהלומים בחיתוך אידיאלי.",
+    imageAltHe: "צמיד טניס קשיח בזהב לבן משובץ יהלומים של Maison Mana",
     metalOptions: ["white-gold", "yellow-gold"],
     certificate: "IGI",
   },
@@ -195,6 +200,7 @@ export const PRODUCTS: Product[] = [
     image: "/bracelet-3.jpg",
     descriptionEn: "Individually bezel-set brilliant cut diamonds in 18k yellow gold.",
     descriptionHe: "יהלומים עגולים בשיבוץ כוסית אינדיבידואלי בזהב צהוב 18K.",
+    imageAltHe: "צמיד טניס בזהב צהוב עם יהלומים בשיבוץ כוסית של Maison Mana",
     metalOptions: ["yellow-gold", "white-gold"],
     certificate: "IGI",
   },
@@ -204,6 +210,7 @@ export const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=800&q=85",
     descriptionEn: "A full-circle tennis necklace, 42cm, 5 total carats.",
     descriptionHe: "שרשרת טניס מלאה, 42 ס\"מ, 5 קראט.",
+    imageAltHe: "שרשרת טניס משובצת יהלומים מתוך אוסף Maison Mana",
     metalOptions: ["white-gold", "yellow-gold"],
     certificate: "IGI",
   },
@@ -214,6 +221,7 @@ export const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=800&q=85",
     descriptionEn: "The house monogram in 18k yellow gold.",
     descriptionHe: "מונוגרם הבית בזהב צהוב 18K.",
+    imageAltHe: "טבעת מונוגרם MM בזהב צהוב מתוך Signature Collection של Maison Mana",
     metalOptions: ["yellow-gold", "white-gold"],
   },
   // MEN'S
@@ -223,6 +231,7 @@ export const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=800&q=85",
     descriptionEn: "A wide band with a channel-set row of round diamonds.",
     descriptionHe: "להקה רחבה עם שורת יהלומים עגולים בשיבוץ מסילה.",
+    imageAltHe: "טבעת יהלומים רחבה לגבר מתוך Men’s Collection של Maison Mana",
     metalOptions: ["yellow-gold", "white-gold", "platinum"],
   },
   // INVESTMENT
@@ -232,6 +241,7 @@ export const PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=85",
     descriptionEn: "1.00ct Round Brilliant, D colour, Flawless — GIA certificate.",
     descriptionHe: "עגול בריליאנט 1.00 קראט, צבע D, ללא רבב — תעודת GIA.",
+    imageAltHe: "יהלום עגול עם תעודת GIA לבחירה בתהליך אישי של Maison Mana",
     metalOptions: [],
     certificate: "GIA",
   },
@@ -244,6 +254,7 @@ export function getProductsByCategory(category: Category) {
     price: p.priceILS,
     description: p.descriptionEn,
     image: p.image,
+    imageAlt: p.imageAltHe,
     metalOptions: p.metalOptions,
     shapeOptions: p.shapeOptions,
     settingOptions: undefined as string[] | undefined,
@@ -260,10 +271,10 @@ export function getProductById(id: string) {
     price: p.priceILS,
     description: p.descriptionEn,
     image: p.image,
+    imageAlt: p.imageAltHe,
     metalOptions: p.metalOptions,
     shapeOptions: p.shapeOptions,
     settingOptions: undefined as string[] | undefined,
     category: p.category,
   };
 }
-

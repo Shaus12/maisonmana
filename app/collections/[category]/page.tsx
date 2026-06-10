@@ -4,22 +4,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useParams } from "next/navigation";
-import { getProductsByCategory, Category } from "@/lib/catalog";
+import { getProductsByCategory } from "@/lib/catalog";
 import { useLanguage } from "@/components/LanguageProvider";
 import { type StringKey } from "@/lib/i18n";
 
 const VALID_CATEGORIES = ["rings", "necklaces", "earrings"] as const;
+type PublicCategory = (typeof VALID_CATEGORIES)[number];
+
+function isPublicCategory(category: string): category is PublicCategory {
+  return VALID_CATEGORIES.includes(category as PublicCategory);
+}
 
 export default function CategoryPage() {
   const params = useParams();
   const category = params.category as string;
   const { t } = useLanguage();
 
-  if (!VALID_CATEGORIES.includes(category as Category)) {
+  if (!isPublicCategory(category)) {
     notFound();
   }
 
-  const products = getProductsByCategory(category as Category);
+  const products = getProductsByCategory(category);
 
   const labelKey = `col_label_${category}` as StringKey;
   const titleKey = `col_title_${category}` as StringKey;
@@ -61,7 +66,7 @@ export default function CategoryPage() {
                   >
                     <Image
                       src={product.image}
-                      alt={product.name}
+                      alt={product.imageAlt}
                       fill
                       className="object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.04]"
                       sizes="(max-width: 768px) 100vw, 50vw"

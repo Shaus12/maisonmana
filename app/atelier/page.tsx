@@ -1,10 +1,12 @@
 import { StudioPageContent } from "@/components/StudioPageContent";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "The Studio — Bespoke Ring Design",
+export const metadata = buildMetadata({
+  title: "עיצוב תכשיט אישי | Maison Mana",
   description:
-    "Design a bespoke engagement ring: choose the setting, diamond, metal, and band — with the goldsmith.",
-};
+    "עצבו תכשיט אישי עם Maison Mana — בחירת סגנון, אבן, מתכת והדמיה ראשונית לפני פגישה פרטית באטלייה.",
+  path: "/atelier",
+});
 
 export default function AtelierPage() {
   return <StudioPageContent />;

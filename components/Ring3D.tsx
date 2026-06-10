@@ -552,7 +552,7 @@ export function Ring3D({
   showSkeleton?: boolean;
 }) {
   return (
-    <div className="w-[94%] mx-auto h-[35vh] min-h-[260px] md:w-full md:h-[60vh] md:min-h-[380px] relative rounded-xl overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing shadow-inner">
+    <div className="w-[96%] mx-auto h-[40vh] min-h-[300px] md:w-full md:h-[64vh] md:min-h-[440px] relative rounded-xl overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing shadow-inner">
       <React.Suspense
         fallback={
           <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest">
@@ -567,13 +567,13 @@ export function Ring3D({
           camera={{
             position:
               jewelryType === "ring"
-                ? [0, 0.2, 5.2]
+                ? [0, 0.05, 5.8]
                 : jewelryType === "necklace"
                 ? [0, -0.25, 3.8]
                 : jewelryType === "bracelet"
                 ? [0, -0.1, 5.2]
                 : [0, 0, 4.6], // earring
-            fov: 38
+            fov: jewelryType === "ring" ? 42 : 38
           }}
         >
           <color attach="background" args={["#161314"]} />
