@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useCallback, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
@@ -121,6 +121,65 @@ function Pill({
     >
       {children}
     </button>
+  );
+}
+
+// ── Mobile horizontal scroll with arrows ─────────────────────
+function MobileScrollRow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateArrows = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 2);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 2);
+  }, []);
+
+  const scroll = useCallback((dir: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.6;
+    el.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+  }, []);
+
+  return (
+    <div className={`relative md:hidden ${className}`}>
+      {/* Left arrow */}
+      {canScrollLeft && (
+        <button
+          type="button"
+          onClick={() => scroll("left")}
+          aria-label="Scroll left"
+          className="absolute start-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-paper/90 border border-rule shadow-sm backdrop-blur-sm text-ink-mute hover:text-ink transition-colors"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 rtl:rotate-180">
+            <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+          </svg>
+        </button>
+      )}
+      {/* Right arrow */}
+      {canScrollRight && (
+        <button
+          type="button"
+          onClick={() => scroll("right")}
+          aria-label="Scroll right"
+          className="absolute end-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-paper/90 border border-rule shadow-sm backdrop-blur-sm text-ink-mute hover:text-ink transition-colors"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 rtl:rotate-180">
+            <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+          </svg>
+        </button>
+      )}
+      <div
+        ref={scrollRef}
+        onScroll={updateArrows}
+        className="flex gap-2.5 overflow-x-auto scroll-smooth scrollbar-hide px-1 py-1 -mx-1"
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -318,7 +377,29 @@ export function AtelierConfigurator() {
             {jewelryType !== "bracelet" && (
               <>
                 <SectionHead step={currentStep++}>{t("conf_shape")}</SectionHead>
-                <div className="grid grid-cols-5 gap-3 sm:grid-cols-5">
+                {/* Mobile: horizontal scroll */}
+                <MobileScrollRow>
+                  {SHAPE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setShape(opt)}
+                      aria-pressed={shape.id === opt.id}
+                      className={`group flex flex-col items-center gap-2 border px-4 py-3.5 text-center transition-all duration-[280ms] shrink-0 min-w-[5rem] ${
+                        shape.id === opt.id
+                          ? "border-ink bg-paper-deep text-ink"
+                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
+                      }`}
+                    >
+                      <ShapeIcon shape={opt.id} />
+                      <span className="text-[0.75rem] tracking-[0.01em] leading-tight mt-1 whitespace-nowrap">
+                        {locale === "he" ? opt.he : opt.en}
+                      </span>
+                    </button>
+                  ))}
+                </MobileScrollRow>
+                {/* Desktop: grid */}
+                <div className="hidden md:grid grid-cols-5 gap-3">
                   {SHAPE_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
@@ -427,7 +508,24 @@ export function AtelierConfigurator() {
             {jewelryType === "ring" && (
               <>
                 <SectionHead step={currentStep++}>{t("conf_band")}</SectionHead>
-                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                <MobileScrollRow>
+                  {displayedBands.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setBand(opt)}
+                      aria-pressed={band.id === opt.id}
+                      className={`border px-4 py-3 text-start text-[0.8125rem] leading-snug transition-all duration-[280ms] shrink-0 whitespace-nowrap ${
+                        band.id === opt.id
+                          ? "border-ink bg-paper-deep text-ink"
+                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
+                      }`}
+                    >
+                      {locale === "he" ? opt.he : opt.en}
+                    </button>
+                  ))}
+                </MobileScrollRow>
+                <div className="hidden md:grid grid-cols-3 gap-2.5">
                   {displayedBands.map((opt) => (
                     <button
                       key={opt.id}
@@ -490,7 +588,19 @@ export function AtelierConfigurator() {
 
             {/* Carat */}
             <p className="section-label mb-3">{t("conf_carat")}</p>
-            <div className="flex flex-wrap gap-2 mb-8">
+            <MobileScrollRow className="mb-8">
+              {CARAT_OPTIONS.map((opt) => (
+                <Pill
+                  key={opt.value}
+                  selected={carat === opt.value}
+                  onClick={() => setCarat(opt.value)}
+                  className="shrink-0 whitespace-nowrap"
+                >
+                  <bdi dir="ltr">{opt.label} ct</bdi>
+                </Pill>
+              ))}
+            </MobileScrollRow>
+            <div className="hidden md:flex flex-wrap gap-2 mb-8">
               {CARAT_OPTIONS.map((opt) => (
                 <Pill
                   key={opt.value}
@@ -507,7 +617,33 @@ export function AtelierConfigurator() {
               {/* Fancy Colors */}
               <div>
                 <p className="section-label mb-3">{locale === "he" ? "צבע היהלום (טבעי + מעבדה)" : "Diamond Color (Natural + Lab)"}</p>
-                <div className="flex flex-wrap gap-2.5">
+                <MobileScrollRow>
+                  {FANCY_COLOR_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setColor(opt.id)}
+                      aria-pressed={color === opt.id}
+                      className={`flex items-center gap-2.5 border px-3.5 py-2.5 text-[0.8125rem] transition-all duration-[280ms] shrink-0 whitespace-nowrap ${
+                        color === opt.id
+                          ? "border-ink bg-paper-deep text-ink font-medium"
+                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
+                      }`}
+                    >
+                      <span
+                        className="inline-block h-4.5 w-4.5 rounded-full border border-rule-soft"
+                        style={{
+                          backgroundColor: opt.hex,
+                          boxShadow: "0 1px 3px rgba(0,0,0,0.1) inset"
+                        }}
+                      />
+                      <span className="display-he">
+                        {locale === "he" ? opt.he : opt.en}
+                      </span>
+                    </button>
+                  ))}
+                </MobileScrollRow>
+                <div className="hidden md:flex flex-wrap gap-2.5">
                   {FANCY_COLOR_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
@@ -538,7 +674,24 @@ export function AtelierConfigurator() {
               {/* Clarity */}
               <div>
                 <p className="section-label mb-3">{t("conf_clarity")}</p>
-                <div className="flex flex-wrap gap-2">
+                <MobileScrollRow>
+                  {CLARITY_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setClarity(opt.value)}
+                      aria-pressed={clarity === opt.value}
+                      className={`border px-3.5 py-2 text-[0.75rem] transition-all duration-[280ms] shrink-0 ${
+                        clarity === opt.value
+                          ? "border-ink bg-paper-deep text-ink"
+                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
+                      }`}
+                    >
+                      <bdi dir="ltr">{opt.value}</bdi>
+                    </button>
+                  ))}
+                </MobileScrollRow>
+                <div className="hidden md:flex flex-wrap gap-2">
                   {CLARITY_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}

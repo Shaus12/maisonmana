@@ -422,3 +422,12 @@
 .piece-tile-wrap:hover figure {
   box-shadow: 0 20px 56px oklch(0.18 0.012 60 / 0.13);
 }
+
+/* Hide scrollbar for mobile horizontal scroll rows */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
