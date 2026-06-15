@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { useRef, useMemo, useState, useEffect } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Float, ContactShadows, PresentationControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { DiamondShape } from "@/lib/pieces";
@@ -530,6 +530,24 @@ function EarringsModel({
 }
 
 // ─────────────────────────────────────────────────────────────
+// Smooth rotation wrapper controlled by arrow buttons
+// ─────────────────────────────────────────────────────────────
+function RotatableGroup({ rotY, rotX, children }: { rotY: number; rotX: number; children: React.ReactNode }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const current = useRef({ x: 0, y: 0 });
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    current.current.y += (rotY - current.current.y) * 0.08;
+    current.current.x += (rotX - current.current.x) * 0.08;
+    groupRef.current.rotation.y = current.current.y;
+    groupRef.current.rotation.x = current.current.x;
+  });
+
+  return <group ref={groupRef}>{children}</group>;
+}
+
+// ─────────────────────────────────────────────────────────────
 // Exported 3D Component
 // ─────────────────────────────────────────────────────────────
 export function Ring3D({
@@ -551,8 +569,54 @@ export function Ring3D({
   diamondColor?: string;
   showSkeleton?: boolean;
 }) {
+  const [arrowRotY, setArrowRotY] = useState(0);
+  const [arrowRotX, setArrowRotX] = useState(0);
+  const STEP = Math.PI / 6; // 30° per tap
+
   return (
     <div className="w-[96%] mx-auto h-[40vh] min-h-[300px] md:w-full md:h-[64vh] md:min-h-[440px] relative rounded-xl overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing shadow-inner">
+      {/* Rotation arrow buttons */}
+      <button
+        type="button"
+        onClick={() => setArrowRotY(r => r + STEP)}
+        aria-label="Rotate left"
+        className="absolute start-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+          <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => setArrowRotY(r => r - STEP)}
+        aria-label="Rotate right"
+        className="absolute end-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+          <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => setArrowRotX(r => Math.max(r - STEP, -Math.PI / 3))}
+        aria-label="Tilt up"
+        className="absolute top-3 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+          <path fillRule="evenodd" d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832l-3.71 3.938a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z" clipRule="evenodd" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => setArrowRotX(r => Math.min(r + STEP, Math.PI / 3))}
+        aria-label="Tilt down"
+        className="absolute bottom-10 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+        </svg>
+      </button>
+
       <React.Suspense
         fallback={
           <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest">
@@ -589,6 +653,7 @@ export function Ring3D({
             azimuth={[-Math.PI, Math.PI]}
             snap={true}
           >
+            <RotatableGroup rotY={arrowRotY} rotX={arrowRotX}>
             <Float rotationIntensity={0.15} floatIntensity={0.08} speed={1.4}>
               {jewelryType === "ring" && (
                 <RingModel
@@ -629,6 +694,7 @@ export function Ring3D({
                 />
               )}
             </Float>
+            </RotatableGroup>
           </PresentationControls>
 
           <ContactShadows
@@ -643,8 +709,8 @@ export function Ring3D({
         </Canvas>
       </React.Suspense>
 
-      <div className="absolute bottom-6 left-0 right-0 text-center text-[0.65rem] text-[#E1D1C1]/40 pointer-events-none tracking-[0.2em] uppercase">
-        Drag to rotate · 3D Studio
+      <div className="absolute bottom-4 left-0 right-0 text-center text-[0.65rem] text-[#E1D1C1]/40 pointer-events-none tracking-[0.2em] uppercase">
+        Drag or use arrows · 3D Studio
       </div>
     </div>
   );
