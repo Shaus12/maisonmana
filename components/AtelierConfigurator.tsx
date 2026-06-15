@@ -84,7 +84,7 @@ function ShapeIcon({ shape }: { shape: string }) {
 function SectionHead({ step, children }: { step: number; children: React.ReactNode }) {
   const hebrewLetters = ["א", "ב", "ג", "ד", "ה", "ו", "ז"];
   return (
-    <div className="flex items-baseline gap-4 border-t border-rule pt-7 mb-5 md:pt-10 md:mb-6">
+    <div className="flex items-baseline gap-4 border-t border-rule pt-5 mb-4 md:pt-10 md:mb-6">
       <span
         className="display-he text-[1.375rem] leading-none font-bold"
         style={{ color: "oklch(0.74 0.110 78)" }}
@@ -205,6 +205,7 @@ export function AtelierConfigurator() {
   const [band, setBand]               = useState<BandOption>(BAND_OPTIONS[0]);
   const [showAllBands, setShowAllBands] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(true);
 
   const estimate = useMemo(
     () => estimatePriceILS({
@@ -281,49 +282,70 @@ export function AtelierConfigurator() {
           <div className="md:col-span-5 md:sticky md:top-[5.5rem] md:self-start md:[height:calc(100dvh-5.5rem)]">
             <div className="flex flex-col border-b md:border-b-0 md:border-e border-rule h-full">
 
-              {/* Skeleton toggle */}
-              <div className="flex justify-center border-b border-rule px-6 py-3">
-                <div className="flex rounded-full border border-rule p-0.5 text-[0.8125rem]">
-                  <button
-                    type="button"
-                    onClick={() => setShowSkeleton(false)}
-                    className={`rounded-full px-5 py-1.5 transition-all duration-300 ${
-                      !showSkeleton ? "bg-ink text-paper" : "text-ink-mute hover:text-ink-soft"
-                    }`}
-                  >
-                    {locale === "he" ? "תכשיט משובץ" : t("viewer_gem")}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowSkeleton(true)}
-                    className={`rounded-full px-5 py-1.5 transition-all duration-300 ${
-                      showSkeleton ? "bg-ink text-paper" : "text-ink-mute hover:text-ink-soft"
-                    }`}
-                  >
-                    {locale === "he" ? "שלד מתכת" : t("viewer_skeleton")}
-                  </button>
+              {/* Mobile: collapse/expand toggle */}
+              <button
+                type="button"
+                onClick={() => setMobilePreviewOpen(!mobilePreviewOpen)}
+                className="md:hidden flex items-center justify-between border-b border-rule px-5 py-3 bg-paper-deep"
+              >
+                <span className="text-[0.75rem] uppercase tracking-[0.14em] text-ink-mute">
+                  {locale === "he" ? "תצוגה מקדימה" : "3D Preview"}
+                </span>
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className={`h-4 w-4 text-ink-mute transition-transform duration-300 ${mobilePreviewOpen ? "rotate-180" : ""}`}
+                >
+                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                </svg>
+              </button>
+
+              {/* Mobile: collapsible 3D area */}
+              <div className={`md:contents overflow-hidden transition-all duration-400 ease-in-out ${mobilePreviewOpen ? "max-h-[500px]" : "max-h-0"}`}>
+                {/* Skeleton toggle */}
+                <div className="flex justify-center border-b border-rule px-6 py-2.5 md:py-3">
+                  <div className="flex rounded-full border border-rule p-0.5 text-[0.8125rem]">
+                    <button
+                      type="button"
+                      onClick={() => setShowSkeleton(false)}
+                      className={`rounded-full px-4 py-1 md:px-5 md:py-1.5 transition-all duration-300 ${
+                        !showSkeleton ? "bg-ink text-paper" : "text-ink-mute hover:text-ink-soft"
+                      }`}
+                    >
+                      {locale === "he" ? "תכשיט משובץ" : t("viewer_gem")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSkeleton(true)}
+                      className={`rounded-full px-4 py-1 md:px-5 md:py-1.5 transition-all duration-300 ${
+                        showSkeleton ? "bg-ink text-paper" : "text-ink-mute hover:text-ink-soft"
+                      }`}
+                    >
+                      {locale === "he" ? "שלד מתכת" : t("viewer_skeleton")}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3D stage */}
+                <div
+                  key={stageKey}
+                  className="stage-crossfade min-h-0 flex-1 overflow-hidden px-4 py-2 [min-height:220px] md:[min-height:0]"
+                >
+                  <Ring3D
+                    jewelryType={jewelryType}
+                    shape={shape.id}
+                    metal={metal}
+                    setting={jewelryType === "earring" ? earringSetting.id : setting.id}
+                    band={band.id}
+                    carat={carat}
+                    diamondColor={FANCY_COLOR_OPTIONS.find(c => c.id === color)?.hex}
+                    showSkeleton={showSkeleton}
+                  />
                 </div>
               </div>
 
-              {/* 3D stage */}
-              <div
-                key={stageKey}
-                className="stage-crossfade min-h-0 flex-1 overflow-hidden px-4 py-2 [min-height:260px] md:[min-height:0]"
-              >
-                <Ring3D
-                  jewelryType={jewelryType}
-                  shape={shape.id}
-                  metal={metal}
-                  setting={jewelryType === "earring" ? earringSetting.id : setting.id}
-                  band={band.id}
-                  carat={carat}
-                  diamondColor={FANCY_COLOR_OPTIONS.find(c => c.id === color)?.hex}
-                  showSkeleton={showSkeleton}
-                />
-              </div>
-
-              {/* Live summary + CTA */}
-              <div className="border-t border-rule px-6 py-5 md:px-8 md:py-6 bg-paper-deep">
+              {/* Live summary + CTA — desktop only (mobile gets sticky bar) */}
+              <div className="hidden md:block border-t border-rule px-8 py-6 bg-paper-deep">
                 <p className="text-[0.6875rem] text-ink-mute tracking-[0.09em] uppercase">
                   {summaryShort}
                 </p>
@@ -333,7 +355,7 @@ export function AtelierConfigurator() {
                     <p className="text-[0.625rem] uppercase tracking-[0.12em] text-ink-mute mb-1">
                       {locale === "he" ? "הצעת מחיר" : "Pricing"}
                     </p>
-                    <p className="font-display text-[1.5rem] md:text-[1.875rem] leading-none text-ink">
+                    <p className="font-display text-[1.875rem] leading-none text-ink">
                       {locale === "he" ? "לפי דרישה" : "Upon Request"}
                     </p>
                     <p className="mt-1.5 text-[0.6875rem] text-ink-mute leading-snug max-w-[18rem]">
@@ -717,7 +739,7 @@ export function AtelierConfigurator() {
               <p className="text-[0.9375rem] text-ink leading-relaxed">{summaryFull}</p>
             </div>
 
-            <div id="atelier-lead" className="scroll-mt-28 mt-16 border-t border-rule pt-10">
+            <div id="atelier-lead" className="scroll-mt-28 mt-16 border-t border-rule pt-10 mb-24 md:mb-0">
               {leadState.status === "ok" ? (
                 <div className="vellum px-6 py-10 text-center">
                   <p className="section-label">Maison Mana</p>
@@ -799,6 +821,42 @@ export function AtelierConfigurator() {
                 </form>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Mobile sticky bottom bar ──────────────────────── */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-rule bg-paper-deep/95 backdrop-blur-md px-5 py-3 safe-bottom">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[0.6875rem] text-ink-mute tracking-[0.06em] uppercase truncate">
+              {summaryShort}
+            </p>
+            <p className="font-display text-[1.125rem] leading-tight text-ink mt-0.5">
+              {locale === "he" ? "לפי דרישה" : "Upon Request"}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setMobilePreviewOpen(true);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-rule text-ink-mute hover:text-ink transition-colors"
+              aria-label={locale === "he" ? "תצוגה מקדימה" : "Preview"}
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4.5 w-4.5">
+                <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                <path fillRule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <a
+              href="#atelier-lead"
+              className="brass-disc brass-disc--solid text-[0.8125rem] px-5 py-2.5"
+            >
+              {t("conf_send")}
+            </a>
           </div>
         </div>
       </div>
