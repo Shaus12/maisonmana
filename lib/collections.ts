@@ -1,18 +1,18 @@
 export interface CollectionItem {
   key: string;
   label: string;
-  title: string;
-  description: string;
+  titleKey: any;
+  descKey: any;
   image: string;
   alt: string;
   objectPosition?: string;
   imageFit?: "cover" | "contain";
   imagePadding?: boolean;
-  href: string;
-  linkText: string;
-  secondaryLinks?: {
+  /** If set, the card image + title will be a clickable link to this href */
+  href?: string;
+  links: {
     href: string;
-    label: string;
+    labelKey: any;
   }[];
   featured?: boolean;
 }
@@ -20,7 +20,7 @@ export interface CollectionItem {
 export const collectionImages = {
   bridal: "/bridal-diamond-rings-blue-box.jpg",
   fineJewelry: "/fine-jewelry-tennis-bracelet-wrist.jpg",
-  signature: "/signature-gold-mm-bracelet.jpg",
+  signature: "/panther-1.jpg",
   highJewelry: "/high-jewelry-square-diamond-ring-black-glove.jpg",
   mens: "/mens-diamond-bracelets-dark.jpg",
   bespoke: "/bespoke-oval-ring-black-glove.jpg",
@@ -30,84 +30,87 @@ export const collections: CollectionItem[] = [
   {
     key: "bridal",
     label: "BRIDAL COLLECTION",
-    title: "Bridal Collection",
-    description: "טבעות אירוסין, טבעות נישואין וסטים לזוגות — תכשיטים לרגע שבו סיפור הופך להתחייבות.",
+    titleKey: "col_bridal_title",
+    descKey: "col_bridal_desc",
     image: collectionImages.bridal,
     alt: "טבעות יהלום בקופסה כחולה מתוך Bridal Collection של Maison Mana",
     objectPosition: "center center",
     imageFit: "cover",
-    href: "/engagement-rings",
-    linkText: "טבעות אירוסין",
-    secondaryLinks: [
-      { href: "/wedding-rings", label: "טבעות נישואין" },
+    links: [
+      { href: "/engagement-rings", labelKey: "link_engagement" },
+      { href: "/wedding-rings", labelKey: "link_wedding" },
     ],
     featured: true
   },
   {
     key: "fineJewelry",
     label: "FINE JEWELRY",
-    title: "Fine Jewelry",
-    description: "שרשראות, עגילים, צמידים וטבעות יהלומים בעיצוב נקי, מדויק ועל־זמני.",
+    titleKey: "col_fine_title",
+    descKey: "col_fine_desc",
     image: collectionImages.fineJewelry,
     alt: "צמיד טניס משובץ יהלומים על פרק כף היד מתוך Fine Jewelry של Maison Mana",
     objectPosition: "center center",
     imageFit: "cover",
-    href: "/diamond-rings",
-    linkText: "טבעות יהלום",
-    secondaryLinks: [
-      { href: "/tennis-bracelets", label: "צמידי טניס" },
-      { href: "/diamond-necklaces", label: "שרשראות יהלומים" },
-      { href: "/diamond-earrings", label: "עגילי יהלומים" },
+    href: "/collections/fine-jewelry",
+    links: [
+      { href: "/diamond-rings", labelKey: "link_diamond_rings" },
+      { href: "/tennis-bracelets", labelKey: "link_tennis_bracelets" },
+      { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
+      { href: "/diamond-earrings", labelKey: "link_diamond_earrings" },
     ],
     featured: true
   },
   {
     key: "highJewelry",
     label: "HIGH JEWELRY",
-    title: "High Jewelry",
-    description: "יצירות חד־פעמיות, אבנים נדירות ועבודת יד ברמת אטלייה. זמינות לצפייה פרטית בלבד.",
+    titleKey: "col_high_title",
+    descKey: "col_high_desc",
     image: collectionImages.highJewelry,
     alt: "טבעת יהלום ייחודית על כפפה שחורה מתוך High Jewelry של Maison Mana",
     objectPosition: "center center",
     imageFit: "cover",
-    href: "/high-jewelry",
-    linkText: "High Jewelry"
+    links: [
+      { href: "/high-jewelry", labelKey: "link_high_jewelry" }
+    ]
   },
   {
     key: "signature",
     label: "SIGNATURE COLLECTION",
-    title: "Signature Collection",
-    description: "העיצובים המזוהים עם Maison MANA — קווים אישיים, פריטי MM ומהדורות מוגבלות.",
+    titleKey: "col_sig_title",
+    descKey: "col_sig_desc",
     image: collectionImages.signature,
     alt: "צמיד זהב משובץ יהלומים עם אלמנט מרכזי מתוך Signature Collection של Maison Mana",
     objectPosition: "center center",
     imageFit: "contain",
     imagePadding: true,
-    href: "/signature",
-    linkText: "Signature Collection"
+    links: [
+      { href: "/signature", labelKey: "link_signature" }
+    ]
   },
   {
     key: "bespoke",
     label: "BESPOKE",
-    title: "Bespoke",
-    description: "תכשיט שנוצר מהתחלה עבור אדם אחד — מהרעיון, דרך האבן והמתכת, ועד הדמיה ראשונית לפני פגישה.",
+    titleKey: "col_bespoke_title",
+    descKey: "col_bespoke_desc",
     image: collectionImages.bespoke,
     alt: "טבעת יהלום אובלית על כפפה שחורה כחלק מתהליך עיצוב אישי ב-Maison Mana",
     objectPosition: "center center",
     imageFit: "cover",
-    href: "/atelier",
-    linkText: "להדמיה אישית"
+    links: [
+      { href: "/atelier", labelKey: "link_atelier" }
+    ]
   },
   {
     key: "mens",
     label: "MEN’S COLLECTION",
-    title: "Men’s Collection",
-    description: "טבעות, צמידים, שרשראות וחפתים בעיצוב גברי נקי, חזק ומדויק.",
+    titleKey: "col_mens_title",
+    descKey: "col_mens_desc",
     image: collectionImages.mens,
     alt: "צמידי יהלומים עבים בזהב לבן וזהב צהוב מתוך Men’s Collection של Maison Mana",
     objectPosition: "center center",
     imageFit: "cover",
-    href: "/mens-jewelry",
-    linkText: "תכשיטי גברים"
+    links: [
+      { href: "/mens-jewelry", labelKey: "link_mens" }
+    ]
   }
 ];

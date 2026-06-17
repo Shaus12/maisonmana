@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState, useCallback, useMemo, useRef, useState } from "react";
+import { useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
 import { submitInquiry, type InquiryState } from "@/app/inquiry/actions";
+import { AtelierRenderFlow } from "./AtelierRenderFlow";
 
 const Ring3D = dynamic(() => import("./Ring3D").then((mod) => mod.Ring3D), {
   ssr: false,
@@ -206,6 +207,13 @@ export function AtelierConfigurator() {
   const [showAllBands, setShowAllBands] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(true);
+  const [renderResult, setRenderResult] = useState<{ imageUrl?: string; imageBase64?: string; mimeType: string } | null>(null);
+
+  useEffect(() => {
+    if (renderResult) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [renderResult]);
 
   const estimate = useMemo(
     () => estimatePriceILS({
@@ -273,6 +281,177 @@ export function AtelierConfigurator() {
   // Step counter logic
   let currentStep = 1;
 
+  async function handleDownloadImage(result: NonNullable<typeof renderResult>) {
+    try {
+      if (result.imageBase64) {
+        const byteCharacters = atob(result.imageBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: result.mimeType });
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = "maison-mana-render.png";
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+      
+      if (result.imageUrl) {
+        const proxyUrl = `/api/atelier/proxy-image?url=${encodeURIComponent(result.imageUrl)}&download=1`;
+        const response = await fetch(proxyUrl);
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = "maison-mana-render.jpg";
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+      }
+    } catch {
+      if (result.imageUrl) window.open(result.imageUrl, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  // ── FULL WIDTH RESULT LAYOUT ─────────────────────────────────
+  if (renderResult) {
+    const displaySrc = renderResult.imageBase64
+      ? `data:${renderResult.mimeType};base64,${renderResult.imageBase64}`
+      : renderResult.imageUrl
+      ? `/api/atelier/proxy-image?url=${encodeURIComponent(renderResult.imageUrl)}`
+      : "";
+
+    return (
+      <div className="bg-paper min-h-screen py-16 px-6 md:py-24" dir="rtl">
+        <div className="mx-auto max-w-[920px] flex flex-col items-center text-center">
+          <p className="section-label mb-4" dir="ltr">MAISON MANA · INITIAL RENDER</p>
+          <h2 className="display-he text-[2.5rem] md:text-[3rem] text-ink mb-3 leading-tight">
+            ההדמיה הראשונית מוכנה
+          </h2>
+          <p className="text-[1rem] text-ink-soft mb-12 max-w-2xl">{summaryFull}</p>
+
+          {/* Large Hero Image using regular <img> */}
+          <div className="relative w-full aspect-square md:aspect-[4/3] bg-velvet border border-ink/10 mb-8 p-0 md:p-8 flex items-center justify-center overflow-hidden">
+            <img
+              src={displaySrc}
+              alt="הדמיה ראשונית של תכשיט Maison Mana"
+              className="max-w-full max-h-full object-contain"
+              onError={(e) => {
+                // If proxy fails or image is dead, hide image and show fallback
+                (e.target as HTMLImageElement).style.display = "none";
+                const parent = (e.target as HTMLImageElement).parentElement;
+                if (parent) {
+                  parent.innerHTML = '<p class="text-ink-mute text-sm">לא ניתן לטעון את התמונה.</p>';
+                }
+              }}
+            />
+          </div>
+
+          {/* Disclaimer */}
+          <p className="text-[0.875rem] leading-relaxed text-ink-mute max-w-2xl mx-auto italic mb-10 border-s border-brass/40 ps-4 text-start">
+            ההדמיה מיועדת להמחשה ראשונית בלבד. היא נוצרה באמצעות מודל בינה מלאכותית על בסיס הבחירות שלך.
+            בפגישה האישית באטלייה נדייק יחד את הפרופורציות, האבן, השיבוץ והפרטים הסופיים.
+          </p>
+
+          {/* Actions */}
+          <div className="flex flex-col md:flex-row gap-5 items-center justify-center w-full max-w-md mx-auto">
+            <button
+              type="button"
+              onClick={() => handleDownloadImage(renderResult)}
+              className="brass-disc brass-disc--solid w-full justify-center"
+            >
+              הורדת ההדמיה
+            </button>
+            <button
+              type="button"
+              onClick={() => setRenderResult(null)}
+              className="hairline-link text-[0.9375rem]"
+            >
+              חזרה לעריכה
+            </button>
+          </div>
+
+          {/* Inquiry form section */}
+          <div id="atelier-lead" className="w-full mt-16 border-t border-rule pt-16 mb-24 md:mb-0 text-start">
+            {leadState.status === "ok" ? (
+              <div className="vellum px-6 py-10 text-center">
+                <p className="section-label">Maison Mana</p>
+                <h2 className="display-he mt-4 text-[2rem] leading-tight text-ink">
+                  הבקשה התקבלה באטלייה.
+                </h2>
+                <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
+                  נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית.
+                </p>
+              </div>
+            ) : (
+              <form action={leadAction} className="vellum px-6 py-8 md:px-12 md:py-16 mx-auto max-w-2xl">
+                <input type="hidden" name="intent" value="bespoke" />
+                <input type="hidden" name="bespoke" value={summaryFull} />
+                <header className="mb-10 text-center">
+                  <p className="section-label">פגישה פרטית</p>
+                  <h2 className="display-he mt-3 text-[1.875rem] leading-tight text-ink">
+                    שליחת העיצוב לאטלייה
+                  </h2>
+                  <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
+                    הפרטים יישלחו יחד עם ההדמיה וסיכום הבחירות כדי שנוכל להכין שיחה מדויקת.
+                  </p>
+                </header>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  <AtelierField
+                    name="name"
+                    label="שם מלא"
+                    required
+                    autoComplete="name"
+                    error={leadState.status === "error" && leadState.field === "name" ? leadState.message : undefined}
+                  />
+                  <AtelierField
+                    name="phone"
+                    label="טלפון"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    dir="ltr"
+                    error={leadState.status === "error" && leadState.field === "phone" ? leadState.message : undefined}
+                  />
+                  <AtelierField
+                    name="preferred"
+                    label="מועד מבוקש"
+                    placeholder="לדוגמה: שלישי בערב"
+                  />
+                </div>
+
+                <label className="mt-8 block text-start">
+                  <span className="section-label mb-3 block">הערות קצרות</span>
+                  <textarea
+                    name="message"
+                    rows={3}
+                    placeholder="מה חשוב שנדע לפני הפגישה?"
+                    className="block w-full resize-y border-0 border-b border-rule bg-transparent py-3 text-[1rem] leading-relaxed text-ink placeholder:text-ink-mute focus:border-brass focus:outline-none"
+                  />
+                </label>
+
+                {leadState.status === "error" && !leadState.field && (
+                  <p className="mt-5 text-[0.875rem] italic text-ink-soft text-start">{leadState.message}</p>
+                )}
+
+                <div className="mt-10 flex flex-wrap items-center justify-between gap-5">
+                  <p className="max-w-sm text-[0.75rem] leading-relaxed text-ink-mute text-start">
+                    הפרטים משמשים לתיאום הפגישה בלבד.
+                  </p>
+                  <AtelierSubmitButton />
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── NORMAL 2-COLUMN CONFIGURATOR LAYOUT ──────────────────────
   return (
     <div className="bg-paper">
       <div className="mx-auto max-w-[1440px]">
@@ -738,6 +917,22 @@ export function AtelierConfigurator() {
               <p className="section-label mb-2">{t("conf_summary_label")}</p>
               <p className="text-[0.9375rem] text-ink leading-relaxed">{summaryFull}</p>
             </div>
+
+            <AtelierRenderFlow
+              designSelections={{
+                jewelryType,
+                setting: jewelryType === "earring" ? earringSetting.id : setting.id,
+                shape: shape.id,
+                origin,
+                carat,
+                color,
+                clarity,
+                metal: metal.id,
+                band: band.id,
+              }}
+              designSummary={summaryFull}
+              onResult={setRenderResult}
+            />
 
             <div id="atelier-lead" className="scroll-mt-28 mt-16 border-t border-rule pt-10 mb-24 md:mb-0">
               {leadState.status === "ok" ? (

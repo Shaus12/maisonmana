@@ -6,6 +6,7 @@ import { siteUrl } from "@/lib/seo";
 const publicRoutes = [
   "/",
   "/collections",
+  "/collections/fine-jewelry",
   "/collections/rings",
   "/collections/necklaces",
   "/collections/earrings",

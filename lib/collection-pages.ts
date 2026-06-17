@@ -11,26 +11,31 @@ export type CollectionPageSlug =
 
 type Cta = {
   href: string;
-  label: string;
+  labelKey: string;
 };
 
 export type FaqItem = {
-  question: string;
-  answer: string;
+  questionKey: string;
+  answerKey: string;
 };
 
 export type CollectionPage = {
   slug: CollectionPageSlug;
-  eyebrow: string;
-  title: string;
+  eyebrowKey: string;
+  titleKey: string;
   titleLat?: string;
-  description: string;
+  descriptionKey: string;
   image: string;
   imageAlt: string;
-  points: string[];
+  detailImages?: {
+    src: string;
+    alt: string;
+    objectPosition?: string;
+  }[];
+  pointsKeys: string[];
   sections: {
-    title: string;
-    body: string;
+    titleKey: string;
+    bodyKey: string;
   }[];
   relatedLinks: Cta[];
   faqs?: FaqItem[];
@@ -43,365 +48,332 @@ export type CollectionPage = {
 export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
   "engagement-rings": {
     slug: "engagement-rings",
-    eyebrow: "Bridal Collection",
-    title: "טבעות אירוסין",
-    description:
-      "טבעת אירוסין ב-Maison Mana מתחילה בסגנון אישי ובבחירת יהלום מדויקת, וממשיכה להדמיה ראשונית ולפגישה פרטית באטלייה.",
+    eyebrowKey: "cp_er_eyebrow",
+    titleKey: "cp_er_title",
+    descriptionKey: "cp_er_desc",
     image: "/bridal-diamond-rings-blue-box.jpg",
-    imageAlt: "טבעות יהלום בקופסה כחולה מתוך Bridal Collection של Maison Mana",
-    points: ["טבעת אירוסין בעיצוב אישי", "בחירת יהלום טבעי או יהלום מעבדה", "הדמיה ראשונית לפני פגישה פרטית"],
+    imageAlt: "טבעת יהלום עגולה בקופסה כהה מתוך Bridal Collection של Maison Mana",
+    detailImages: [
+      {
+        src: "/ring-close.jpg",
+        alt: "טבעת יהלום מרקיזה בתקריב בעיצוב אישי של Maison Mana",
+      }
+    ],
+    pointsKeys: ["cp_er_points_0", "cp_er_points_1", "cp_er_points_2"],
     sections: [
       {
-        title: "בחירת היהלום",
-        body: "בפגישה בוחנים צורה, קראט, צבע, ניקיון ותעודה. אפשר לבחור יהלום טבעי או יהלום מעבדה לפי העדפה, תקציב ונוכחות על היד.",
+        titleKey: "cp_er_sec_1_title",
+        bodyKey: "cp_er_sec_1_body",
       },
       {
-        title: "מתכת ופרופורציה",
-        body: "זהב צהוב, זהב לבן, זהב ורוד או פלטינה משנים את אופי הטבעת. גם רוחב הלהקה, גובה השיבוץ והנוחות היומיומית נבחנים יחד.",
+        titleKey: "cp_er_sec_2_title",
+        bodyKey: "cp_er_sec_2_body",
       },
       {
-        title: "מהדמיה לפגישה",
-        body: "ההדמיה האישית מסמנת כיוון ראשוני. לאחר מכן מתאמים פגישה פרטית כדי לדייק את האבן, המתכת והפרטים הקטנים לפני ייצור.",
+        titleKey: "cp_er_sec_3_title",
+        bodyKey: "cp_er_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/diamonds", label: "מדריך היהלומים" },
-      { href: "/atelier", label: "הדמיה אישית" },
-      { href: "/inquiry", label: "תיאום פגישה פרטית" },
+      { href: "/diamonds", labelKey: "link_diamonds_guide" },
+      { href: "/atelier", labelKey: "link_atelier" },
+      { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
     faqs: [
-      {
-        question: "כמה זמן לוקח לעצב טבעת אירוסין?",
-        answer: "משך התהליך משתנה לפי זמינות האבן ורמת המורכבות, אך לרוב מתחילים בהדמיה ובפגישה פרטית לפני קביעת לוח זמנים מדויק.",
-      },
-      {
-        question: "האם אפשר לבחור יהלום טבעי או יהלום מעבדה?",
-        answer: "כן. Maison Mana מלווה בבחירת יהלום טבעי או יהלום מעבדה לפי מראה, מפרט, תעודה ותקציב.",
-      },
-      {
-        question: "האם אפשר להגיע עם תמונת השראה?",
-        answer: "כן. תמונת השראה עוזרת להבין את הכיוון, ולאחר מכן מתרגמים אותה לעיצוב אישי שמתאים לאבן וליד.",
-      },
-      {
-        question: "האם מקבלים תעודה ליהלום?",
-        answer: "כאשר האבן נבחרת עם תעודה, פרטי התעודה כגון GIA, IGI או HRD נמסרים כחלק ממפרט התכשיט.",
-      },
-      {
-        question: "האם הפגישה בתיאום מראש?",
-        answer: "כן. כל פגישה ב-Maison Mana מתקיימת בתיאום מראש בלבד כדי לשמור על תהליך פרטי ושקט.",
-      },
+      { questionKey: "cp_er_faq_1_q", answerKey: "cp_er_faq_1_a" },
+      { questionKey: "cp_er_faq_2_q", answerKey: "cp_er_faq_2_a" },
+      { questionKey: "cp_er_faq_3_q", answerKey: "cp_er_faq_3_a" },
+      { questionKey: "cp_er_faq_4_q", answerKey: "cp_er_faq_4_a" },
+      { questionKey: "cp_er_faq_5_q", answerKey: "cp_er_faq_5_a" },
     ],
-    primaryCta: { href: "/atelier", label: "להדמיה אישית" },
-    secondaryCta: { href: "/inquiry", label: "לתיאום פגישה פרטית" },
+    primaryCta: { href: "/atelier", labelKey: "link_atelier" },
+    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
     metaTitle: "טבעות אירוסין | Maison Mana",
-    metaDescription:
-      "טבעות אירוסין של Maison Mana בעיצוב אישי, עם בחירת יהלום טבעי או יהלום מעבדה, מתכת והדמיה ראשונית לפני פגישה פרטית.",
+    metaDescription: "טבעות אירוסין של Maison Mana בעיצוב אישי, עם בחירת יהלום טבעי או יהלום מעבדה, מתכת והדמיה ראשונית לפני פגישה פרטית.",
   },
   "wedding-rings": {
     slug: "wedding-rings",
-    eyebrow: "Bridal Collection",
-    title: "טבעות נישואין",
-    description:
-      "טבעות נישואין בעבודת אטלייה נקייה, מזוגות קלאסיים ועד טבעות משובצות שנוצרות לצד טבעת האירוסין.",
+    eyebrowKey: "cp_er_eyebrow",
+    titleKey: "cp_wr_title",
+    descriptionKey: "cp_wr_desc",
     image: "/rings-campaign.png",
     imageAlt: "טבעות יהלום וזהב מתוך Bridal Collection של Maison Mana",
-    points: ["סטים לזוגות", "חריטה אישית ועדינה", "התאמה לטבעת אירוסין קיימת"],
+    pointsKeys: ["cp_wr_points_0", "cp_wr_points_1", "cp_wr_points_2"],
     sections: [
       {
-        title: "זוג טבעות עם שפה משותפת",
-        body: "אפשר ליצור זוג טבעות תואמות או שתי טבעות שונות עם פרט משותף: חתך, מתכת, חריטה או יחס עדין לטבעת האירוסין.",
+        titleKey: "cp_wr_sec_1_title",
+        bodyKey: "cp_wr_sec_1_body",
       },
       {
-        title: "חריטה ופרטים אישיים",
-        body: "חריטה פנימית, גימור מט או מבריק ושיבוץ יהלומים עדין מאפשרים להפוך טבעת נישואין קלאסית לפריט אישי בלי להעמיס עליה.",
+        titleKey: "cp_wr_sec_2_title",
+        bodyKey: "cp_wr_sec_2_body",
       },
       {
-        title: "נוחות לאורך שנים",
-        body: "הפרופיל, העובי והקימור נבחרים לפי ענידה יומיומית. המטרה היא טבעת שנראית מדויקת ומרגישה טבעית על היד.",
+        titleKey: "cp_wr_sec_3_title",
+        bodyKey: "cp_wr_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/engagement-rings", label: "טבעות אירוסין" },
-      { href: "/atelier", label: "הדמיה אישית" },
-      { href: "/inquiry", label: "תיאום פגישה פרטית" },
+      { href: "/engagement-rings", labelKey: "link_engagement" },
+      { href: "/atelier", labelKey: "link_atelier" },
+      { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
-    primaryCta: { href: "/inquiry", label: "לתיאום פגישה פרטית" },
-    secondaryCta: { href: "/engagement-rings", label: "טבעות אירוסין" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
+    secondaryCta: { href: "/engagement-rings", labelKey: "link_engagement" },
     metaTitle: "טבעות נישואין | Maison Mana",
-    metaDescription:
-      "טבעות נישואין של Maison Mana בעיצוב אישי, סטים לזוגות, חריטה עדינה ופגישה פרטית להתאמת מתכת, פרופיל ושיבוץ.",
+    metaDescription: "טבעות נישואין של Maison Mana בעיצוב אישי, סטים לזוגות, חריטה עדינה ופגישה פרטית להתאמת מתכת, פרופיל ושיבוץ.",
   },
   "diamond-rings": {
     slug: "diamond-rings",
-    eyebrow: "Fine Jewelry",
-    title: "טבעות יהלום",
-    description:
-      "טבעות יהלום לאירוע, ליום יום או כיצירת חתימה אישית, עם בחירה מדויקת של חיתוך יהלום, מתכת ופרופורציה.",
-    image: "/ring-close.jpg",
-    imageAlt: "טבעת יהלום מקרוב מתוך Fine Jewelry של Maison Mana",
-    points: ["חיתוכי יהלומים שונים", "יהלום טבעי או יהלום מעבדה", "עיצוב אישי סביב האבן"],
+    eyebrowKey: "col_fine_title",
+    titleKey: "cp_dr_title",
+    descriptionKey: "cp_dr_desc",
+    image: "/high-jewelry-square-diamond-ring-black-glove.jpg",
+    imageAlt: "טבעת יהלום קושן בזהב בעבודת יד של Maison Mana",
+    detailImages: [
+      {
+        src: "/bespoke-oval-ring-black-glove.jpg",
+        alt: "טבעת יהלומים רחבה עם יהלום טיפה בעיצוב ייחודי של Maison Mana",
+      }
+    ],
+    pointsKeys: ["cp_dr_points_0", "cp_dr_points_1", "cp_dr_points_2"],
     sections: [
       {
-        title: "חיתוך היהלום משנה את האופי",
-        body: "עגול, אובל, אמרלד, כרית או טיפה מעניקים לטבעת נוכחות אחרת. בחירת החיתוך נעשית לצד שיקולי אור, יד וסגנון אישי.",
+        titleKey: "cp_dr_sec_1_title",
+        bodyKey: "cp_dr_sec_1_body",
       },
       {
-        title: "טבעת יהלום שאינה בהכרח טבעת אירוסין",
-        body: "טבעות יהלום יכולות להיות פריט יום-יום מדויק, טבעת קוקטייל או מתנה לציון רגע אישי. העיצוב נבנה סביב השימוש ולא רק סביב האבן.",
+        titleKey: "cp_dr_sec_2_title",
+        bodyKey: "cp_dr_sec_2_body",
       },
       {
-        title: "מפרט לפני החלטה",
-        body: "אפשר להשוות בין יהלום טבעי ליהלום מעבדה, להבין את התעודה ולבחור מתכת ושיבוץ שמתאימים לתקציב ולמראה המבוקש.",
+        titleKey: "cp_dr_sec_3_title",
+        bodyKey: "cp_dr_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/diamonds", label: "מדריך היהלומים" },
-      { href: "/engagement-rings", label: "טבעות אירוסין" },
-      { href: "/inquiry", label: "תיאום פגישה פרטית" },
+      { href: "/diamonds", labelKey: "link_diamonds_guide" },
+      { href: "/engagement-rings", labelKey: "link_engagement" },
+      { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
-    primaryCta: { href: "/atelier", label: "להדמיה אישית" },
-    secondaryCta: { href: "/inquiry", label: "לבירור על האוסף" },
+    primaryCta: { href: "/atelier", labelKey: "link_atelier" },
+    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
     metaTitle: "טבעות יהלום | Maison Mana",
-    metaDescription:
-      "טבעות יהלום של Maison Mana בעיצוב אישי, עם חיתוכי יהלומים, יהלום טבעי או יהלום מעבדה ופגישה פרטית.",
+    metaDescription: "טבעות יהלום של Maison Mana בעיצוב אישי, עם חיתוכי יהלומים, יהלום טבעי או יהלום מעבדה ופגישה פרטית.",
   },
   "tennis-bracelets": {
     slug: "tennis-bracelets",
-    eyebrow: "Fine Jewelry",
-    title: "צמידי טניס",
-    description:
-      "צמיד טניס ב-Maison Mana נבחן דרך רצף היהלומים, איכות השיבוץ, סוג הזהב והנוחות על פרק כף היד.",
+    eyebrowKey: "col_fine_title",
+    titleKey: "cp_tb_title",
+    descriptionKey: "cp_tb_desc",
     image: "/fine-jewelry-tennis-bracelet-wrist.jpg",
     imageAlt: "צמיד טניס משובץ יהלומים על פרק כף היד מתוך Fine Jewelry של Maison Mana",
-    points: ["שיבוץ יהלומים רציף ומדויק", "זהב לבן, צהוב או ורוד", "התאמת אורך וסוגר"],
+    detailImages: [
+      {
+        src: "/bracelet-1.jpg",
+        alt: "צמיד יהלומים על בד קטיפה כחול מתוך Maison Mana",
+      }
+    ],
+    pointsKeys: ["cp_tb_points_0", "cp_tb_points_1", "cp_tb_points_2"],
     sections: [
       {
-        title: "רצף אור על פרק היד",
-        body: "צמיד טניס טוב נמדד באחידות היהלומים, במרווחי השיבוץ ובדרך שבה הוא נע על היד בלי לאבד את הקו הנקי שלו.",
+        titleKey: "cp_tb_sec_1_title",
+        bodyKey: "cp_tb_sec_1_body",
       },
       {
-        title: "בחירת זהב ומבנה",
-        body: "זהב לבן מדגיש בהירות, זהב צהוב מוסיף חום וזהב ורוד יוצר רכות. גם גובה השיבוץ וסוג הסוגר משפיעים על התחושה.",
+        titleKey: "cp_tb_sec_2_title",
+        bodyKey: "cp_tb_sec_2_body",
       },
       {
-        title: "התאמה אישית ולא מדף",
-        body: "אורך הצמיד, משקל היהלומים והבחירה בין יהלומים טבעיים ליהלומי מעבדה נקבעים בפגישה פרטית לפי היד והתקציב.",
+        titleKey: "cp_tb_sec_3_title",
+        bodyKey: "cp_tb_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/diamond-necklaces", label: "שרשראות יהלומים" },
-      { href: "/diamond-earrings", label: "עגילי יהלומים" },
-      { href: "/inquiry", label: "תיאום צפייה פרטית" },
+      { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
+      { href: "/diamond-earrings", labelKey: "link_diamond_earrings" },
+      { href: "/inquiry", labelKey: "link_inquiry_viewing" },
     ],
     faqs: [
-      {
-        question: "מהו צמיד טניס?",
-        answer: "צמיד טניס הוא צמיד רציף המשובץ בדרך כלל ביהלומים לאורך כל ההיקף, כך שנוצר קו אור נקי וגמיש על פרק היד.",
-      },
-      {
-        question: "האם אפשר לבחור את סוג הזהב?",
-        answer: "כן. ניתן להתאים את הצמיד לזהב לבן, צהוב או ורוד בהתאם למראה המבוקש ולשילוב עם תכשיטים קיימים.",
-      },
-      {
-        question: "האם אפשר להתאים את אורך הצמיד?",
-        answer: "כן. אורך הצמיד והתחושה על היד נבדקים בפגישה כדי לשמור על נוחות, ביטחון ונפילה נכונה.",
-      },
-      {
-        question: "האם הצמיד מגיע עם יהלומים טבעיים או מעבדה?",
-        answer: "אפשר לבחון שתי אפשרויות. הבחירה נעשית לפי מפרט, מראה, תעודות ותקציב.",
-      },
+      { questionKey: "cp_tb_faq_1_q", answerKey: "cp_tb_faq_1_a" },
+      { questionKey: "cp_tb_faq_2_q", answerKey: "cp_tb_faq_2_a" },
+      { questionKey: "cp_tb_faq_3_q", answerKey: "cp_tb_faq_3_a" },
+      { questionKey: "cp_tb_faq_4_q", answerKey: "cp_tb_faq_4_a" },
     ],
-    primaryCta: { href: "/inquiry", label: "לתיאום צפייה פרטית" },
-    secondaryCta: { href: "/diamond-necklaces", label: "שרשראות יהלומים" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
+    secondaryCta: { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
     metaTitle: "צמידי טניס | Maison Mana",
-    metaDescription:
-      "צמידי טניס וצמידי יהלומים של Maison Mana, בהתאמת אורך, סוג זהב, איכות שיבוץ ומפרט יהלומים בפגישה פרטית.",
+    metaDescription: "צמידי טניס וצמידי יהלומים של Maison Mana, בהתאמת אורך, סוג זהב, איכות שיבוץ ומפרט יהלומים בפגישה פרטית.",
   },
   "diamond-necklaces": {
     slug: "diamond-necklaces",
-    eyebrow: "Fine Jewelry",
-    title: "שרשראות יהלומים",
-    description:
-      "שרשראות ותליוני יהלומים בעיצוב נקי, מתליון יחיד ועד שרשרת טניס, עם התאמה אישית של האבן, האורך והנוכחות.",
-    image: "/panther-1.jpg",
-    imageAlt: "שרשרת יהלומים מתוך אוסף השרשראות של Maison Mana",
-    points: ["תליון יהלום או שרשרת טניס", "התאמת אורך ונוכחות", "בחירת יהלום טבעי או יהלום מעבדה"],
+    eyebrowKey: "col_fine_title",
+    titleKey: "cp_dn_title",
+    descriptionKey: "cp_dn_desc",
+    image: "/maya.jpg",
+    imageAlt: "שרשרת יהלום סוליטר על בובת תצוגה שחורה של Maison Mana",
+    pointsKeys: ["cp_dn_points_0", "cp_dn_points_1", "cp_dn_points_2"],
     sections: [
       {
-        title: "תליון יהלום אישי",
-        body: "תליון יהלום יכול להיות עדין ויומיומי או בעל נוכחות ברורה. צורת האבן, אורך השרשרת וסוג המתכת משנים את כל האופי.",
+        titleKey: "cp_dn_sec_1_title",
+        bodyKey: "cp_dn_sec_1_body",
       },
       {
-        title: "שרשרת טניס",
-        body: "שרשרת טניס דורשת איזון בין אחידות היהלומים, גמישות על הצוואר ותחושת משקל. כל פרט משפיע על הנוחות והמראה.",
+        titleKey: "cp_dn_sec_2_title",
+        bodyKey: "cp_dn_sec_2_body",
       },
       {
-        title: "התאמה לסגנון ולשכבות",
-        body: "בפגישה אפשר להתאים את השרשרת לענידה לבד או בשכבות, ולבחור אורך שמחמיא למבנה הצוואר ולתכשיטים קיימים.",
+        titleKey: "cp_dn_sec_3_title",
+        bodyKey: "cp_dn_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/tennis-bracelets", label: "צמידי טניס" },
-      { href: "/diamond-earrings", label: "עגילי יהלומים" },
-      { href: "/inquiry", label: "לבירור על האוסף" },
+      { href: "/tennis-bracelets", labelKey: "link_tennis_bracelets" },
+      { href: "/diamond-earrings", labelKey: "link_diamond_earrings" },
+      { href: "/inquiry", labelKey: "link_inquiry_collection" },
     ],
-    primaryCta: { href: "/inquiry", label: "לבירור על האוסף" },
-    secondaryCta: { href: "/tennis-bracelets", label: "צמידי טניס" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    secondaryCta: { href: "/tennis-bracelets", labelKey: "link_tennis_bracelets" },
     metaTitle: "שרשראות יהלומים | Maison Mana",
-    metaDescription:
-      "שרשראות יהלומים, תליון יהלום ושרשרת טניס של Maison Mana בעיצוב אישי ובצפייה פרטית באטלייה.",
+    metaDescription: "שרשראות יהלומים, תליון יהלום ושרשרת טניס של Maison Mana בעיצוב אישי ובצפייה פרטית באטלייה.",
   },
   "diamond-earrings": {
     slug: "diamond-earrings",
-    eyebrow: "Fine Jewelry",
-    title: "עגילי יהלומים",
-    description:
-      "עגילי יהלומים צמודים, חישוקים ועגילי drop בעיצוב מדויק, עם דגש על סימטריה, אור ונוחות ענידה.",
+    eyebrowKey: "col_fine_title",
+    titleKey: "cp_de_title",
+    descriptionKey: "cp_de_desc",
     image: "/earrings-campaign.jpg",
-    imageAlt: "עגילי יהלומים מתוך אוסף העגילים של Maison Mana",
-    points: ["Stud, hoop ו-drop", "עגילים ליומיום ולאירועים", "התאמה לפי צורת יהלום וסגנון אישי"],
+    imageAlt: "עגילי יהלומים יוקרתיים על כפפה שחורה מתוך High Jewelry של Maison Mana",
+    pointsKeys: ["cp_de_points_0", "cp_de_points_1", "cp_de_points_2"],
     sections: [
       {
-        title: "Stud, hoop או drop",
-        body: "עגילים צמודים מדגישים ניקיון ואור, חישוקים נותנים תנועה יומיומית, ועגילי drop מוסיפים אורך ונוכחות לאירוע.",
+        titleKey: "cp_de_sec_1_title",
+        bodyKey: "cp_de_sec_1_body",
       },
       {
-        title: "סימטריה ונוחות",
-        body: "בבחירת עגילי יהלומים חשוב להתייחס למשקל, לסגירה ולמרחק מהאוזן. תכשיט יפה צריך להרגיש נכון גם אחרי כמה שעות.",
+        titleKey: "cp_de_sec_2_title",
+        bodyKey: "cp_de_sec_2_body",
       },
       {
-        title: "יהלומים שמתאימים לזוג",
-        body: "האבנים נבחרות כזוג מבחינת צבע, ניקיון, קוטר ואופי החיתוך כדי ליצור מראה אחיד ומדויק.",
+        titleKey: "cp_de_sec_3_title",
+        bodyKey: "cp_de_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/diamond-necklaces", label: "שרשראות יהלומים" },
-      { href: "/diamond-rings", label: "טבעות יהלום" },
-      { href: "/inquiry", label: "לבירור על האוסף" },
+      { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
+      { href: "/diamond-rings", labelKey: "link_diamond_rings" },
+      { href: "/inquiry", labelKey: "link_inquiry_collection" },
     ],
-    primaryCta: { href: "/inquiry", label: "לבירור על האוסף" },
-    secondaryCta: { href: "/diamond-necklaces", label: "שרשראות יהלומים" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    secondaryCta: { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
     metaTitle: "עגילי יהלומים | Maison Mana",
-    metaDescription:
-      "עגילי יהלומים של Maison Mana: stud, hoop ו-drop בעיצוב נקי ומדויק, עם התאמת יהלומים ומתכת בפגישה פרטית.",
+    metaDescription: "עגילי יהלומים של Maison Mana: stud, hoop ו-drop בעיצוב נקי ומדויק, עם התאמת יהלומים ומתכת בפגישה פרטית.",
   },
   "mens-jewelry": {
     slug: "mens-jewelry",
-    eyebrow: "Men's Collection",
-    title: "תכשיטי גברים",
-    description:
-      "תכשיטי גברים בזהב ויהלומים, מטבעות וצמידים ועד שרשראות וחפתים בקווים חזקים, נקיים ומדויקים.",
+    eyebrowKey: "col_mens_title",
+    titleKey: "cp_mj_title",
+    descriptionKey: "cp_mj_desc",
     image: "/mens-diamond-bracelets-dark.jpg",
     imageAlt: "צמידי יהלומים עבים בזהב לבן וזהב צהוב מתוך Men’s Collection של Maison Mana",
-    points: ["טבעות גברים", "צמידים, שרשראות וחפתים", "עיצוב אישי לפי פרופורציה ונוכחות"],
+    pointsKeys: ["cp_mj_points_0", "cp_mj_points_1", "cp_mj_points_2"],
     sections: [
       {
-        title: "נוכחות בלי עודף",
-        body: "תכשיטי גברים ב-Maison Mana נשענים על קווים ברורים, משקל נכון וחומרים שמרגישים מדויקים ולא מקושטים מדי.",
+        titleKey: "cp_mj_sec_1_title",
+        bodyKey: "cp_mj_sec_1_body",
       },
       {
-        title: "טבעות, צמידים ושרשראות",
-        body: "אפשר להתחיל מטבעת יהלום לגבר, צמיד זהב, שרשרת נקייה או חפתים אישיים, ולבנות את הפרופורציה סביב הגוף והסגנון.",
+        titleKey: "cp_mj_sec_2_title",
+        bodyKey: "cp_mj_sec_2_body",
       },
       {
-        title: "פגישה פרטית למדידה",
-        body: "רוחב טבעת, אורך צמיד או משקל שרשרת נבחרים בצורה הטובה ביותר בפגישה שבה אפשר למדוד ולהרגיש את התכשיט.",
+        titleKey: "cp_mj_sec_3_title",
+        bodyKey: "cp_mj_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/collections", label: "כל האוספים" },
-      { href: "/inquiry", label: "תיאום פגישה פרטית" },
+      { href: "/collections", labelKey: "link_all_collections" },
+      { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
-    primaryCta: { href: "/inquiry", label: "לתיאום פגישה פרטית" },
-    secondaryCta: { href: "/collections", label: "כל האוספים" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
+    secondaryCta: { href: "/collections", labelKey: "link_all_collections" },
     metaTitle: "תכשיטי גברים | Maison Mana",
-    metaDescription:
-      "תכשיטי גברים של Maison Mana: טבעות גברים, צמידים, שרשראות וחפתים בזהב ויהלומים, בעיצוב אישי ופגישה פרטית.",
+    metaDescription: "תכשיטי גברים של Maison Mana: טבעות גברים, צמידים, שרשראות וחפתים בזהב ויהלומים, בעיצוב אישי ופגישה פרטית.",
   },
   "high-jewelry": {
     slug: "high-jewelry",
-    eyebrow: "High Jewelry",
-    title: "תכשיטי יוקרה חד־פעמיים",
+    eyebrowKey: "col_high_title",
+    titleKey: "cp_hj_title",
     titleLat: "High Jewelry",
-    description:
-      "High Jewelry ב-Maison Mana נוצר סביב אבנים נדירות, יהלומים גדולים ועבודת יד מדויקת לצפייה פרטית בלבד.",
+    descriptionKey: "cp_hj_desc",
     image: "/high-jewelry-square-diamond-ring-black-glove.jpg",
     imageAlt: "טבעת יהלום ייחודית על כפפה שחורה מתוך High Jewelry של Maison Mana",
-    points: ["יצירות חד־פעמיות", "יהלומים גדולים ואבנים נדירות", "צפייה פרטית ותהליך דיסקרטי"],
+    detailImages: [
+      {
+        src: "/earrings-campaign.jpg",
+        alt: "תכשיט יהלומים דרמטי מתוך High Jewelry של Maison Mana",
+      }
+    ],
+    pointsKeys: ["cp_hj_points_0", "cp_hj_points_1", "cp_hj_points_2"],
     sections: [
       {
-        title: "האבן מובילה את העיצוב",
-        body: "ב-High Jewelry מתחילים לרוב מאבן משמעותית: יהלום גדול, צורה נדירה או גוון יוצא דופן. העיצוב נבנה כדי לשרת אותה.",
+        titleKey: "cp_hj_sec_1_title",
+        bodyKey: "cp_hj_sec_1_body",
       },
       {
-        title: "יצירה אחת, תהליך אחד",
-        body: "כל פריט נבחן כיצירה חד־פעמית. המתכת, השיבוץ והפרופורציה מפותחים סביב האבן והאדם שעבורו היא מיועדת.",
+        titleKey: "cp_hj_sec_2_title",
+        bodyKey: "cp_hj_sec_2_body",
       },
       {
-        title: "צפייה פרטית",
-        body: "פריטי High Jewelry מוצגים בפגישה פרטית בלבד, עם זמן לשיחה, מדידה והבנת מקור האבן והמפרט שלה.",
+        titleKey: "cp_hj_sec_3_title",
+        bodyKey: "cp_hj_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/diamonds", label: "ייעוץ יהלומים" },
-      { href: "/inquiry", label: "תיאום צפייה פרטית" },
+      { href: "/diamonds", labelKey: "link_diamonds_guide" },
+      { href: "/inquiry", labelKey: "link_inquiry_viewing" },
     ],
     faqs: [
-      {
-        question: "מה נחשב High Jewelry?",
-        answer: "High Jewelry מתייחס ליצירות חד־פעמיות או נדירות במיוחד, לרוב סביב אבנים משמעותיות ועבודת יד ברמת אטלייה גבוהה.",
-      },
-      {
-        question: "האם ניתן לראות פריטים בפגישה פרטית?",
-        answer: "כן. פריטי High Jewelry מוצגים בתיאום צפייה פרטית בלבד כדי לשמור על דיסקרטיות ועל זמן בחינה מתאים.",
-      },
-      {
-        question: "האם ניתן לבחור אבן נדירה מראש?",
-        answer: "כן. אפשר להתחיל מבחירת אבן מסוימת או מבקשה לאתר אבן נדירה לפי צורה, גודל, צבע או תעודה.",
-      },
-      {
-        question: "האם כל פריט מיוצר בעבודת יד?",
-        answer: "פריטי High Jewelry מפותחים ומיוצרים בתהליך אטלייה מוקפד, עם עבודת יד בשלבי השיבוץ והגימור.",
-      },
+      { questionKey: "cp_hj_faq_1_q", answerKey: "cp_hj_faq_1_a" },
+      { questionKey: "cp_hj_faq_2_q", answerKey: "cp_hj_faq_2_a" },
+      { questionKey: "cp_hj_faq_3_q", answerKey: "cp_hj_faq_3_a" },
+      { questionKey: "cp_hj_faq_4_q", answerKey: "cp_hj_faq_4_a" },
     ],
-    primaryCta: { href: "/inquiry", label: "לתיאום צפייה פרטית" },
-    secondaryCta: { href: "/diamonds", label: "ייעוץ יהלומים" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
+    secondaryCta: { href: "/diamonds", labelKey: "link_diamonds_guide" },
     metaTitle: "High Jewelry | תכשיטי יוקרה חד־פעמיים | Maison Mana",
-    metaDescription:
-      "High Jewelry של Maison Mana: תכשיטי יוקרה חד־פעמיים, יהלומים גדולים, אבנים נדירות וצפייה פרטית באטלייה.",
+    metaDescription: "High Jewelry של Maison Mana: תכשיטי יוקרה חד־פעמיים, יהלומים גדולים, אבנים נדירות וצפייה פרטית באטלייה.",
   },
   signature: {
     slug: "signature",
-    eyebrow: "Signature Collection",
-    title: "Signature Collection",
-    description:
-      "Signature Collection מרכזת את פריטי ה-MM והעיצובים המזוהים עם Maison Mana, בקווים אישיים ומהדורות מוגבלות.",
-    image: "/signature-gold-mm-bracelet.jpg",
-    imageAlt: "צמיד זהב משובץ יהלומים עם אלמנט מרכזי מתוך Signature Collection של Maison Mana",
-    points: ["פריטי MM", "מהדורות מוגבלות", "עיצובי Maison Mana מזוהים"],
+    eyebrowKey: "col_sig_title",
+    titleKey: "cp_sig_title",
+    descriptionKey: "cp_sig_desc",
+    image: "/panther-1.jpg",
+    imageAlt: "תכשיט חתימה מתוך Signature Collection של Maison Mana",
+    pointsKeys: ["cp_sig_points_0", "cp_sig_points_1", "cp_sig_points_2"],
     sections: [
       {
-        title: "שפת בית מזוהה",
-        body: "הפריטים בקולקציית Signature נשענים על צורות, פרופורציות ופרטי MM שמזוהים עם Maison Mana.",
+        titleKey: "cp_sig_sec_1_title",
+        bodyKey: "cp_sig_sec_1_body",
       },
       {
-        title: "מהדורות מוגבלות",
-        body: "חלק מהפריטים נוצרים בכמויות קטנות או סביב חומרים זמינים לזמן מוגבל, ולכן מתאימים לצפייה ובירור אישי.",
+        titleKey: "cp_sig_sec_2_title",
+        bodyKey: "cp_sig_sec_2_body",
       },
       {
-        title: "אפשרות להתאמה אישית",
-        body: "ניתן לבחון התאמות עדינות כמו מתכת, אורך, שיבוץ או חריטה, תוך שמירה על האופי המקורי של העיצוב.",
+        titleKey: "cp_sig_sec_3_title",
+        bodyKey: "cp_sig_sec_3_body",
       },
     ],
     relatedLinks: [
-      { href: "/collections", label: "כל האוספים" },
-      { href: "/inquiry", label: "לבירור על האוסף" },
+      { href: "/collections", labelKey: "link_all_collections" },
+      { href: "/inquiry", labelKey: "link_inquiry_collection" },
     ],
-    primaryCta: { href: "/inquiry", label: "לבירור על האוסף" },
-    secondaryCta: { href: "/collections", label: "כל האוספים" },
+    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    secondaryCta: { href: "/collections", labelKey: "link_all_collections" },
     metaTitle: "Signature Collection | Maison Mana",
-    metaDescription:
-      "Signature Collection של Maison Mana: פריטי MM, מהדורות מוגבלות ועיצובי בית מזוהים לצפייה פרטית.",
+    metaDescription: "Signature Collection של Maison Mana: פריטי MM, מהדורות מוגבלות ועיצובי בית מזוהים לצפייה פרטית.",
   },
 };
 

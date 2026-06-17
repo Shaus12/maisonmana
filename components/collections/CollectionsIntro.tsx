@@ -1,25 +1,25 @@
-import { ScrollReveal } from "@/components/ScrollReveal";
+"use client";
+
+import { useLanguage } from "@/components/LanguageProvider";
 
 export function CollectionsIntro() {
+  const { t } = useLanguage();
+  const isHe = t("col_intro_label" as any) !== "Collections";
+
   return (
-    <section className="bg-paper text-ink pb-12 md:pb-16 overflow-hidden" dir="rtl">
-      <div className="mx-auto max-w-[820px] px-6 md:px-12">
-        <ScrollReveal className="flex flex-col items-center text-center">
-          <p className="section-label mb-6 text-ink-soft tracking-[0.25em]" dir="ltr">
-            MAISON MANA COLLECTIONS
-          </p>
-          <h1 className="display-lat text-[2.5rem] leading-[1.1] md:text-[4rem] text-ink mb-8">
-            אוספים
-          </h1>
-          <p className="text-[1.125rem] leading-relaxed text-ink-soft mb-6 max-w-xl mx-auto">
-            עולמות התכשיטים של Maison MANA — מטבעות אירוסין ועיצוב אישי ועד תכשיטי יהלומים, פריטי חתימה ויצירות חד־פעמיות.
-          </p>
-          <p className="text-sm tracking-wide text-ink-mute">
-            כל אוסף נבנה סביב רגע אחר, חומר אחר וסיפור אחר.
-          </p>
-          <div className="mt-10 mx-auto h-px w-full max-w-[120px] bg-brass/30" />
-        </ScrollReveal>
+    <section className="bg-paper px-6 pt-16 pb-14 md:pt-24 md:pb-20" dir={isHe ? "rtl" : "ltr"}>
+      <div className="mx-auto max-w-[900px] text-center">
+        <h1 className="display-he text-[3.5rem] md:text-[5rem] text-ink leading-[1.05] mb-8">
+          {t("col_intro_label" as any)}
+        </h1>
+        <p className="text-[1.0625rem] leading-relaxed text-ink-soft mb-4 max-w-2xl mx-auto">
+          {t("col_intro_title" as any)}
+        </p>
+        <p className="text-[0.9375rem] leading-relaxed text-ink-mute max-w-xl mx-auto">
+          {t("col_intro_body" as any)}
+        </p>
       </div>
     </section>
   );
 }
+
