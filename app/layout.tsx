@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { jewelryStoreJsonLd, websiteJsonLd } from "@/lib/seo";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonmana.co.il"),
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <WhatsAppButton />
         </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
