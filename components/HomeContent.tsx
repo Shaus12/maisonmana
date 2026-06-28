@@ -40,7 +40,7 @@ export function HomeContent() {
             id: "rings",
             categoryUrl: "/diamond-rings",
             bgImage: "/rings-campaign.png",
-            archImage: "/ring-close.jpg",
+            archImage: "/marquise-diamond-ring-closeup.jpg",
             titleEn: "RINGS",
             titleHe: "טבעות",
             subtitleEn: "A Circle of Perfection",
