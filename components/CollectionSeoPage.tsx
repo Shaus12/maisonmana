@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { CollectionPage } from "@/lib/collection-pages";
 
-export function CollectionSeoPage({ page }: { page: CollectionPage }) {
+export function CollectionSeoPage({ page, children }: { page: CollectionPage, children?: React.ReactNode }) {
   const { t } = useLanguage();
 
   const faqJsonLd = page.faqs
@@ -175,6 +175,8 @@ export function CollectionSeoPage({ page }: { page: CollectionPage }) {
           </div>
         </section>
       )}
+
+      {children}
 
       <section className="mx-auto max-w-[900px] px-6 py-16 text-center md:px-12 md:py-24">
         <p className="section-label">Maison Mana</p>

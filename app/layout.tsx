@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   verification: {
-    google: "vJQdRnts0ZbOer0kiPrqb8DaIs5brUIeZBAu2TtpGyA",
+    google: ["vJQdRnts0ZbOer0kiPrqb8DaIs5brUIeZBAu2TtpGyA", "8KZY_W9pZkbImGHjhdG8tv6xBFBky6mtuAUSff9_F3o"],
   },
   openGraph: {
     type: "website",
