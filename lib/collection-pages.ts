@@ -88,8 +88,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/atelier", labelKey: "link_atelier" },
     secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
-    metaTitle: "טבעות אירוסין | Maison Mana",
-    metaDescription: "טבעות אירוסין של Maison Mana בעיצוב אישי, עם בחירת יהלום טבעי או יהלום מעבדה, מתכת והדמיה ראשונית לפני פגישה פרטית.",
+    metaTitle: "טבעות אירוסין | טבעת אירוסין יהלום בעיצוב אישי | Maison MANA",
+    metaDescription: "טבעות אירוסין מבית Maison MANA בעיצוב אישי, עם בחירת טבעת אירוסין יהלום טבעי או יהלום מעבדה, והדמיה ראשונית לפני פגישה פרטית.",
   },
   "wedding-rings": {
     slug: "wedding-rings",
@@ -120,8 +120,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
     secondaryCta: { href: "/engagement-rings", labelKey: "link_engagement" },
-    metaTitle: "טבעות נישואין | Maison Mana",
-    metaDescription: "טבעות נישואין של Maison Mana בעיצוב אישי, סטים לזוגות, חריטה עדינה ופגישה פרטית להתאמת מתכת, פרופיל ושיבוץ.",
+    metaTitle: "טבעות נישואין | טבעות זהב זוגיות | Maison MANA",
+    metaDescription: "טבעות נישואין של Maison MANA בעיצוב אישי, סטים של טבעות זוגיות וטבעות זהב. חריטה עדינה ופגישה פרטית להתאמה.",
   },
   "diamond-rings": {
     slug: "diamond-rings",
@@ -158,8 +158,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/atelier", labelKey: "link_atelier" },
     secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
-    metaTitle: "טבעות יהלום | Maison Mana",
-    metaDescription: "טבעות יהלום של Maison Mana בעיצוב אישי, עם חיתוכי יהלומים, יהלום טבעי או יהלום מעבדה ופגישה פרטית.",
+    metaTitle: "טבעות יהלום | טבעות יהלום מעבדה 2 קראט | Maison MANA",
+    metaDescription: "טבעות יהלום של Maison MANA בעיצוב אישי. טבעות יהלום מעבדה ויהלום טבעי, כולל טבעת יהלום 2 קראט זמינה להזמנה.",
   },
   "tennis-bracelets": {
     slug: "tennis-bracelets",
@@ -202,8 +202,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
     secondaryCta: { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
-    metaTitle: "צמידי טניס | Maison Mana",
-    metaDescription: "צמידי טניס וצמידי יהלומים של Maison Mana, בהתאמת אורך, סוג זהב, איכות שיבוץ ומפרט יהלומים בפגישה פרטית.",
+    metaTitle: "צמידי טניס | צמיד טניס יהלומים | Maison MANA",
+    metaDescription: "צמידי טניס וצמיד טניס יהלומים מבית Maison MANA. התאמת אורך, סוג זהב, איכות שיבוץ ומפרט יהלומים בפגישה פרטית.",
   },
   "diamond-necklaces": {
     slug: "diamond-necklaces",
@@ -234,8 +234,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
     secondaryCta: { href: "/tennis-bracelets", labelKey: "link_tennis_bracelets" },
-    metaTitle: "שרשראות יהלומים | Maison Mana",
-    metaDescription: "שרשראות יהלומים, תליון יהלום ושרשרת טניס של Maison Mana בעיצוב אישי ובצפייה פרטית באטלייה.",
+    metaTitle: "שרשראות יהלומים | שרשרת יהלום | Maison MANA",
+    metaDescription: "שרשראות יהלומים, שרשרת יהלום סוליטר ושרשרת טניס של Maison MANA בעיצוב אישי ובצפייה פרטית באטלייה.",
   },
   "diamond-earrings": {
     slug: "diamond-earrings",
@@ -266,8 +266,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
     secondaryCta: { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
-    metaTitle: "עגילי יהלומים | Maison Mana",
-    metaDescription: "עגילי יהלומים של Maison Mana: stud, hoop ו-drop בעיצוב נקי ומדויק, עם התאמת יהלומים ומתכת בפגישה פרטית.",
+    metaTitle: "עגילי יהלומים | עגילי יהלום | Maison MANA",
+    metaDescription: "עגילי יהלומים של Maison MANA: עגילי יהלום צמודים (stud), חישוק (hoop) וטיפה (drop) בעיצוב נקי ומדויק.",
   },
   "mens-jewelry": {
     slug: "mens-jewelry",
@@ -297,8 +297,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
     secondaryCta: { href: "/collections", labelKey: "link_all_collections" },
-    metaTitle: "תכשיטי גברים | Maison Mana",
-    metaDescription: "תכשיטי גברים של Maison Mana: טבעות גברים, צמידים, שרשראות וחפתים בזהב ויהלומים, בעיצוב אישי ופגישה פרטית.",
+    metaTitle: "תכשיטי גברים | טבעות וצמידי גברים | Maison MANA",
+    metaDescription: "תכשיטי גברים של Maison MANA: טבעות גברים, צמידי גברים, שרשראות וחפתים בזהב ויהלומים, בעיצוב אישי ופגישה פרטית.",
   },
   "high-jewelry": {
     slug: "high-jewelry",
@@ -341,8 +341,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
     secondaryCta: { href: "/diamonds", labelKey: "link_diamonds_guide" },
-    metaTitle: "High Jewelry | תכשיטי יוקרה חד־פעמיים | Maison Mana",
-    metaDescription: "High Jewelry של Maison Mana: תכשיטי יוקרה חד־פעמיים, יהלומים גדולים, אבנים נדירות וצפייה פרטית באטלייה.",
+    metaTitle: "High Jewelry | תכשיטי יוקרה ויהלומים גדולים | Maison MANA",
+    metaDescription: "High Jewelry של Maison MANA: תכשיטי יוקרה, פריטים חד־פעמיים, יהלומים גדולים ואבנים נדירות לצפייה פרטית באטלייה.",
   },
   signature: {
     slug: "signature",
@@ -372,8 +372,8 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
     secondaryCta: { href: "/collections", labelKey: "link_all_collections" },
-    metaTitle: "Signature Collection | Maison Mana",
-    metaDescription: "Signature Collection של Maison Mana: פריטי MM, מהדורות מוגבלות ועיצובי בית מזוהים לצפייה פרטית.",
+    metaTitle: "Signature Collection | תכשיטי חתימה בעיצוב Maison MANA",
+    metaDescription: "Signature Collection מבית Maison MANA: תכשיטי חתימה, פריטי MM, מהדורות מוגבלות ועיצוב מזוהה לצפייה פרטית.",
   },
 };
 

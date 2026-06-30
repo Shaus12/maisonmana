@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Fine Jewelry | Maison Mana",
+  title: "Fine Jewelry | טבעות יהלום, צמידי טניס ושרשראות | Maison MANA",
   description:
-    "Fine Jewelry של Maison Mana — טבעות יהלום, צמידי טניס, שרשראות יהלומים ועגילי יהלומים בעיצוב נקי ועל־זמני.",
+    "קולקציית Fine Jewelry של Maison MANA — טבעות יהלום, צמידי טניס, שרשראות יהלומים ועגילי יהלומים בעיצוב נקי ועל־זמני.",
   path: "/collections/fine-jewelry",
 });
 
@@ -38,8 +38,18 @@ const subcategories = [
 ];
 
 export default function FineJewelryPage() {
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "דף הבית", url: "/" },
+    { name: "אוספים", url: "/collections" },
+    { name: "Fine Jewelry", url: "/collections/fine-jewelry" }
+  ]);
+
   return (
     <main className="min-h-screen bg-paper" dir="rtl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[1440px] px-6 pt-28 pb-16 md:px-12 md:pt-36 md:pb-24">

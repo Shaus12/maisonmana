@@ -3,9 +3,9 @@ import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "הסיפור שלנו | Maison Mana",
+  title: "אודות | אטלייה תכשיטים ועיצוב אישי | Maison MANA",
   description:
-    "הכירו את Maison Mana — בית תכשיטים פרטי המתמחה בעיצוב אישי, טבעות אירוסין ותכשיטי יהלומים.",
+    "בית תכשיטים פרטי. אטלייה תכשיטים המתמחה ביהלומים ועיצוב אישי של טבעות אירוסין وتכשיטי חתימה, המותאם ללקוח בפגישה אישית.",
   path: "/about",
 });
 

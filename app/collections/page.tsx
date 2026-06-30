@@ -5,9 +5,9 @@ import { CollectionsBottomCTA } from "@/components/collections/CollectionsBottom
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "אוספים | Maison Mana",
+  title: "אוספים | Fine Jewelry, Bridal & High Jewelry | Maison MANA",
   description:
-    "אוספי התכשיטים של Maison Mana — טבעות אירוסין, תכשיטי יהלומים, High Jewelry, עיצוב אישי ופריטי חתימה.",
+    "אוספי תכשיטי יהלומים של Maison MANA — טבעות אירוסין, קולקציית Bridal, Fine Jewelry ופריטי High Jewelry ייחודיים.",
   path: "/collections",
 });
 

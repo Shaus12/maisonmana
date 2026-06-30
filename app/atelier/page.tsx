@@ -2,9 +2,9 @@ import { StudioPageContent } from "@/components/StudioPageContent";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "עיצוב תכשיט אישי | Maison Mana",
+  title: "הדמיית תכשיט ועיצוב טבעת אישית | Maison MANA",
   description:
-    "עצבו תכשיט אישי עם Maison Mana — בחירת סגנון, אבן, מתכת והדמיה ראשונית לפני פגישה פרטית באטלייה.",
+    "עצבו תכשיט או טבעת בעיצוב אישי דרך האטלייה של Maison MANA. קבלו הדמיה ראשונית (הדמיית תכשיט) לפני פגישה פרטית.",
   path: "/atelier",
 });
 

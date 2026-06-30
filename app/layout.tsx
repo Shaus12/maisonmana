@@ -8,7 +8,7 @@ import { jewelryStoreJsonLd, websiteJsonLd } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://maisonmana.co.il"),
+  metadataBase: new URL("https://masonmana-il.com"),
   title: {
     default: "Maison Mana | בית תכשיטים פרטי לטבעות אירוסין ותכשיטי יהלומים",
     template: "%s",

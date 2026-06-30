@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "המראה | התנסות ויזואלית בתכשיטים | Maison Mana",
+  title: "מראה דיגיטלית והתאמה אישית של תכשיטים | Maison MANA",
   description:
-    "התנסות ויזואלית פרטית בתכשיטי Maison Mana לפני פגישה אישית, כחלק מחוויית האטלייה.",
+    "מראה וירטואלית להתאמה אישית ומדידת תכשיטים. קבלו השראה ויזואלית לפני יצירת תכשיט היהלומים שלכם באטלייה.",
   path: "/mirror",
 });
 

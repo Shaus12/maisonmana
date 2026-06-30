@@ -3,9 +3,9 @@ import { HomeContent } from "@/components/HomeContent";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Maison Mana | בית תכשיטים פרטי לטבעות אירוסין ותכשיטי יהלומים",
+  title: "Maison MANA | אטלייה פרטי לעיצוב אישי של טבעות אירוסין ותכשיטי יהלומים",
   description:
-    "Maison Mana הוא בית תכשיטים פרטי המתמחה בטבעות אירוסין, תכשיטי יהלומים ועיצוב אישי בפגישה פרטית.",
+    "Maison MANA הוא אטלייה פרטי לעיצוב אישי של תכשיטי יהלומים וטבעות אירוסין. קבעו פגישה פרטית ליצירת התכשיט שלכם.",
   path: "/",
 });
 

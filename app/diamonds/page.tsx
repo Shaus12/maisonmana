@@ -3,9 +3,9 @@ import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "מדריך יהלומים וייעוץ יהלומים | Maison Mana",
+  title: "יהלומים | יהלום טבעי, יהלום מעבדה ומדריך ה-4Cs | Maison MANA",
   description:
-    "מדריך יהלומים של Maison Mana: יהלומים טבעיים ויהלומי מעבדה, צבע, ניקיון, חיתוך, קראט ותעודות GIA, IGI ו-HRD.",
+    "מדריך היהלומים של Maison MANA. הכל על יהלום טבעי, יהלום מעבדה, ה-4Cs (צבע, ניקיון, חיתוך, קראט), ותעודות IGI ו-GIA.",
   path: "/diamonds",
 });
 
