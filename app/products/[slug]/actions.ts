@@ -1,0 +1,79 @@
+"use server";
+
+export type ProductInquiryState =
+  | { status: "idle" }
+  | { status: "error"; message: string; field?: string }
+  | { status: "ok"; reference: string };
+
+export async function submitProductInquiry(
+  _prev: ProductInquiryState,
+  formData: FormData
+): Promise<ProductInquiryState> {
+  const fullName = String(formData.get("fullName") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const message = String(formData.get("message") ?? "").trim();
+  const originPage = String(formData.get("originPage") ?? "").trim();
+  const productJson = String(formData.get("product") ?? "{}").trim();
+  const selectedOptionsJson = String(formData.get("selectedOptions") ?? "{}").trim();
+
+  if (!fullName || fullName.length < 2) {
+    return { status: "error", message: "נא להזין שם מלא.", field: "fullName" };
+  }
+  if (!phone && !email) {
+    return {
+      status: "error",
+      message: "נא להשאיר טלפון או דוא״ל ליצירת קשר.",
+      field: "phone",
+    };
+  }
+  if (phone && !/^[0-9+\-\s()]{7,}$/.test(phone)) {
+    return { status: "error", message: "מספר הטלפון אינו תקין.", field: "phone" };
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { status: "error", message: "כתובת הדוא״ל אינה תקינה.", field: "email" };
+  }
+
+  let product = {};
+  try {
+    product = JSON.parse(productJson);
+  } catch (e) {
+    // fallback empty
+  }
+
+  let selectedOptions = {};
+  try {
+    selectedOptions = JSON.parse(selectedOptionsJson);
+  } catch (e) {
+    // fallback empty
+  }
+
+  const reference = `MM-PRD-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+  const payload = {
+    source: "product_detail_inquiry",
+    originPage,
+    leadType: "product_inquiry",
+    fullName,
+    phone,
+    email: email || undefined,
+    message: message || undefined,
+    product,
+    selectedOptions,
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    await fetch(
+      "https://n8n.srv877545.hstgr.cloud/webhook/3d30f03a-5a30-4e3e-b175-a3e4fb4dd294",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+  } catch (err) {
+    console.error("[Maison Mana · Product Webhook] failed to deliver", err);
+  }
+
+  return { status: "ok", reference };
+}

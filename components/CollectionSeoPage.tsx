@@ -5,7 +5,17 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { CollectionPage } from "@/lib/collection-pages";
 
-export function CollectionSeoPage({ page, children }: { page: CollectionPage, children?: React.ReactNode }) {
+export function CollectionSeoPage({ 
+  page, 
+  children,
+  afterIntroContent,
+  heroExtraCta
+}: { 
+  page: CollectionPage, 
+  children?: React.ReactNode,
+  afterIntroContent?: React.ReactNode,
+  heroExtraCta?: React.ReactNode
+}) {
   const { t } = useLanguage();
 
   const faqJsonLd = page.faqs
@@ -71,6 +81,7 @@ export function CollectionSeoPage({ page, children }: { page: CollectionPage, ch
                 {t(page.secondaryCta.labelKey as any)}
               </Link>
             )}
+            {heroExtraCta}
           </div>
         </div>
 
@@ -97,6 +108,8 @@ export function CollectionSeoPage({ page, children }: { page: CollectionPage, ch
           ))}
         </div>
       </div>
+
+      {afterIntroContent}
 
       <section className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-24">
         <div className="grid gap-10 md:grid-cols-12">

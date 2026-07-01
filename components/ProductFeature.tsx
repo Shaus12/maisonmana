@@ -24,8 +24,8 @@ export function ProductFeature({ product }: { product: Product }) {
           <div className="md:col-span-6 flex flex-col gap-4">
             <figure className="relative aspect-square w-full overflow-hidden bg-velvet">
               <Image
-                src={product.images[currentIndex].src}
-                alt={product.images[currentIndex].alt}
+                src={typeof product.images[currentIndex] === 'string' ? (product.images[currentIndex] as string) : (product.images[currentIndex] as any).src}
+                alt={typeof product.images[currentIndex] === 'string' ? product.title : (product.images[currentIndex] as any).alt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 60vw"
@@ -44,8 +44,8 @@ export function ProductFeature({ product }: { product: Product }) {
                     aria-label={`View image ${i + 1}`}
                   >
                     <Image
-                      src={img.src}
-                      alt={img.alt}
+                      src={typeof img === 'string' ? img : img.src}
+                      alt={typeof img === 'string' ? product.title : img.alt}
                       fill
                       className="object-cover"
                       sizes="20vw"

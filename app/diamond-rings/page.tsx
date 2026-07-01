@@ -20,7 +20,7 @@ export default function DiamondRingsPage() {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
-    image: `${siteUrl}${product.images[0].src}`,
+    image: `${siteUrl}${typeof product.images[0] === 'string' ? product.images[0] : product.images[0].src}`,
     description: product.shortDescription,
     brand: {
       "@type": "Brand",
