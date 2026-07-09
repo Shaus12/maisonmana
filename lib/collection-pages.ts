@@ -55,7 +55,7 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     imageAlt: "טבעת יהלום עגולה בקופסה כהה מתוך Bridal Collection של Maison Mana",
     detailImages: [
       {
-        src: "/ring-close.jpg",
+        src: "/marquise-diamond-ring-closeup.jpg",
         alt: "טבעת יהלום מרקיזה בתקריב בעיצוב אישי של Maison Mana",
       }
     ],
