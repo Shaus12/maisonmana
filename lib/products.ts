@@ -206,6 +206,68 @@ export const products: Record<string, Product> = {
     availability: AVAILABLE,
     ctaLabel: CTA,
   },
+  "diamond-product-01": {
+    id: "diamond-product-01",
+    slug: "diamond-product-01",
+    group: "rings",
+    title: lv("טבעת זהב אדום 14K יהלומים טבעיים 1.10 קראט", "14K Rose Gold Natural Diamond Ring, 1.10 ct"),
+    category: lv("טבעות יהלום", "Diamond Rings"),
+    price: 3900,
+    priceLabel: "₪3,900",
+    shortDescription: lv(
+      "טבעת יוקרתית בעיצוב מודרני ואלגנטי, עשויה זהב אדום 14K ומשובצת יהלומים טבעיים במשקל כולל של 1.10 קראט. היהלומים בדרגת D Color ו-VS1 Clarity, המעניקים לטבעת ברק יוצא דופן ומראה יוקרתי.",
+      "A luxurious ring in a modern, elegant design, crafted in 14K rose gold and set with natural diamonds totaling 1.10 ct. The diamonds are D color and VS1 clarity, giving the ring exceptional brilliance and a refined look."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב אדום 14K", "14K Rose Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומים טבעיים", "Natural diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("1.10") },
+      { label: COLOR, value: same("D") },
+      { label: CLARITY, value: same("VS1") },
+    ],
+    images: [
+      {
+        src: "/products/diamond-product-01.jpg",
+        alt: lv(
+          "טבעת זהב אדום 14K משובצת יהלומים טבעיים 1.10 קראט של Maison MANA",
+          "14K rose gold ring set with 1.10 ct natural diamonds by Maison MANA"
+        ),
+      },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+  },
+  "diamond-product-02": {
+    id: "diamond-product-02",
+    slug: "diamond-product-02",
+    group: "rings",
+    title: lv("טבעת זהב אדום יהלומי מעבדה 0.30 קראט", "Rose Gold Lab-Grown Diamond Ring, 0.30 ct"),
+    category: lv("טבעות יהלום", "Diamond Rings"),
+    price: 1300,
+    priceLabel: "₪1,300",
+    shortDescription: lv(
+      "טבעת אלגנטית בעיצוב ייחודי מזהב אדום, משובצת יהלומי מעבדה במשקל כולל של 0.30 קראט, בדרגת D Color ו-VS1 Clarity. עיצוב נשי, יוקרתי ועל־זמני המתאים ללבישה יומיומית או כמתנה מיוחדת.",
+      "An elegant ring in a distinctive rose gold design, set with lab-grown diamonds totaling 0.30 ct in D color and VS1 clarity. A feminine, refined, and timeless piece for everyday wear or a special gift."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב אדום", "Rose Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.30") },
+      { label: COLOR, value: same("D") },
+      { label: CLARITY, value: same("VS1") },
+    ],
+    images: [
+      {
+        src: "/products/diamond-product-02.jpg",
+        alt: lv(
+          "טבעת זהב אדום משובצת יהלומי מעבדה 0.30 קראט של Maison MANA",
+          "Rose gold ring set with 0.30 ct lab-grown diamonds by Maison MANA"
+        ),
+      },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+  },
   "natural-diamond-tennis-bracelet-1ct": {
     id: "bracelet-product-01",
     slug: "natural-diamond-tennis-bracelet-1ct",
@@ -737,3 +799,58 @@ export const products: Record<string, Product> = {
     options: [goldColorOption],
   },
 };
+
+export type CatalogCategory =
+  | "rings"
+  | "bracelets"
+  | "tennis-bracelets"
+  | "necklaces"
+  | "earrings"
+  | "mens"
+  | "high-jewelry"
+  | "signature";
+
+const CATALOG_CATEGORY_GROUPS: Record<CatalogCategory, ProductGroup[]> = {
+  rings: ["rings"],
+  bracelets: ["tennis", "bangles", "personalized", "bracelets"],
+  "tennis-bracelets": ["tennis"],
+  necklaces: [],
+  earrings: [],
+  mens: [],
+  "high-jewelry": [],
+  signature: [],
+};
+
+const FEATURED_PRODUCT_SLUGS: Partial<Record<CatalogCategory, string[]>> = {
+  rings: ["lab-diamond-ring-2-30ct"],
+  bracelets: [
+    "natural-diamond-tennis-bracelet-1ct",
+    "round-diamond-bangle-bracelet-1-5ct",
+    "initial-pendant-diamond-bracelet-0-20ct",
+    "pear-diamond-bracelet-0-50ct",
+  ],
+  "tennis-bracelets": [
+    "natural-diamond-tennis-bracelet-1ct",
+    "half-tennis-bracelet-11-diamonds-1-1ct",
+    "oval-diamond-tennis-bracelet-7ct",
+    "tennis-bracelet-round-center-diamond-1-5ct",
+  ],
+};
+
+export function getOrderableProducts(): Product[] {
+  return Object.values(products);
+}
+
+export function getProductsByCatalogCategory(category: CatalogCategory): Product[] {
+  const groups = CATALOG_CATEGORY_GROUPS[category];
+  return getOrderableProducts().filter((product) => groups.includes(product.group));
+}
+
+export function getFeaturedProductsByCategory(category: CatalogCategory, limit = 4): Product[] {
+  const featured = FEATURED_PRODUCT_SLUGS[category]
+    ?.map((slug) => products[slug])
+    .filter((product): product is Product => Boolean(product));
+
+  const source = featured && featured.length > 0 ? featured : getProductsByCatalogCategory(category);
+  return source.slice(0, limit);
+}

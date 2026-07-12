@@ -25,7 +25,6 @@ export function Masthead() {
     { href: "/collections", label: t("nav_collections") },
     { href: "/products", label: t("nav_shop") },
     { href: "/atelier", label: t("nav_studio") },
-    { href: "/mirror", label: t("nav_mirror") },
     { href: "/inquiry", label: t("nav_contact") },
   ];
 

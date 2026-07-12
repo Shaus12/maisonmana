@@ -1,3 +1,5 @@
+import type { CatalogCategory } from "@/lib/products";
+
 export type CollectionPageSlug =
   | "engagement-rings"
   | "wedding-rings"
@@ -41,6 +43,14 @@ export type CollectionPage = {
   faqs?: FaqItem[];
   primaryCta: Cta;
   secondaryCta?: Cta;
+  shopCta: Cta;
+  consultationCta: Cta;
+  productPreview?: {
+    category: CatalogCategory;
+    titleKey: string;
+    bodyKey: string;
+    limit?: number;
+  };
   metaTitle: string;
   metaDescription: string;
 };
@@ -87,7 +97,15 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { questionKey: "cp_er_faq_5_q", answerKey: "cp_er_faq_5_a" },
     ],
     primaryCta: { href: "/atelier", labelKey: "link_atelier" },
-    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
+    secondaryCta: { href: "/products?category=rings", labelKey: "link_shop_rings" },
+    shopCta: { href: "/products?category=rings", labelKey: "link_shop_rings" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
+    productPreview: {
+      category: "rings",
+      titleKey: "preview_rings_title",
+      bodyKey: "preview_default_body",
+      limit: 1,
+    },
     metaTitle: "טבעות אירוסין | טבעת אירוסין יהלום בעיצוב אישי | Maison MANA",
     metaDescription: "טבעות אירוסין מבית Maison MANA בעיצוב אישי, עם בחירת טבעת אירוסין יהלום טבעי או יהלום מעבדה, והדמיה ראשונית לפני פגישה פרטית.",
   },
@@ -119,7 +137,9 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
-    secondaryCta: { href: "/engagement-rings", labelKey: "link_engagement" },
+    secondaryCta: { href: "/products?category=rings", labelKey: "link_shop_rings" },
+    shopCta: { href: "/products?category=rings", labelKey: "link_shop_rings" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
     metaTitle: "טבעות נישואין | טבעות זהב זוגיות | Maison MANA",
     metaDescription: "טבעות נישואין של Maison MANA בעיצוב אישי, סטים של טבעות זוגיות וטבעות זהב. חריטה עדינה ופגישה פרטית להתאמה.",
   },
@@ -156,8 +176,16 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { href: "/engagement-rings", labelKey: "link_engagement" },
       { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
-    primaryCta: { href: "/atelier", labelKey: "link_atelier" },
+    primaryCta: { href: "/products?category=rings", labelKey: "link_shop_rings" },
     secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    shopCta: { href: "/products?category=rings", labelKey: "link_shop_rings" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    productPreview: {
+      category: "rings",
+      titleKey: "preview_rings_title",
+      bodyKey: "preview_default_body",
+      limit: 1,
+    },
     metaTitle: "טבעות יהלום | טבעות יהלום מעבדה 2 קראט | Maison MANA",
     metaDescription: "טבעות יהלום של Maison MANA בעיצוב אישי. טבעות יהלום מעבדה ויהלום טבעי, כולל טבעת יהלום 2 קראט זמינה להזמנה.",
   },
@@ -200,8 +228,16 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { questionKey: "cp_tb_faq_3_q", answerKey: "cp_tb_faq_3_a" },
       { questionKey: "cp_tb_faq_4_q", answerKey: "cp_tb_faq_4_a" },
     ],
-    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
-    secondaryCta: { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
+    primaryCta: { href: "/products?category=bracelets", labelKey: "link_shop_tennis_bracelets" },
+    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
+    shopCta: { href: "/products?category=bracelets", labelKey: "link_shop_tennis_bracelets" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
+    productPreview: {
+      category: "tennis-bracelets",
+      titleKey: "preview_tennis_title",
+      bodyKey: "preview_default_body",
+      limit: 4,
+    },
     metaTitle: "צמידי טניס | צמיד טניס יהלומים | Maison MANA",
     metaDescription: "צמידי טניס וצמיד טניס יהלומים מבית Maison MANA. התאמת אורך, סוג זהב, איכות שיבוץ ומפרט יהלומים בפגישה פרטית.",
   },
@@ -232,8 +268,16 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { href: "/diamond-earrings", labelKey: "link_diamond_earrings" },
       { href: "/inquiry", labelKey: "link_inquiry_collection" },
     ],
-    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
-    secondaryCta: { href: "/tennis-bracelets", labelKey: "link_tennis_bracelets" },
+    primaryCta: { href: "/products?category=necklaces", labelKey: "link_shop_necklaces" },
+    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    shopCta: { href: "/products?category=necklaces", labelKey: "link_shop_necklaces" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    productPreview: {
+      category: "necklaces",
+      titleKey: "preview_necklaces_title",
+      bodyKey: "preview_default_body",
+      limit: 4,
+    },
     metaTitle: "שרשראות יהלומים | שרשרת יהלום | Maison MANA",
     metaDescription: "שרשראות יהלומים, שרשרת יהלום סוליטר ושרשרת טניס של Maison MANA בעיצוב אישי ובצפייה פרטית באטלייה.",
   },
@@ -264,8 +308,16 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { href: "/diamond-rings", labelKey: "link_diamond_rings" },
       { href: "/inquiry", labelKey: "link_inquiry_collection" },
     ],
-    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
-    secondaryCta: { href: "/diamond-necklaces", labelKey: "link_diamond_necklaces" },
+    primaryCta: { href: "/products?category=earrings", labelKey: "link_shop_earrings" },
+    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    shopCta: { href: "/products?category=earrings", labelKey: "link_shop_earrings" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    productPreview: {
+      category: "earrings",
+      titleKey: "preview_earrings_title",
+      bodyKey: "preview_default_body",
+      limit: 4,
+    },
     metaTitle: "עגילי יהלומים | עגילי יהלום | Maison MANA",
     metaDescription: "עגילי יהלומים של Maison MANA: עגילי יהלום צמודים (stud), חישוק (hoop) וטיפה (drop) בעיצוב נקי ומדויק.",
   },
@@ -296,7 +348,15 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { href: "/inquiry", labelKey: "link_inquiry_private" },
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
-    secondaryCta: { href: "/collections", labelKey: "link_all_collections" },
+    secondaryCta: { href: "/products", labelKey: "link_shop_all" },
+    shopCta: { href: "/products", labelKey: "link_shop_all" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_private" },
+    productPreview: {
+      category: "mens",
+      titleKey: "preview_mens_title",
+      bodyKey: "preview_default_body",
+      limit: 4,
+    },
     metaTitle: "תכשיטי גברים | טבעות וצמידי גברים | Maison MANA",
     metaDescription: "תכשיטי גברים של Maison MANA: טבעות גברים, צמידי גברים, שרשראות וחפתים בזהב ויהלומים, בעיצוב אישי ופגישה פרטית.",
   },
@@ -340,7 +400,9 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { questionKey: "cp_hj_faq_4_q", answerKey: "cp_hj_faq_4_a" },
     ],
     primaryCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
-    secondaryCta: { href: "/diamonds", labelKey: "link_diamonds_guide" },
+    secondaryCta: { href: "/products", labelKey: "link_shop_all" },
+    shopCta: { href: "/products", labelKey: "link_shop_all" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_viewing" },
     metaTitle: "High Jewelry | תכשיטי יוקרה ויהלומים גדולים | Maison MANA",
     metaDescription: "High Jewelry של Maison MANA: תכשיטי יוקרה, פריטים חד־פעמיים, יהלומים גדולים ואבנים נדירות לצפייה פרטית באטלייה.",
   },
@@ -370,8 +432,16 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
       { href: "/collections", labelKey: "link_all_collections" },
       { href: "/inquiry", labelKey: "link_inquiry_collection" },
     ],
-    primaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
-    secondaryCta: { href: "/collections", labelKey: "link_all_collections" },
+    primaryCta: { href: "/products", labelKey: "link_shop_all" },
+    secondaryCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    shopCta: { href: "/products", labelKey: "link_shop_all" },
+    consultationCta: { href: "/inquiry", labelKey: "link_inquiry_collection" },
+    productPreview: {
+      category: "signature",
+      titleKey: "preview_signature_title",
+      bodyKey: "preview_default_body",
+      limit: 4,
+    },
     metaTitle: "Signature Collection | תכשיטי חתימה בעיצוב Maison MANA",
     metaDescription: "Signature Collection מבית Maison MANA: תכשיטי חתימה, פריטי MM, מהדורות מוגבלות ועיצוב מזוהה לצפייה פרטית.",
   },

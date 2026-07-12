@@ -21,7 +21,7 @@ export function ProductGrid({
 
   return (
     <section className="bg-paper border-t border-rule">
-      <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-24">
+      <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-12 md:py-24">
         {showHeader && (
           <div className="mb-12 md:mb-16 md:text-center">
             <h2 className="display-he text-[2rem] text-ink md:text-[2.75rem]">
@@ -35,7 +35,7 @@ export function ProductGrid({
           </div>
         )}
 
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((sourceProduct) => {
             const product = resolveProduct(sourceProduct, locale);
             const firstImage = product.images[0];
@@ -46,14 +46,14 @@ export function ProductGrid({
 
             return (
               <div key={product.slug} className="group flex flex-col">
-                <Link href={`/products/${product.slug}`} className="block relative aspect-[4/5] w-full overflow-hidden bg-velvet mb-6">
+                <Link href={`/products/${product.slug}`} className="mb-3 block relative aspect-[4/5] w-full overflow-hidden bg-velvet md:mb-6">
                   {firstImage ? (
                     <Image
                       src={firstImage.src}
                       alt={firstImage.alt}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-ink-mute bg-paper-deep">
@@ -63,17 +63,17 @@ export function ProductGrid({
                 </Link>
 
                 <div className="flex flex-col flex-grow">
-                  <p className="text-[0.75rem] text-ink-mute tracking-widest uppercase mb-2">
+                  <p className="mb-1 text-[0.625rem] uppercase tracking-[0.14em] text-ink-mute md:mb-2 md:text-[0.75rem] md:tracking-widest">
                     {product.category}
                   </p>
-                  <h3 className="display-he text-[1.375rem] leading-snug text-ink mb-3">
+                  <h3 className="display-he mb-2 text-[1rem] leading-snug text-ink md:mb-3 md:text-[1.375rem]">
                     {product.title}
                   </h3>
-                  <p className="text-[1.125rem] text-ink-soft mb-6">
+                  <p className="mb-4 text-[0.9375rem] text-ink-soft md:mb-6 md:text-[1.125rem]">
                     {product.priceLabel}
                   </p>
 
-                  <ul className="mb-6 space-y-1.5 text-[0.875rem] text-ink-soft flex-grow">
+                  <ul className="mb-6 hidden flex-grow space-y-1.5 text-[0.875rem] text-ink-soft md:block">
                     {product.specs.slice(0, 4).map((spec, i) => (
                       <li key={i}>
                         <span className="text-ink">{spec.label}:</span> {spec.value}
@@ -82,15 +82,15 @@ export function ProductGrid({
                   </ul>
 
                   {optionsSummary && (
-                    <p className="text-[0.875rem] text-ink-mute mb-8 border-t border-rule pt-4">
+                    <p className="mb-8 hidden border-t border-rule pt-4 text-[0.875rem] text-ink-mute md:block">
                       {optionsSummary}
                     </p>
                   )}
 
-                  <div className="mt-auto pt-4">
+                  <div className="mt-auto pt-2 md:pt-4">
                     <Link
                       href={`/products/${product.slug}`}
-                      className="brass-disc brass-disc--solid w-full text-center flex justify-center py-3 text-[0.9375rem]"
+                      className="brass-disc brass-disc--solid flex w-full justify-center px-3 py-2 text-center text-[0.8125rem] md:py-3 md:text-[0.9375rem]"
                     >
                       {t("prod_view_order")}
                     </Link>

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { CollectionSeoPage } from "@/components/CollectionSeoPage";
 import { collectionPages } from "@/lib/collection-pages";
-import { buildMetadata, siteUrl, buildBreadcrumbJsonLd } from "@/lib/seo";
-import { ProductFeature } from "@/components/ProductFeature";
-import { products } from "@/lib/products";
+import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 
 const page = collectionPages["diamond-rings"];
 
@@ -14,27 +12,6 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function DiamondRingsPage() {
-  const product = products["lab-diamond-ring-2-30ct"];
-  
-  const productJsonLd = product ? {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title.he,
-    image: `${siteUrl}${product.images[0].src}`,
-    description: product.shortDescription.he,
-    brand: {
-      "@type": "Brand",
-      name: "Maison MANA"
-    },
-    offers: {
-      "@type": "Offer",
-      price: product.price,
-      priceCurrency: "ILS",
-      url: `${siteUrl}/diamond-rings`,
-      availability: "https://schema.org/InStock"
-    }
-  } : null;
-
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "דף הבית", url: "/" },
     { name: "אוספים", url: "/collections" },
@@ -48,16 +25,7 @@ export default function DiamondRingsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      {productJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
-        />
-      )}
-      <CollectionSeoPage page={page}>
-        {product && <ProductFeature product={product} />}
-      </CollectionSeoPage>
+      <CollectionSeoPage page={page} />
     </>
   );
 }
-

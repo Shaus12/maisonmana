@@ -21,7 +21,8 @@ export function HomeContent() {
         const campaignSections = [
           {
             id: "necklaces",
-            categoryUrl: "/diamond-necklaces",
+            categoryUrl: "/products?category=necklaces",
+            seoUrl: "/diamond-necklaces",
             bgImage: "/panther-1.jpg",
             archImage: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=85",
             titleEn: "NECKLACES",
@@ -30,15 +31,18 @@ export function HomeContent() {
             subtitleHe: "דיאלוג של אלגנטיות",
             descEn: "Celebrate every milestone with a diamond necklace that captures the light.",
             descHe: "לחגוג כל רגע משמעותי עם שרשרת יהלום הלוכדת את האור.",
-            buttonEn: "VIEW NECKLACES",
-            buttonHe: "לגילוי האוסף",
+            buttonEn: "VIEW NECKLACES TO ORDER",
+            buttonHe: "לצפייה בשרשראות להזמנה",
+            seoLinkEn: "More about diamond necklaces",
+            seoLinkHe: "עוד על שרשראות יהלומים",
             bgAltHe: "שרשרת יהלומים על רקע קמפיין מתוך אוסף השרשראות של Maison Mana",
             archAltHe: "שרשרת יהלום עדינה מתוך אוסף השרשראות של Maison Mana",
             bgClass: "bg-[#F5F2EA]",
           },
           {
             id: "rings",
-            categoryUrl: "/diamond-rings",
+            categoryUrl: "/products?category=rings",
+            seoUrl: "/diamond-rings",
             bgImage: "/rings-campaign.png",
             archImage: "/marquise-diamond-ring-closeup.jpg",
             titleEn: "RINGS",
@@ -47,15 +51,18 @@ export function HomeContent() {
             subtitleHe: "עיגול של שלמות",
             descEn: "Celebrate every milestone with a bespoke ring that tells your unique story.",
             descHe: "לחגוג כל רגע משמעותי עם טבעת בעיצוב אישי המספרת את הסיפור הייחודי שלך.",
-            buttonEn: "VIEW RINGS",
-            buttonHe: "לגילוי האוסף",
+            buttonEn: "VIEW RINGS TO ORDER",
+            buttonHe: "לצפייה בטבעות להזמנה",
+            seoLinkEn: "More about diamond rings",
+            seoLinkHe: "עוד על טבעות יהלום",
             bgAltHe: "טבעת יהלום מתוך אוסף הטבעות של Maison Mana",
             archAltHe: "טבעת יהלום מקרוב מתוך אוסף הטבעות של Maison Mana",
             bgClass: "bg-[#EAE4D6]",
           },
           {
             id: "earrings",
-            categoryUrl: "/diamond-earrings",
+            categoryUrl: "/products?category=earrings",
+            seoUrl: "/diamond-earrings",
             bgImage: "/earrings-campaign.jpg",
             archImage: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=85",
             titleEn: "EARRINGS",
@@ -64,25 +71,30 @@ export function HomeContent() {
             subtitleHe: "עוצמה וסימטריה",
             descEn: "Celebrate every milestone with hand-selected diamonds set in our workshop.",
             descHe: "לחגוג כל רגע משמעותי עם יהלומים שנבחרו ידנית ושובצו בסדנה.",
-            buttonEn: "VIEW EARRINGS",
-            buttonHe: "לגילוי האוסף",
+            buttonEn: "VIEW EARRINGS TO ORDER",
+            buttonHe: "לצפייה בעגילים להזמנה",
+            seoLinkEn: "More about diamond earrings",
+            seoLinkHe: "עוד על עגילי יהלומים",
             bgAltHe: "עגילי יהלומים מתוך אוסף העגילים של Maison Mana",
             archAltHe: "עגילי יהלום בעיצוב עדין מתוך אוסף העגילים של Maison Mana",
             bgClass: "bg-[#E6DEC9]",
           },
           {
             id: "bracelets",
-            categoryUrl: "/tennis-bracelets",
+            categoryUrl: "/products?category=bracelets",
+            seoUrl: "/tennis-bracelets",
             bgImage: "/panther-3.jpg",
-            archImage: "/bracelet-4.jpg",
+            archImage: "/diamond-bracelet-blue-velvet.jpg",
             titleEn: "BRACELETS",
             titleHe: "צמידים",
             subtitleEn: "Strength & Continuity",
             subtitleHe: "עוצמה והמשכיות",
             descEn: "Celebrate every milestone with a tennis bracelet wrapping the wrist in light.",
             descHe: "לחגוג כל רגע משמעותי עם צמיד טניס העוטף את פרק היד באור.",
-            buttonEn: "VIEW BRACELETS",
-            buttonHe: "לגילוי האוסף",
+            buttonEn: "VIEW BRACELETS TO ORDER",
+            buttonHe: "לצפייה בצמידים להזמנה",
+            seoLinkEn: "More about tennis bracelets",
+            seoLinkHe: "עוד על צמידי טניס",
             bgAltHe: "צמיד יהלומים מתוך אוסף הצמידים של Maison Mana",
             archAltHe: "צמיד יהלומים בזהב מתוך אוסף הצמידים של Maison Mana",
             bgClass: "bg-[#DFDCD4]",
@@ -159,6 +171,12 @@ export function HomeContent() {
                     className="inline-block border border-ink/30 hover:border-ink hover:bg-ink hover:text-paper px-8 py-3 rounded-full text-xs md:text-sm font-medium tracking-widest uppercase transition-all duration-300"
                   >
                     {isHe ? section.buttonHe : section.buttonEn}
+                  </Link>
+                  <Link
+                    href={section.seoUrl}
+                    className="mt-4 text-[0.8125rem] text-ink-soft underline decoration-ink-mute/30 underline-offset-4 transition-colors hover:text-ink"
+                  >
+                    {isHe ? section.seoLinkHe : section.seoLinkEn}
                   </Link>
                 </ScrollReveal>
 

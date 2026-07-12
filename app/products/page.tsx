@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { buildMetadata } from "@/lib/seo";
 import { ProductCatalog } from "@/components/ProductCatalog";
 
@@ -10,5 +11,9 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function ProductsPage() {
-  return <ProductCatalog />;
+  return (
+    <Suspense>
+      <ProductCatalog />
+    </Suspense>
+  );
 }

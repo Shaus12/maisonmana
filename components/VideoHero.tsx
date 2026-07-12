@@ -60,7 +60,7 @@ export function VideoHero() {
         </h1>
         <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 fade-in-delayed">
           <Link
-            href="/inquiry"
+            href="/products"
             className="brass-disc text-[0.875rem] sm:text-[0.9375rem]"
             style={{
               borderColor: "oklch(0.74 0.110 78 / 0.85)",
@@ -71,7 +71,7 @@ export function VideoHero() {
             {t("hero_cta_view")}
           </Link>
           <Link
-            href="/collections"
+            href="/inquiry"
             className="text-[0.8125rem] tracking-[0.08em] uppercase transition-opacity hover:opacity-70"
             style={{ color: "oklch(0.985 0.004 75 / 0.65)" }}
           >

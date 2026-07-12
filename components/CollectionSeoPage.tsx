@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { CollectionPage } from "@/lib/collection-pages";
+import { getFeaturedProductsByCategory, resolveProduct, type Product } from "@/lib/products";
 
 export function CollectionSeoPage({
   page,
@@ -17,6 +18,9 @@ export function CollectionSeoPage({
   heroExtraCta?: { href: string; labelKey: string }
 }) {
   const { t } = useLanguage();
+  const previewProducts = page.productPreview
+    ? getFeaturedProductsByCategory(page.productPreview.category, page.productPreview.limit)
+    : [];
 
   const faqJsonLd = page.faqs
     ? {
@@ -168,6 +172,18 @@ export function CollectionSeoPage({
         </section>
       )}
 
+      {page.productPreview && (
+        <CollectionProductPreview
+          products={previewProducts}
+          title={t(page.productPreview.titleKey as any)}
+          body={t(page.productPreview.bodyKey as any)}
+          ctaHref={page.shopCta.href}
+          ctaLabel={t(page.shopCta.labelKey as any)}
+          consultationHref={page.consultationCta.href}
+          consultationLabel={t(page.consultationCta.labelKey as any)}
+        />
+      )}
+
       {page.faqs && (
         <section className="bg-paper-deep">
           <div className="mx-auto max-w-[1000px] px-6 py-16 md:px-12 md:py-24">
@@ -203,7 +219,15 @@ export function CollectionSeoPage({
         <p className="mx-auto mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-ink-soft">
           {t("seo_continue_body" as any)}
         </p>
-        <div className="mt-9 flex flex-wrap justify-center gap-x-6 gap-y-3">
+        <div className="mt-9 flex flex-wrap justify-center gap-4">
+          <Link href={page.shopCta.href} className="brass-disc brass-disc--solid">
+            {t(page.shopCta.labelKey as any)}
+          </Link>
+          <Link href={page.consultationCta.href} className="brass-disc">
+            {t(page.consultationCta.labelKey as any)}
+          </Link>
+        </div>
+        <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3">
           {page.relatedLinks.map((link) => (
             <Link key={link.href} href={link.href} className="hairline-link">
               {t(link.labelKey as any)}
@@ -211,6 +235,170 @@ export function CollectionSeoPage({
           ))}
         </div>
       </section>
+    </section>
+  );
+}
+
+function CollectionProductPreview({
+  products,
+  title,
+  body,
+  ctaHref,
+  ctaLabel,
+  consultationHref,
+  consultationLabel,
+}: {
+  products: Product[];
+  title: string;
+  body: string;
+  ctaHref: string;
+  ctaLabel: string;
+  consultationHref: string;
+  consultationLabel: string;
+}) {
+  const { locale, t } = useLanguage();
+  const visibleProducts = products.slice(0, 4);
+
+  if (visibleProducts.length === 0) {
+    return (
+      <section className="bg-paper px-6 py-14 md:px-12 md:py-20">
+        <div className="mx-auto max-w-[980px] border-y border-rule bg-paper-deep/45 px-6 py-12 text-center md:px-12 md:py-16">
+          <p className="section-label">{t("preview_label" as any)}</p>
+          <h2 className="display-he mt-5 text-[2rem] leading-[1.15] text-ink md:text-[2.6rem]">
+            {t("preview_empty_title" as any)}
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-ink-soft">
+            {t("preview_empty_body" as any)}
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link href={consultationHref} className="brass-disc brass-disc--solid">
+              {consultationLabel}
+            </Link>
+            <Link href={ctaHref} className="brass-disc">
+              {ctaLabel}
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (visibleProducts.length === 1) {
+    const product = resolveProduct(visibleProducts[0], locale);
+    const image = product.images[0];
+
+    return (
+      <section className="bg-paper px-6 py-14 md:px-12 md:py-20">
+        <div className="mx-auto max-w-[1180px] border-y border-rule bg-paper-deep/45">
+          <div className="grid gap-0 md:grid-cols-2">
+            <figure className="relative min-h-[360px] overflow-hidden bg-velvet md:min-h-[520px]">
+              {image ? (
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-paper-deep text-ink-mute">
+                  {t("prod_no_image" as any)}
+                </div>
+              )}
+            </figure>
+
+            <div className="flex flex-col justify-center px-6 py-10 text-start md:px-12 md:py-16">
+              <p className="section-label">{t("preview_label" as any)}</p>
+              <h2 className="display-he mt-5 text-[2rem] leading-[1.12] text-ink md:text-[2.75rem]">
+                {t("preview_featured_title" as any)}
+              </h2>
+              <p className="mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-ink-soft">
+                {t("preview_featured_body" as any)}
+              </p>
+
+              <div className="mt-8 border-t border-rule pt-7">
+                <p className="text-[0.75rem] uppercase tracking-[0.16em] text-ink-mute">
+                  {product.category}
+                </p>
+                <h3 className="mt-3 display-he text-[1.75rem] leading-tight text-ink md:text-[2.15rem]">
+                  {product.title}
+                </h3>
+                <p className="mt-3 text-[1.125rem] text-ink-soft">
+                  {product.priceLabel}
+                </p>
+              </div>
+
+              <div className="mt-9 flex flex-wrap gap-4">
+                <Link href={`/products/${product.slug}`} className="brass-disc brass-disc--solid">
+                  {t("prod_view_order" as any)}
+                </Link>
+                <Link href={ctaHref} className="brass-disc">
+                  {ctaLabel}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="border-y border-rule bg-paper">
+      <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-24">
+        <div className="grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-4">
+            <p className="section-label">{t("preview_label" as any)}</p>
+            <h2 className="display-he mt-5 text-[2rem] leading-[1.12] text-ink md:text-[2.75rem]">
+              {title}
+            </h2>
+            <p className="mt-5 max-w-md text-[1.0625rem] leading-relaxed text-ink-soft">
+              {body}
+            </p>
+            <Link href={ctaHref} className="brass-disc brass-disc--solid mt-8 inline-flex">
+              {ctaLabel}
+            </Link>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 md:col-span-8 lg:grid-cols-4">
+            {visibleProducts.map((sourceProduct) => {
+              const product = resolveProduct(sourceProduct, locale);
+              const image = product.images[0];
+
+              return (
+                <article key={product.slug} className="group">
+                  <Link href={`/products/${product.slug}`} className="block">
+                    <figure className="relative aspect-[4/5] overflow-hidden bg-velvet">
+                      {image ? (
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 18vw"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-paper-deep text-ink-mute">
+                          {t("prod_no_image" as any)}
+                        </div>
+                      )}
+                    </figure>
+                    <p className="mt-5 text-[0.75rem] uppercase tracking-[0.16em] text-ink-mute">
+                      {product.category}
+                    </p>
+                    <h3 className="mt-2 display-he text-[1.25rem] leading-snug text-ink">
+                      {product.title}
+                    </h3>
+                    <p className="mt-2 text-[1rem] text-ink-soft">
+                      {product.priceLabel}
+                    </p>
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
