@@ -19,9 +19,9 @@ export default function DiamondRingsPage() {
   const productJsonLd = product ? {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.title,
-    image: `${siteUrl}${typeof product.images[0] === 'string' ? product.images[0] : product.images[0].src}`,
-    description: product.shortDescription,
+    name: product.title.he,
+    image: `${siteUrl}${product.images[0].src}`,
+    description: product.shortDescription.he,
     brand: {
       "@type": "Brand",
       name: "Maison MANA"

@@ -325,11 +325,11 @@ export function AtelierConfigurator() {
       : "";
 
     return (
-      <div className="bg-paper min-h-screen py-16 px-6 md:py-24" dir="rtl">
+      <div className="bg-paper min-h-screen py-16 px-6 md:py-24">
         <div className="mx-auto max-w-[920px] flex flex-col items-center text-center">
           <p className="section-label mb-4" dir="ltr">MAISON MANA · INITIAL RENDER</p>
           <h2 className="display-he text-[2.5rem] md:text-[3rem] text-ink mb-3 leading-tight">
-            ההדמיה הראשונית מוכנה
+            {locale === "he" ? "ההדמיה הראשונית מוכנה" : "Your initial preview is ready"}
           </h2>
           <p className="text-[1rem] text-ink-soft mb-12 max-w-2xl">{summaryFull}</p>
 
@@ -337,14 +337,14 @@ export function AtelierConfigurator() {
           <div className="relative w-full aspect-square md:aspect-[4/3] bg-velvet border border-ink/10 mb-8 p-0 md:p-8 flex items-center justify-center overflow-hidden">
             <img
               src={displaySrc}
-              alt="הדמיה ראשונית של תכשיט Maison Mana"
+              alt={locale === "he" ? "הדמיה ראשונית של תכשיט Maison Mana" : "Initial preview of a Maison Mana piece"}
               className="max-w-full max-h-full object-contain"
               onError={(e) => {
                 // If proxy fails or image is dead, hide image and show fallback
                 (e.target as HTMLImageElement).style.display = "none";
                 const parent = (e.target as HTMLImageElement).parentElement;
                 if (parent) {
-                  parent.innerHTML = '<p class="text-ink-mute text-sm">לא ניתן לטעון את התמונה.</p>';
+                  parent.innerHTML = `<p class="text-ink-mute text-sm">${locale === "he" ? "לא ניתן לטעון את התמונה." : "The image could not be loaded."}</p>`;
                 }
               }}
             />
@@ -352,8 +352,9 @@ export function AtelierConfigurator() {
 
           {/* Disclaimer */}
           <p className="text-[0.875rem] leading-relaxed text-ink-mute max-w-2xl mx-auto italic mb-10 border-s border-brass/40 ps-4 text-start">
-            ההדמיה מיועדת להמחשה ראשונית בלבד. היא נוצרה באמצעות מודל בינה מלאכותית על בסיס הבחירות שלך.
-            בפגישה האישית באטלייה נדייק יחד את הפרופורציות, האבן, השיבוץ והפרטים הסופיים.
+            {locale === "he"
+              ? "ההדמיה מיועדת להמחשה ראשונית בלבד. היא נוצרה באמצעות מודל בינה מלאכותית על בסיס הבחירות שלך. בפגישה האישית באטלייה נדייק יחד את הפרופורציות, האבן, השיבוץ והפרטים הסופיים."
+              : "The preview is for initial illustration only. It was created by an AI model based on your choices. In the personal meeting at the atelier we will refine the proportions, stone, setting, and final details together."}
           </p>
 
           {/* Actions */}
@@ -363,14 +364,14 @@ export function AtelierConfigurator() {
               onClick={() => handleDownloadImage(renderResult)}
               className="brass-disc brass-disc--solid w-full justify-center"
             >
-              הורדת ההדמיה
+              {locale === "he" ? "הורדת ההדמיה" : "Download Preview"}
             </button>
             <button
               type="button"
               onClick={() => setRenderResult(null)}
               className="hairline-link text-[0.9375rem]"
             >
-              חזרה לעריכה
+              {locale === "he" ? "חזרה לעריכה" : "Back to Editing"}
             </button>
           </div>
 
@@ -380,10 +381,10 @@ export function AtelierConfigurator() {
               <div className="vellum px-6 py-10 text-center">
                 <p className="section-label">Maison Mana</p>
                 <h2 className="display-he mt-4 text-[2rem] leading-tight text-ink">
-                  הבקשה התקבלה באטלייה.
+                  {t("inq_success_title")}
                 </h2>
                 <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
-                  נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית.
+                  {locale === "he" ? "נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית." : "We will get back to you within one business day to arrange a private meeting."}
                 </p>
               </div>
             ) : (
@@ -391,55 +392,55 @@ export function AtelierConfigurator() {
                 <input type="hidden" name="intent" value="bespoke" />
                 <input type="hidden" name="bespoke" value={summaryFull} />
                 <header className="mb-10 text-center">
-                  <p className="section-label">פגישה פרטית</p>
+                  <p className="section-label">{locale === "he" ? "פגישה פרטית" : "Private Meeting"}</p>
                   <h2 className="display-he mt-3 text-[1.875rem] leading-tight text-ink">
-                    שליחת העיצוב לאטלייה
+                    {locale === "he" ? "שליחת העיצוב לאטלייה" : "Send the Design to the Atelier"}
                   </h2>
                   <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
-                    הפרטים יישלחו יחד עם ההדמיה וסיכום הבחירות כדי שנוכל להכין שיחה מדויקת.
+                    {locale === "he" ? "הפרטים יישלחו יחד עם ההדמיה וסיכום הבחירות כדי שנוכל להכין שיחה מדויקת." : "Your details will be sent together with the preview and choice summary so we can prepare a precise conversation."}
                   </p>
                 </header>
 
                 <div className="grid gap-6 md:grid-cols-2">
                   <AtelierField
                     name="name"
-                    label="שם מלא"
+                    label={t("inq_field_name")}
                     required
                     autoComplete="name"
-                    error={leadState.status === "error" && leadState.field === "name" ? leadState.message : undefined}
+                    error={leadState.status === "error" && leadState.field === "name" ? t(leadState.message as any) : undefined}
                   />
                   <AtelierField
                     name="phone"
-                    label="טלפון"
+                    label={t("inq_field_phone")}
                     inputMode="tel"
                     autoComplete="tel"
                     dir="ltr"
-                    error={leadState.status === "error" && leadState.field === "phone" ? leadState.message : undefined}
+                    error={leadState.status === "error" && leadState.field === "phone" ? t(leadState.message as any) : undefined}
                   />
                   <AtelierField
                     name="preferred"
-                    label="מועד מבוקש"
-                    placeholder="לדוגמה: שלישי בערב"
+                    label={locale === "he" ? "מועד מבוקש" : "Preferred time"}
+                    placeholder={locale === "he" ? "לדוגמה: שלישי בערב" : "e.g. Tuesday evening"}
                   />
                 </div>
 
                 <label className="mt-8 block text-start">
-                  <span className="section-label mb-3 block">הערות קצרות</span>
+                  <span className="section-label mb-3 block">{locale === "he" ? "הערות קצרות" : "Short notes"}</span>
                   <textarea
                     name="message"
                     rows={3}
-                    placeholder="מה חשוב שנדע לפני הפגישה?"
+                    placeholder={locale === "he" ? "מה חשוב שנדע לפני הפגישה?" : "What should we know before the meeting?"}
                     className="block w-full resize-y border-0 border-b border-rule bg-transparent py-3 text-[1rem] leading-relaxed text-ink placeholder:text-ink-mute focus:border-brass focus:outline-none"
                   />
                 </label>
 
                 {leadState.status === "error" && !leadState.field && (
-                  <p className="mt-5 text-[0.875rem] italic text-ink-soft text-start">{leadState.message}</p>
+                  <p className="mt-5 text-[0.875rem] italic text-ink-soft text-start">{t(leadState.message as any)}</p>
                 )}
 
                 <div className="mt-10 flex flex-wrap items-center justify-between gap-5">
                   <p className="max-w-sm text-[0.75rem] leading-relaxed text-ink-mute text-start">
-                    הפרטים משמשים לתיאום הפגישה בלבד.
+                    {locale === "he" ? "הפרטים משמשים לתיאום הפגישה בלבד." : "Your details are used to arrange the meeting only."}
                   </p>
                   <AtelierSubmitButton />
                 </div>
@@ -939,10 +940,10 @@ export function AtelierConfigurator() {
                 <div className="vellum px-6 py-10 text-center">
                   <p className="section-label">Maison Mana</p>
                   <h2 className="display-he mt-4 text-[2rem] leading-tight text-ink">
-                    הבקשה התקבלה באטלייה.
+                    {t("inq_success_title")}
                   </h2>
                   <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
-                    נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית.
+                    {locale === "he" ? "נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית." : "We will get back to you within one business day to arrange a private meeting."}
                   </p>
                   <p className="mt-8 text-[0.6875rem] tracking-[0.18em] uppercase text-ink-mute display-lat">
                     Reference&nbsp;·&nbsp;<bdi dir="ltr">{leadState.reference}</bdi>
@@ -953,63 +954,63 @@ export function AtelierConfigurator() {
                   <input type="hidden" name="intent" value="bespoke" />
                   <input type="hidden" name="bespoke" value={summaryFull} />
                   <header className="mb-8">
-                    <p className="section-label">פגישה פרטית</p>
+                    <p className="section-label">{locale === "he" ? "פגישה פרטית" : "Private Meeting"}</p>
                     <h2 className="display-he mt-3 text-[1.875rem] leading-tight text-ink">
-                      שליחת ההדמיה לאטלייה
+                      {locale === "he" ? "שליחת ההדמיה לאטלייה" : "Send the Preview to the Atelier"}
                     </h2>
                     <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
-                      הפרטים יישלחו יחד עם סיכום הבחירות כדי שנוכל להכין שיחה מדויקת.
+                      {locale === "he" ? "הפרטים יישלחו יחד עם סיכום הבחירות כדי שנוכל להכין שיחה מדויקת." : "Your details will be sent together with the choice summary so we can prepare a precise conversation."}
                     </p>
                   </header>
 
                   <div className="grid gap-6 md:grid-cols-2">
                     <AtelierField
                       name="name"
-                      label="שם מלא"
+                      label={t("inq_field_name")}
                       required
                       autoComplete="name"
-                      error={leadState.status === "error" && leadState.field === "name" ? leadState.message : undefined}
+                      error={leadState.status === "error" && leadState.field === "name" ? t(leadState.message as any) : undefined}
                     />
                     <AtelierField
                       name="phone"
-                      label="טלפון"
+                      label={t("inq_field_phone")}
                       inputMode="tel"
                       autoComplete="tel"
                       dir="ltr"
-                      error={leadState.status === "error" && leadState.field === "phone" ? leadState.message : undefined}
+                      error={leadState.status === "error" && leadState.field === "phone" ? t(leadState.message as any) : undefined}
                     />
                     <AtelierField
                       name="email"
-                      label="דוא״ל"
+                      label={t("inq_field_email")}
                       type="email"
                       autoComplete="email"
                       dir="ltr"
-                      error={leadState.status === "error" && leadState.field === "email" ? leadState.message : undefined}
+                      error={leadState.status === "error" && leadState.field === "email" ? t(leadState.message as any) : undefined}
                     />
                     <AtelierField
                       name="preferred"
-                      label="מועד מבוקש"
-                      placeholder="לדוגמה: שלישי בערב"
+                      label={locale === "he" ? "מועד מבוקש" : "Preferred time"}
+                      placeholder={locale === "he" ? "לדוגמה: שלישי בערב" : "e.g. Tuesday evening"}
                     />
                   </div>
 
                   <label className="mt-8 block">
-                    <span className="section-label mb-3 block">הערות קצרות</span>
+                    <span className="section-label mb-3 block">{locale === "he" ? "הערות קצרות" : "Short notes"}</span>
                     <textarea
                       name="message"
                       rows={3}
-                      placeholder="מה חשוב שנדע לפני הפגישה?"
+                      placeholder={locale === "he" ? "מה חשוב שנדע לפני הפגישה?" : "What should we know before the meeting?"}
                       className="block w-full resize-y border-0 border-b border-rule bg-transparent py-3 text-[1rem] leading-relaxed text-ink placeholder:text-ink-mute focus:border-brass focus:outline-none"
                     />
                   </label>
 
                   {leadState.status === "error" && !leadState.field && (
-                    <p className="mt-5 text-[0.875rem] italic text-ink-soft">{leadState.message}</p>
+                    <p className="mt-5 text-[0.875rem] italic text-ink-soft">{t(leadState.message as any)}</p>
                   )}
 
                   <div className="mt-8 flex flex-wrap items-center justify-between gap-5">
                     <p className="max-w-sm text-[0.75rem] leading-relaxed text-ink-mute">
-                      הפרטים משמשים לתיאום הפגישה בלבד.
+                      {locale === "he" ? "הפרטים משמשים לתיאום הפגישה בלבד." : "Your details are used to arrange the meeting only."}
                     </p>
                     <AtelierSubmitButton />
                   </div>
@@ -1104,10 +1105,11 @@ function AtelierField({
 }
 
 function AtelierSubmitButton() {
+  const { t } = useLanguage();
   const { pending } = useFormStatus();
   return (
     <button type="submit" disabled={pending} className="brass-disc brass-disc--solid">
-      {pending ? "נשלח…" : "לתיאום פגישה"}
+      {pending ? t("inq_sending") : t("col_index_cta_meeting")}
     </button>
   );
 }

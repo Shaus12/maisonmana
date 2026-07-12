@@ -2,21 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/lib/products";
+import { Product, resolveProduct } from "@/lib/products";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useState } from "react";
 
-export function ProductFeature({ product }: { product: Product }) {
+export function ProductFeature({ product: sourceProduct }: { product: Product }) {
+  const { t, locale } = useLanguage();
+  const product = resolveProduct(sourceProduct, locale);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const mainImage = product.images[currentIndex] ?? product.images[0];
+
   return (
-    <section className="bg-paper border-t border-rule" dir="rtl">
+    <section className="bg-paper border-t border-rule">
       <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-24">
         <div className="mb-12 md:mb-16 md:text-center">
           <h2 className="display-he text-[2rem] text-ink md:text-[2.75rem]">
-            פריט זמין להזמנה
+            {t("prod_feature_title")}
           </h2>
           <p className="mt-4 text-[1.0625rem] text-ink-soft max-w-2xl mx-auto">
-            פריט ראשון מתוך האוסף שניתן להזמין או לברר עליו ישירות מול האטלייה.
+            {t("prod_feature_sub")}
           </p>
         </div>
 
@@ -24,8 +29,8 @@ export function ProductFeature({ product }: { product: Product }) {
           <div className="md:col-span-6 flex flex-col gap-4">
             <figure className="relative aspect-square w-full overflow-hidden bg-velvet">
               <Image
-                src={typeof product.images[currentIndex] === 'string' ? (product.images[currentIndex] as string) : (product.images[currentIndex] as any).src}
-                alt={typeof product.images[currentIndex] === 'string' ? product.title : (product.images[currentIndex] as any).alt}
+                src={mainImage.src}
+                alt={mainImage.alt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 60vw"
@@ -44,8 +49,8 @@ export function ProductFeature({ product }: { product: Product }) {
                     aria-label={`View image ${i + 1}`}
                   >
                     <Image
-                      src={typeof img === 'string' ? img : img.src}
-                      alt={typeof img === 'string' ? product.title : img.alt}
+                      src={img.src}
+                      alt={img.alt}
                       fill
                       className="object-cover"
                       sizes="20vw"
@@ -75,12 +80,12 @@ export function ProductFeature({ product }: { product: Product }) {
                 {product.specs.map((spec, index) => (
                   <div key={index} className="py-4 flex justify-between gap-4">
                     <dt className="text-ink-soft">{spec.label}</dt>
-                    <dd className="text-ink text-left">{spec.value}</dd>
+                    <dd className="text-ink text-end">{spec.value}</dd>
                   </div>
                 ))}
               </dl>
               <p className="text-[0.875rem] text-ink-mute mt-4">
-                המשקל והמחיר עשויים להשתנות בהתאם למידת האצבע, התאמות אישיות וזמינות האבנים.
+                {t("prod_feature_note")}
               </p>
             </div>
 

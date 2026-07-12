@@ -4,10 +4,9 @@ import { useLanguage } from "@/components/LanguageProvider";
 
 export function CollectionsIntro() {
   const { t } = useLanguage();
-  const isHe = t("col_intro_label" as any) !== "Collections";
 
   return (
-    <section className="bg-paper px-6 pt-16 pb-14 md:pt-24 md:pb-20" dir={isHe ? "rtl" : "ltr"}>
+    <section className="bg-paper px-6 pt-16 pb-14 md:pt-24 md:pb-20">
       <div className="mx-auto max-w-[900px] text-center">
         <h1 className="display-he text-[3.5rem] md:text-[5rem] text-ink leading-[1.05] mb-8">
           {t("col_intro_label" as any)}

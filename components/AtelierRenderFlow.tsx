@@ -2,6 +2,67 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/components/LanguageProvider";
+
+// ── Copy (bilingual) ──────────────────────────────────────────
+const COPY = {
+  he: {
+    idleLabel: "הדמיה ראשונית",
+    idleBody: "בחרתם את הפרטים — נוכל ליצור עבורכם הדמיה ויזואלית ראשונית של התכשיט.",
+    idleCta: "צרו הדמיה ראשונית",
+    modalAria: "יצירת הדמיה ראשונית",
+    close: "סגור",
+    modalTitle: "יצירת הדמיה ראשונית",
+    modalBody: "הזינו אימייל כדי שניצור עבורכם קונספט ויזואלי שיוצג מיד כאן באתר.",
+    emailLabel: "כתובת אימייל",
+    emailError: "נא להזין כתובת אימייל תקינה",
+    modalSubmit: "יצירת הדמיה",
+    summaryPrefix: "הסיכום:",
+    loadingTitle: "מרכיבים עבורך קונספט ראשוני",
+    loadingBody: "אנחנו מתרגמים את הבחירות שלך להדמיה ויזואלית של התכשיט.",
+    resultTitle: "ההדמיה הראשונית מוכנה",
+    resultAlt: "הדמיה ראשונית של תכשיט Maison Mana",
+    resultDisclaimer: "ההדמיה מיועדת להמחשה ראשונית בלבד. בפגישה האישית נדייק יחד את הפרופורציות, האבן, השיבוץ והפרטים הסופיים.",
+    download: "הורדת ההדמיה",
+    sendToAtelier: "שליחת העיצוב לאטלייה",
+    restart: "התחל מחדש",
+    blockedTitle: "כבר יצרת הדמיה ראשונית מהדפדפן הזה.",
+    blockedBody: "כדי לדייק את העיצוב או ליצור גרסה נוספת, השאירו פרטים ונחזור אליכם להמשך אישי.",
+    blockedCta: "שלחו את העיצוב לאטלייה",
+    abuseBody: "לא הצלחנו לאמת את הבקשה. נסו שוב בעוד רגע.",
+    retry: "נסה שוב",
+    errorLabel: "שגיאה",
+    errorBody: "לא הצלחנו ליצור את ההדמיה כרגע. נסו שוב בעוד רגע.",
+  },
+  en: {
+    idleLabel: "Initial Preview",
+    idleBody: "You have chosen the details — we can now create an initial visual preview of the piece for you.",
+    idleCta: "Create an Initial Preview",
+    modalAria: "Create an initial preview",
+    close: "Close",
+    modalTitle: "Create an Initial Preview",
+    modalBody: "Enter your email and we will create a visual concept, shown right here on the site.",
+    emailLabel: "Email Address",
+    emailError: "Please enter a valid email address",
+    modalSubmit: "Create Preview",
+    summaryPrefix: "Summary:",
+    loadingTitle: "Composing your initial concept",
+    loadingBody: "We are translating your choices into a visual preview of the piece.",
+    resultTitle: "Your initial preview is ready",
+    resultAlt: "Initial preview of a Maison Mana piece",
+    resultDisclaimer: "The preview is for initial illustration only. In the personal meeting we will refine the proportions, stone, setting, and final details together.",
+    download: "Download Preview",
+    sendToAtelier: "Send the Design to the Atelier",
+    restart: "Start Over",
+    blockedTitle: "You have already created an initial preview from this browser.",
+    blockedBody: "To refine the design or create another version, leave your details and we will get back to you personally.",
+    blockedCta: "Send the Design to the Atelier",
+    abuseBody: "We could not verify the request. Please try again in a moment.",
+    retry: "Try Again",
+    errorLabel: "Error",
+    errorBody: "We could not create the preview right now. Please try again in a moment.",
+  },
+} as const;
 
 // ── sessionId helpers ─────────────────────────────────────────
 function getOrCreateSessionId(): string {
@@ -36,6 +97,8 @@ export function AtelierRenderFlow({
   designSummary,
   onResult,
 }: AtelierRenderFlowProps) {
+  const { locale } = useLanguage();
+  const c = COPY[locale];
   const [stage, setStage] = useState<Stage>("idle");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -71,7 +134,7 @@ export function AtelierRenderFlow({
     e.preventDefault();
 
     if (!validateEmail(email)) {
-      setEmailError("נא להזין כתובת אימייל תקינה");
+      setEmailError(c.emailError);
       return;
     }
     setEmailError("");
@@ -152,17 +215,17 @@ export function AtelierRenderFlow({
   // ── Idle — main trigger button ────────────────────────────
   if (stage === "idle") {
     return (
-      <div className="mt-10 pt-8 border-t border-rule flex flex-col items-start gap-4" dir="rtl">
-        <p className="section-label">הדמיה ראשונית</p>
+      <div className="mt-10 pt-8 border-t border-rule flex flex-col items-start gap-4">
+        <p className="section-label">{c.idleLabel}</p>
         <p className="text-[0.9375rem] leading-relaxed text-ink-soft max-w-md">
-          בחרתם את הפרטים — נוכל ליצור עבורכם הדמיה ויזואלית ראשונית של התכשיט.
+          {c.idleBody}
         </p>
         <button
           type="button"
           onClick={() => setStage("modal")}
           className="brass-disc brass-disc--solid mt-2"
         >
-          צרו הדמיה ראשונית
+          {c.idleCta}
         </button>
       </div>
     );
@@ -173,17 +236,16 @@ export function AtelierRenderFlow({
     return (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-velvet/60 backdrop-blur-sm"
-        dir="rtl"
         onClick={(e) => { if (e.target === e.currentTarget) setStage("idle"); }}
         role="dialog"
         aria-modal="true"
-        aria-label="יצירת הדמיה ראשונית"
+        aria-label={c.modalAria}
       >
         <div className="relative w-full max-w-md bg-paper border border-rule shadow-2xl px-8 py-10">
           {/* Close */}
           <button
             type="button"
-            aria-label="סגור"
+            aria-label={c.close}
             onClick={() => setStage("idle")}
             className="absolute start-5 top-5 text-ink-mute hover:text-ink transition-colors"
           >
@@ -196,10 +258,10 @@ export function AtelierRenderFlow({
           <div className="mb-8">
             <p className="section-label mb-4" dir="ltr">Maison Mana · Atelier</p>
             <h2 className="display-he text-[1.75rem] leading-tight text-ink mb-3">
-              יצירת הדמיה ראשונית
+              {c.modalTitle}
             </h2>
             <p className="text-[0.9375rem] leading-relaxed text-ink-soft">
-              הזינו אימייל כדי שניצור עבורכם קונספט ויזואלי שיוצג מיד כאן באתר.
+              {c.modalBody}
             </p>
           </div>
 
@@ -234,7 +296,7 @@ export function AtelierRenderFlow({
 
             {/* Email field — the only field users see */}
             <label className="block mb-6">
-              <span className="section-label mb-3 block">כתובת אימייל</span>
+              <span className="section-label mb-3 block">{c.emailLabel}</span>
               <input
                 ref={emailRef}
                 type="email"
@@ -254,10 +316,10 @@ export function AtelierRenderFlow({
 
             <div className="mt-2 flex flex-col gap-3">
               <button type="submit" className="brass-disc brass-disc--solid w-full justify-center">
-                יצירת הדמיה
+                {c.modalSubmit}
               </button>
               <p className="text-center text-[0.75rem] text-ink-mute leading-relaxed">
-                הסיכום: <span className="text-ink-soft" dir="ltr">{designSummary}</span>
+                {c.summaryPrefix} <span className="text-ink-soft" dir="ltr">{designSummary}</span>
               </p>
             </div>
           </form>
@@ -269,7 +331,7 @@ export function AtelierRenderFlow({
   // ── Loading ───────────────────────────────────────────────
   if (stage === "loading") {
     return (
-      <div className="mt-10 pt-8 border-t border-rule" dir="rtl">
+      <div className="mt-10 pt-8 border-t border-rule">
         <div className="vellum px-8 py-12 flex flex-col items-center text-center gap-6">
           {/* Brass spinner */}
           <div className="relative h-12 w-12">
@@ -281,10 +343,10 @@ export function AtelierRenderFlow({
           </div>
           <div>
             <h2 className="display-he text-[1.5rem] text-ink mb-3">
-              מרכיבים עבורך קונספט ראשוני
+              {c.loadingTitle}
             </h2>
             <p className="text-[0.9375rem] leading-relaxed text-ink-soft max-w-sm mx-auto">
-              אנחנו מתרגמים את הבחירות שלך להדמיה ויזואלית של התכשיט.
+              {c.loadingBody}
             </p>
           </div>
           <p className="text-[0.75rem] text-ink-mute tracking-widest uppercase" dir="ltr">
@@ -298,11 +360,11 @@ export function AtelierRenderFlow({
   // ── Result ────────────────────────────────────────────────
   if (stage === "result" && imageUrl) {
     return (
-      <div className="mt-10 pt-8 border-t border-rule" dir="rtl">
+      <div className="mt-10 pt-8 border-t border-rule">
         <div className="flex flex-col gap-6">
           <div>
             <p className="section-label mb-3" dir="ltr">Maison Mana · Initial Render</p>
-            <h2 className="display-he text-[1.75rem] text-ink mb-2">ההדמיה הראשונית מוכנה</h2>
+            <h2 className="display-he text-[1.75rem] text-ink mb-2">{c.resultTitle}</h2>
             <p className="text-[0.875rem] text-ink-mute">{designSummary}</p>
           </div>
 
@@ -310,7 +372,7 @@ export function AtelierRenderFlow({
           <div className="relative w-full aspect-square max-w-md bg-velvet overflow-hidden border border-ink/10">
             <Image
               src={`/api/atelier/proxy-image?url=${encodeURIComponent(imageUrl)}`}
-              alt="הדמיה ראשונית של תכשיט Maison Mana"
+              alt={c.resultAlt}
               fill
               className="object-contain"
               unoptimized
@@ -319,7 +381,7 @@ export function AtelierRenderFlow({
 
           {/* Disclaimer */}
           <p className="text-[0.8125rem] leading-relaxed text-ink-mute max-w-md border-s border-brass/40 ps-4 italic">
-            ההדמיה מיועדת להמחשה ראשונית בלבד. בפגישה האישית נדייק יחד את הפרופורציות, האבן, השיבוץ והפרטים הסופיים.
+            {c.resultDisclaimer}
           </p>
 
           {/* Actions */}
@@ -329,10 +391,10 @@ export function AtelierRenderFlow({
               onClick={handleDownload}
               className="brass-disc brass-disc--solid"
             >
-              הורדת ההדמיה
+              {c.download}
             </button>
             <a href="#atelier-lead" className="hairline-link text-[0.9375rem]">
-              שליחת העיצוב לאטלייה
+              {c.sendToAtelier}
             </a>
           </div>
 
@@ -342,7 +404,7 @@ export function AtelierRenderFlow({
             onClick={() => { setStage("idle"); setImageUrl(null); }}
             className="text-[0.8125rem] text-ink-mute hover:text-ink transition-colors self-start"
           >
-            התחל מחדש
+            {c.restart}
           </button>
         </div>
       </div>
@@ -352,17 +414,17 @@ export function AtelierRenderFlow({
   // ── Rate-limited (blocked) ────────────────────────────────
   if (stage === "blocked") {
     return (
-      <div className="mt-10 pt-8 border-t border-rule" dir="rtl">
+      <div className="mt-10 pt-8 border-t border-rule">
         <div className="vellum px-8 py-10">
           <p className="section-label mb-4" dir="ltr">Atelier</p>
           <h2 className="display-he text-[1.5rem] text-ink mb-4">
-            כבר יצרת הדמיה ראשונית מהדפדפן הזה.
+            {c.blockedTitle}
           </h2>
           <p className="text-[0.9375rem] leading-relaxed text-ink-soft mb-6 max-w-sm">
-            כדי לדייק את העיצוב או ליצור גרסה נוספת, השאירו פרטים ונחזור אליכם להמשך אישי.
+            {c.blockedBody}
           </p>
           <a href="#atelier-lead" className="brass-disc brass-disc--solid inline-flex">
-            שלחו את העיצוב לאטלייה
+            {c.blockedCta}
           </a>
         </div>
       </div>
@@ -372,18 +434,18 @@ export function AtelierRenderFlow({
   // ── Abuse-blocked (honeypot / timing) ────────────────────
   if (stage === "abuse-blocked") {
     return (
-      <div className="mt-10 pt-8 border-t border-rule" dir="rtl">
+      <div className="mt-10 pt-8 border-t border-rule">
         <div className="vellum px-8 py-10">
           <p className="section-label mb-4 text-ink-mute" dir="ltr">Atelier</p>
           <p className="text-[0.9375rem] leading-relaxed text-ink-soft mb-6">
-            לא הצלחנו לאמת את הבקשה. נסו שוב בעוד רגע.
+            {c.abuseBody}
           </p>
           <button
             type="button"
             onClick={() => setStage("modal")}
             className="brass-disc"
           >
-            נסה שוב
+            {c.retry}
           </button>
         </div>
       </div>
@@ -392,18 +454,18 @@ export function AtelierRenderFlow({
 
   // ── Generic error ─────────────────────────────────────────
   return (
-    <div className="mt-10 pt-8 border-t border-rule" dir="rtl">
+    <div className="mt-10 pt-8 border-t border-rule">
       <div className="vellum px-8 py-10">
-        <p className="section-label mb-4 text-ink-mute" dir="ltr">שגיאה</p>
+        <p className="section-label mb-4 text-ink-mute">{c.errorLabel}</p>
         <p className="text-[0.9375rem] leading-relaxed text-ink-soft mb-6">
-          לא הצלחנו ליצור את ההדמיה כרגע. נסו שוב בעוד רגע.
+          {c.errorBody}
         </p>
         <button
           type="button"
           onClick={() => setStage("idle")}
           className="brass-disc"
         >
-          נסה שוב
+          {c.retry}
         </button>
       </div>
     </div>

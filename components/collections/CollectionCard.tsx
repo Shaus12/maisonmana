@@ -40,7 +40,7 @@ export function CollectionCard({ collection, index }: { collection: CollectionIt
   );
 
   const titleBlock = (
-    <div className="flex flex-col items-start text-start" dir="rtl">
+    <div className="flex flex-col items-start text-start">
       <span className="text-[0.625rem] tracking-[0.22em] uppercase text-ink-soft mb-3 font-body" dir="ltr">
         {collection.label}
       </span>
@@ -68,14 +68,17 @@ export function CollectionCard({ collection, index }: { collection: CollectionIt
           </div>
         )}
         {collection.links && collection.links.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-x-5 gap-y-2" dir="rtl">
+          <div className="mt-2 flex flex-wrap gap-2.5">
             {collection.links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-[0.8125rem] tracking-widest text-ink-soft border-b border-ink/10 pb-0.5 hover:text-ink hover:border-ink/40 transition-colors"
+                className="inline-flex items-center gap-2 border border-ink/20 px-4 py-2 text-[0.875rem] tracking-wide text-ink hover:border-ink hover:bg-paper-deep transition-colors"
               >
                 {t(link.labelKey as any)}
+                <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden>
+                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                </svg>
               </Link>
             ))}
           </div>

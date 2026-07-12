@@ -8,7 +8,7 @@ export function CollectionsBottomCTA() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-paper pb-24 md:pb-40 px-6 md:px-12" dir="rtl">
+    <section className="bg-paper pb-24 md:pb-40 px-6 md:px-12">
       <div className="mx-auto max-w-[800px]">
         <div className="h-px w-full bg-brass/20 mb-16" />
         <ScrollReveal className="text-center">

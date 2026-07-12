@@ -6,6 +6,7 @@ const publicRoutes = [
   "/",
   "/collections",
   "/collections/fine-jewelry",
+  "/products",
   "/atelier",
   "/mirror",
   "/inquiry",

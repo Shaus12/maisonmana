@@ -5,16 +5,16 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { CollectionPage } from "@/lib/collection-pages";
 
-export function CollectionSeoPage({ 
-  page, 
+export function CollectionSeoPage({
+  page,
   children,
   afterIntroContent,
   heroExtraCta
-}: { 
-  page: CollectionPage, 
+}: {
+  page: CollectionPage,
   children?: React.ReactNode,
   afterIntroContent?: React.ReactNode,
-  heroExtraCta?: React.ReactNode
+  heroExtraCta?: { href: string; labelKey: string }
 }) {
   const { t } = useLanguage();
 
@@ -34,7 +34,7 @@ export function CollectionSeoPage({
     : undefined;
 
   return (
-    <section className="bg-paper" dir="rtl">
+    <section className="bg-paper">
       {faqJsonLd && (
         <script
           type="application/ld+json"
@@ -81,7 +81,11 @@ export function CollectionSeoPage({
                 {t(page.secondaryCta.labelKey as any)}
               </Link>
             )}
-            {heroExtraCta}
+            {heroExtraCta && (
+              <a href={heroExtraCta.href} className="brass-disc">
+                {t(heroExtraCta.labelKey as any)}
+              </a>
+            )}
           </div>
         </div>
 

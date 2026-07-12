@@ -19,11 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: "Product Not Found" };
   }
 
-  const title = `${product.title} | Maison MANA`;
-  const description = product.shortDescription;
+  const title = `${product.title.he} | Maison MANA`;
+  const description = product.shortDescription.he;
   const canonicalUrl = `${siteUrl}/products/${product.slug}`;
-  const firstImage = product.images[0];
-  const imageUrl = `${siteUrl}${typeof firstImage === "string" ? firstImage : firstImage?.src}`;
+  const imageUrl = `${siteUrl}${product.images[0]?.src}`;
 
   return {
     title,
@@ -61,15 +60,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   }
 
   const canonicalUrl = `${siteUrl}/products/${product.slug}`;
-  const firstImage = product.images[0];
-  const imageUrl = `${siteUrl}${typeof firstImage === "string" ? firstImage : firstImage?.src}`;
+  const imageUrl = `${siteUrl}${product.images[0]?.src}`;
 
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.title,
+    name: product.title.he,
     image: imageUrl,
-    description: product.shortDescription,
+    description: product.shortDescription.he,
     brand: {
       "@type": "Brand",
       name: "Maison MANA"

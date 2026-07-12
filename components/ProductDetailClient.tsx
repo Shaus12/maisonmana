@@ -1,83 +1,77 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
+import { useState, useActionState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/lib/products";
+import { Product, resolveProduct } from "@/lib/products";
 import { submitProductInquiry } from "@/app/products/[slug]/actions";
+import { useLanguage } from "@/components/LanguageProvider";
+import type { StringKey } from "@/lib/i18n";
 
-export function ProductDetailClient({ product }: { product: Product }) {
+export function ProductDetailClient({ product: sourceProduct }: { product: Product }) {
+  const { t, locale } = useLanguage();
+  const product = resolveProduct(sourceProduct, locale);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
-  
-  // Set default values for select options
-  useEffect(() => {
-    if (product.options) {
-      const defaults: Record<string, string> = {};
-      product.options.forEach((opt) => {
-        if (opt.type === "select" && opt.options.length > 0) {
-          defaults[opt.name] = opt.options[0];
-        }
-      });
-      setSelectedOptions(defaults);
-    }
-  }, [product.options]);
-
-  const handleOptionChange = (name: string, value: string) => {
-    setSelectedOptions((prev) => ({ ...prev, [name]: value }));
-  };
+  // Select choices are stored by index so they survive a language switch;
+  // free-text values are stored as-is.
+  const [selectedIndexes, setSelectedIndexes] = useState<Record<string, number>>(() => {
+    const defaults: Record<string, number> = {};
+    sourceProduct.options?.forEach((opt) => {
+      if (opt.type === "select" && opt.options.length > 0) defaults[opt.name] = 0;
+    });
+    return defaults;
+  });
+  const [textValues, setTextValues] = useState<Record<string, string>>({});
 
   const [state, formAction, isPending] = useActionState(submitProductInquiry, { status: "idle" });
-
   const isSuccess = state.status === "ok";
+  const errorText = (code: string) => t(code as StringKey);
 
-  const mainImage = product.images[currentImageIndex];
-  const mainImgSrc = typeof mainImage === "string" ? mainImage : mainImage?.src;
-  const mainImgAlt = typeof mainImage === "string" ? `תמונה של ${product.title} מבית Maison MANA` : (mainImage?.alt || product.title);
+  const mainImage = product.images[currentImageIndex] ?? product.images[0];
+
+  const selectedOptions: Record<string, string> = {};
+  product.options?.forEach((opt) => {
+    if (opt.type === "select") {
+      selectedOptions[opt.name] = opt.options[selectedIndexes[opt.name] ?? 0] ?? "";
+    } else if (textValues[opt.name]) {
+      selectedOptions[opt.name] = textValues[opt.name];
+    }
+  });
 
   const productContextPayload = {
     id: product.id,
     slug: product.slug,
-    title: product.title,
-    category: product.category,
+    title: sourceProduct.title.he,
+    category: sourceProduct.category.he,
     price: product.price,
-    priceLabel: product.priceLabel
+    priceLabel: product.priceLabel,
   };
 
   return (
-    <section className="bg-paper min-h-screen pt-28 pb-16 md:pt-36 md:pb-24" dir="rtl">
+    <section className="bg-paper min-h-screen pt-28 pb-16 md:pt-36 md:pb-24">
       <div className="mx-auto max-w-[1440px] px-6 md:px-12">
         {/* Breadcrumb */}
         <div className="mb-8">
           <Link
-            href={product.id?.startsWith("bracelet-product-") ? "/tennis-bracelets" : "/diamond-rings"}
+            href="/products"
             className="inline-flex items-center gap-2 text-[0.875rem] text-ink-mute hover:text-ink transition-colors"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 rtl:rotate-180">
               <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
             </svg>
-            חזרה ל{product.id?.startsWith("bracelet-product-") ? "צמידים" : "טבעות"}
+            {t("prod_back_catalog")}
           </Link>
         </div>
 
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Left Side: Images (on LTR it would be Left, but RTL implies this is right. Wait, CSS grid naturally handles RTL. 
-              Usually in RTL, col-span-7 comes first on the right. 
-              Design spec: Right side (title, form), Left side (images). 
-              So in RTL, the images should be the second item in DOM or use CSS order. 
-              Actually, in standard RTL DOM order, the first element goes to the right.
-              Since we want text on the right and images on the left:
-              Text is 1st element in DOM, Images is 2nd element.
-              On mobile, we want Image first, then Text. 
-              We can use flex/grid order. */}
-          
-          {/* Images Section (Left on Desktop, Top on Mobile) */}
+          {/* Images: first in reading order on mobile, opposite the text on desktop */}
           <div className="lg:col-span-7 flex flex-col order-1 lg:order-2">
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-velvet mb-4">
-              {mainImgSrc ? (
+              {mainImage ? (
                 <Image
-                  src={mainImgSrc}
-                  alt={mainImgAlt}
+                  src={mainImage.src}
+                  alt={mainImage.alt}
                   fill
                   priority
                   className="object-cover"
@@ -85,40 +79,36 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-ink-mute bg-paper-deep">
-                  אין תמונה
+                  {t("prod_no_image")}
                 </div>
               )}
             </div>
 
             {product.images.length > 1 && (
               <div className="grid grid-cols-5 gap-3">
-                {product.images.map((img, i) => {
-                  const imgSrc = typeof img === "string" ? img : img.src;
-                  const imgAlt = typeof img === "string" ? `תמונה ${i + 1} של ${product.title}` : (img.alt || product.title);
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentImageIndex(i)}
-                      className={`relative aspect-[4/5] overflow-hidden bg-velvet border transition-colors ${
-                        currentImageIndex === i ? "border-ink" : "border-transparent hover:border-ink/50"
-                      }`}
-                      aria-label={`View image ${i + 1}`}
-                    >
-                      <Image
-                        src={imgSrc}
-                        alt={imgAlt}
-                        fill
-                        className="object-cover"
-                        sizes="15vw"
-                      />
-                    </button>
-                  );
-                })}
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImageIndex(i)}
+                    className={`relative aspect-[4/5] overflow-hidden bg-velvet border transition-colors ${
+                      currentImageIndex === i ? "border-ink" : "border-transparent hover:border-ink/50"
+                    }`}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      className="object-cover"
+                      sizes="15vw"
+                    />
+                  </button>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Details Section (Right on Desktop, Bottom on Mobile) */}
+          {/* Details */}
           <div className="lg:col-span-5 flex flex-col order-2 lg:order-1 lg:pt-8">
             <p className="text-[0.875rem] text-ink-mute tracking-widest uppercase mb-3">
               {product.category}
@@ -145,11 +135,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
                         <select
                           id={`option-${option.name}`}
                           className="w-full appearance-none border border-rule bg-transparent px-4 py-3 text-[1rem] text-ink focus:border-ink focus:outline-none focus:ring-0"
-                          value={selectedOptions[option.name] || ""}
-                          onChange={(e) => handleOptionChange(option.name, e.target.value)}
+                          value={selectedIndexes[option.name] ?? 0}
+                          onChange={(e) =>
+                            setSelectedIndexes((prev) => ({ ...prev, [option.name]: Number(e.target.value) }))
+                          }
                         >
-                          {option.options.map((opt) => (
-                            <option key={opt} value={opt}>
+                          {option.options.map((opt, i) => (
+                            <option key={i} value={i}>
                               {opt}
                             </option>
                           ))}
@@ -160,11 +152,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           id={`option-${option.name}`}
                           placeholder={option.placeholder}
                           className="w-full border border-rule bg-transparent px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:border-ink focus:outline-none focus:ring-0"
-                          value={selectedOptions[option.name] || ""}
-                          onChange={(e) => handleOptionChange(option.name, e.target.value)}
+                          value={textValues[option.name] || ""}
+                          onChange={(e) =>
+                            setTextValues((prev) => ({ ...prev, [option.name]: e.target.value }))
+                          }
                         />
                       )}
-                      {('note' in option && option.note) && (
+                      {option.type === "text" && option.note && (
                         <p className="text-[0.8125rem] text-ink-mute mt-1">
                           {option.note}
                         </p>
@@ -175,12 +169,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
               )}
 
               <div className="bg-paper-deep p-6 border border-rule/50">
-                <h3 className="display-he text-[1.5rem] text-ink mb-4">השאירו פרטים להזמנה</h3>
-                
+                <h3 className="display-he text-[1.5rem] text-ink mb-4">{t("prod_order_form_title")}</h3>
+
                 {isSuccess ? (
                   <div className="text-center py-8">
-                    <p className="text-[1.25rem] text-ink mb-2">תודה רבה!</p>
-                    <p className="text-ink-soft">פנייתך התקבלה ואנו ניצור קשר בהקדם.</p>
+                    <p className="text-[1.25rem] text-ink mb-2">{t("prod_thanks_title")}</p>
+                    <p className="text-ink-soft">{t("prod_thanks_body")}</p>
                   </div>
                 ) : (
                   <form action={formAction} className="flex flex-col gap-4">
@@ -189,21 +183,21 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     <input type="hidden" name="selectedOptions" value={JSON.stringify(selectedOptions)} />
 
                     {state.status === "error" && !state.field && (
-                      <p className="text-red-700 text-[0.875rem]">{state.message}</p>
+                      <p className="text-red-700 text-[0.875rem]">{errorText(state.message)}</p>
                     )}
 
                     <div>
                       <input
                         type="text"
                         name="fullName"
-                        placeholder="שם מלא *"
+                        placeholder={t("prod_ph_full_name")}
                         className={`w-full border bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none focus:ring-0 ${
                           state.status === "error" && state.field === "fullName" ? "border-red-700" : "border-rule focus:border-ink"
                         }`}
                         required
                       />
                       {state.status === "error" && state.field === "fullName" && (
-                        <p className="text-red-700 text-[0.8125rem] mt-1">{state.message}</p>
+                        <p className="text-red-700 text-[0.8125rem] mt-1">{errorText(state.message)}</p>
                       )}
                     </div>
 
@@ -211,16 +205,16 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       <input
                         type="tel"
                         name="phone"
-                        placeholder="טלפון *"
+                        placeholder={t("prod_ph_phone")}
                         className={`w-full border bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none focus:ring-0 ${
                           state.status === "error" && state.field === "phone" ? "border-red-700" : "border-rule focus:border-ink"
                         }`}
                         required
                         dir="ltr"
-                        style={{ textAlign: 'right' }}
+                        style={{ textAlign: locale === "he" ? "right" : "left" }}
                       />
                       {state.status === "error" && state.field === "phone" && (
-                        <p className="text-red-700 text-[0.8125rem] mt-1">{state.message}</p>
+                        <p className="text-red-700 text-[0.8125rem] mt-1">{errorText(state.message)}</p>
                       )}
                     </div>
 
@@ -228,22 +222,22 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       <input
                         type="email"
                         name="email"
-                        placeholder="אימייל"
+                        placeholder={t("prod_ph_email")}
                         className={`w-full border bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none focus:ring-0 ${
                           state.status === "error" && state.field === "email" ? "border-red-700" : "border-rule focus:border-ink"
                         }`}
                         dir="ltr"
-                        style={{ textAlign: 'right' }}
+                        style={{ textAlign: locale === "he" ? "right" : "left" }}
                       />
                       {state.status === "error" && state.field === "email" && (
-                        <p className="text-red-700 text-[0.8125rem] mt-1">{state.message}</p>
+                        <p className="text-red-700 text-[0.8125rem] mt-1">{errorText(state.message)}</p>
                       )}
                     </div>
 
                     <div>
                       <textarea
                         name="message"
-                        placeholder="הערות / בקשה מיוחדת"
+                        placeholder={t("prod_ph_notes")}
                         rows={3}
                         className="w-full border border-rule bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:border-ink focus:outline-none focus:ring-0 resize-none"
                       />
@@ -254,7 +248,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       disabled={isPending}
                       className="brass-disc brass-disc--solid w-full mt-2 py-3 disabled:opacity-50"
                     >
-                      {isPending ? "שולח..." : "שליחת בקשה על התכשיט"}
+                      {isPending ? t("prod_sending") : t("prod_submit")}
                     </button>
                   </form>
                 )}
@@ -267,18 +261,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
         <div className="mt-20 lg:mt-32 border-t border-rule pt-16">
           <div className="max-w-3xl mx-auto">
             <h2 className="display-he text-[1.75rem] text-ink mb-8 text-center">
-              מפרט התכשיט
+              {t("prod_specs_title")}
             </h2>
             <dl className="divide-y divide-rule border-t border-rule">
               {product.specs.map((spec, index) => (
                 <div key={index} className="py-4 flex justify-between gap-4">
                   <dt className="text-ink-soft w-1/3">{spec.label}</dt>
-                  <dd className="text-ink text-left font-medium w-2/3">{spec.value}</dd>
+                  <dd className="text-ink text-end font-medium w-2/3">{spec.value}</dd>
                 </div>
               ))}
             </dl>
             <p className="text-[0.875rem] text-ink-mute mt-8 text-center">
-              המחיר והמשקל עשויים להשתנות בהתאם להתאמות אישיות, מידה וזמינות האבנים.
+              {t("prod_specs_note")}
             </p>
           </div>
         </div>

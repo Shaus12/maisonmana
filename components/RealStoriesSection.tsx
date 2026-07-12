@@ -3,26 +3,37 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { useLanguage } from "@/components/LanguageProvider";
 
 const stories = [
   {
     label: "PERSONAL PIECE",
-    name: "מאיה",
-    descriptor: "שרשרת לב בעיצוב אישי",
-    quote: "חיפשתי משהו קטן ועדין, אבל כזה שבאמת ירגיש שלי. לא רציתי עוד שרשרת יפה וזהו. רציתי תכשיט עם משמעות. התוצאה יצאה בדיוק כמו שדמיינתי — פשוטה, נקייה, ואני לא מורידה אותה כמעט בכלל.",
+    nameHe: "מאיה",
+    nameEn: "Maya",
+    descriptorHe: "שרשרת לב בעיצוב אישי",
+    descriptorEn: "Bespoke heart necklace",
+    quoteHe: "חיפשתי משהו קטן ועדין, אבל כזה שבאמת ירגיש שלי. לא רציתי עוד שרשרת יפה וזהו. רציתי תכשיט עם משמעות. התוצאה יצאה בדיוק כמו שדמיינתי — פשוטה, נקייה, ואני לא מורידה אותה כמעט בכלל.",
+    quoteEn: "I was looking for something small and delicate, but something that would truly feel mine. I didn't want just another pretty necklace — I wanted a piece with meaning. The result came out exactly as I imagined: simple, clean, and I almost never take it off.",
     image: "/maya.jpg",
-    alt: "לקוחה עונדת שרשרת לב בעיצוב אישי של Maison MANA",
-    cta: "לעיצוב תכשיט אישי",
+    altHe: "לקוחה עונדת שרשרת לב בעיצוב אישי של Maison MANA",
+    altEn: "A client wearing a bespoke heart necklace by Maison MANA",
+    ctaHe: "לעיצוב תכשיט אישי",
+    ctaEn: "Design a Bespoke Piece",
     href: "/atelier"
   },
   {
     label: "BRIDAL STORY",
-    name: "נועה ויואב",
-    descriptor: "טבעת אירוסין בעיצוב אישי",
-    quote: "מהרגע הראשון היה לנו ברור שאנחנו לא רוצים לבחור טבעת מוכנה ממגש. רצינו משהו שירגיש שלנו. עברנו יחד על הסגנון, האבן והפרטים הקטנים, ובסוף יצאה טבעת שהרגישה הכי מדויקת שיש — גם בהצעה וגם ביום החתונה.",
+    nameHe: "נועה ויואב",
+    nameEn: "Noa & Yoav",
+    descriptorHe: "טבעת אירוסין בעיצוב אישי",
+    descriptorEn: "Bespoke engagement ring",
+    quoteHe: "מהרגע הראשון היה לנו ברור שאנחנו לא רוצים לבחור טבעת מוכנה ממגש. רצינו משהו שירגיש שלנו. עברנו יחד על הסגנון, האבן והפרטים הקטנים, ובסוף יצאה טבעת שהרגישה הכי מדויקת שיש — גם בהצעה וגם ביום החתונה.",
+    quoteEn: "From the very first moment it was clear to us we didn't want to pick a ready-made ring from a tray. We wanted something that would feel like ours. We went over the style, the stone, and the small details together, and the ring that came out felt exactly right — at the proposal and on the wedding day.",
     image: "/couple.jpg",
-    alt: "זוג ביום חתונתם מציג טבעת אירוסין בעיצוב אישי",
-    cta: "לתיאום פגישה פרטית",
+    altHe: "זוג ביום חתונתם מציג טבעת אירוסין בעיצוב אישי",
+    altEn: "A couple on their wedding day showing a bespoke engagement ring",
+    ctaHe: "לתיאום פגישה פרטית",
+    ctaEn: "Book a Private Meeting",
     href: "/inquiry"
   }
 ];
@@ -30,16 +41,21 @@ const stories = [
 // TODO: Replace testimonial copy with approved real customer quotes before final production launch if needed.
 
 export function RealStoriesSection() {
+  const { locale } = useLanguage();
+  const isHe = locale === "he";
+
   return (
-    <section className="bg-paper text-ink overflow-hidden" dir="rtl">
+    <section className="bg-paper text-ink overflow-hidden">
       <div className="mx-auto max-w-[1440px] px-6 py-16 md:px-12 md:py-32">
         <ScrollReveal className="text-center mb-16 md:mb-24 flex flex-col items-center">
           <p className="section-label mb-6 text-ink-soft" dir="ltr">MAISON MANA STORIES</p>
           <h2 className="display-lat text-[2.25rem] leading-[1.07] md:text-[3.75rem] text-ink">
-            רגעים אמיתיים
+            {isHe ? "רגעים אמיתיים" : "Real Moments"}
           </h2>
           <p className="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-ink-soft">
-            יש תכשיטים שלא מתחילים מקטלוג. הם מתחילים מרגע, מאדם, מסיפור קטן שרוצים לשמור קרוב.
+            {isHe
+              ? "יש תכשיטים שלא מתחילים מקטלוג. הם מתחילים מרגע, מאדם, מסיפור קטן שרוצים לשמור קרוב."
+              : "Some pieces don't begin in a catalogue. They begin with a moment, a person, a small story worth keeping close."}
           </p>
         </ScrollReveal>
 
@@ -47,8 +63,8 @@ export function RealStoriesSection() {
           {stories.map((story, idx) => {
             const isEven = idx % 2 === 0;
             return (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`flex flex-col md:flex-row gap-10 md:gap-20 items-center ${
                   isEven ? "" : "md:flex-row-reverse"
                 }`}
@@ -59,7 +75,7 @@ export function RealStoriesSection() {
                     <div className={`relative w-full ${isEven ? "aspect-[3/4]" : "aspect-[4/3]"} overflow-hidden border border-ink/10`}>
                       <Image
                         src={story.image}
-                        alt={story.alt}
+                        alt={isHe ? story.altHe : story.altEn}
                         fill
                         className="object-cover transition-transform duration-[1400ms] ease-out hover:scale-[1.03]"
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -81,17 +97,17 @@ export function RealStoriesSection() {
                         {story.label}
                       </span>
                       <blockquote className="text-[1.25rem] md:text-[1.5rem] leading-relaxed text-ink mb-8">
-                        "{story.quote}"
+                        "{isHe ? story.quoteHe : story.quoteEn}"
                       </blockquote>
                       <div className="flex flex-col gap-1 border-s border-brass/50 ps-4 mb-8">
-                        <span className="font-medium text-lg">{story.name}</span>
-                        <span className="text-ink-soft text-sm">{story.descriptor}</span>
+                        <span className="font-medium text-lg">{isHe ? story.nameHe : story.nameEn}</span>
+                        <span className="text-ink-soft text-sm">{isHe ? story.descriptorHe : story.descriptorEn}</span>
                       </div>
-                      <Link 
+                      <Link
                         href={story.href}
                         className="inline-block border-b border-ink/30 pb-1 text-sm tracking-widest hover:border-ink transition-colors"
                       >
-                        {story.cta}
+                        {isHe ? story.ctaHe : story.ctaEn}
                       </Link>
                     </div>
                   </ScrollReveal>
