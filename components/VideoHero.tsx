@@ -26,6 +26,7 @@ export function VideoHero() {
       <video
         ref={videoRef}
         src="/hero.mp4"
+        poster="/hero-poster.jpg"
         autoPlay
         muted
         loop
@@ -52,9 +53,15 @@ export function VideoHero() {
         >
           {t("hero_tagline")}
         </p>
-        <h1
+        <p
           className="display-lat mt-5 leading-[1.1] fade-in"
           style={{ color: "oklch(0.985 0.004 75)", fontSize: "clamp(2.5rem, 7vw, 6rem)" }}
+        >
+          {t("hero_display")}
+        </p>
+        <h1
+          className="display-he mt-5 leading-[1.35] fade-in"
+          style={{ color: "oklch(0.985 0.004 75 / 0.92)", fontSize: "clamp(1.125rem, 2.2vw, 1.625rem)" }}
         >
           {t("hero_h1")}
         </h1>

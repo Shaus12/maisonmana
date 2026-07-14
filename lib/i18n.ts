@@ -17,7 +17,8 @@ export const strings = {
 
     // ── Hero ─────────────────────────────────────────────────
     hero_tagline:          "Maison Mana",
-    hero_h1:               "wear your legacy",
+    hero_display:          "wear your legacy",
+    hero_h1:               "Engagement rings & diamond jewelry, designed with you in a private atelier",
     hero_cta_view:         "View Pieces",
     hero_cta_collections:  "Book a Private Viewing",
 
@@ -458,7 +459,8 @@ export const strings = {
     masthead_sub:    "אטלייה",
 
     hero_tagline:          "מייסון מאנא",
-    hero_h1:               "wear your legacy",
+    hero_display:          "wear your legacy",
+    hero_h1:               "טבעות אירוסין ותכשיטי יהלומים בעיצוב אישי, באטלייה פרטי",
     hero_cta_view:         "לצפייה בפריטים",
     hero_cta_collections:  "לקביעת צפייה פרטית",
 

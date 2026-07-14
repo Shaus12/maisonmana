@@ -43,7 +43,7 @@ export function HomeContent() {
             id: "rings",
             categoryUrl: "/products?category=rings",
             seoUrl: "/diamond-rings",
-            bgImage: "/rings-campaign.png",
+            bgImage: "/rings-campaign.webp",
             archImage: "/marquise-diamond-ring-closeup.jpg",
             titleEn: "RINGS",
             titleHe: "טבעות",
@@ -140,7 +140,7 @@ export function HomeContent() {
 
                 {/* Social Watermark at bottom-left of image */}
                 <div className="absolute bottom-8 start-8 md:bottom-12 md:start-12 text-white/40 text-[0.625rem] tracking-[0.2em] font-body">
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
+                  <a href="https://www.instagram.com/maisonmana.diamonds" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
                 </div>
               </div>
 

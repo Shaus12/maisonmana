@@ -72,6 +72,10 @@ export function Footer() {
             <a href="https://wa.me/972507099933" target="_blank" rel="noopener noreferrer" className="hairline-link">
               WhatsApp · +972 50-709-9933
             </a>
+            <br />
+            <a href="https://www.instagram.com/maisonmana.diamonds" target="_blank" rel="noopener noreferrer" className="hairline-link">
+              Instagram · @maisonmana.diamonds
+            </a>
           </div>
         </div>
       </div>

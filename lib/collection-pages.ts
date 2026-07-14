@@ -114,7 +114,7 @@ export const collectionPages: Record<CollectionPageSlug, CollectionPage> = {
     eyebrowKey: "cp_er_eyebrow",
     titleKey: "cp_wr_title",
     descriptionKey: "cp_wr_desc",
-    image: "/rings-campaign.png",
+    image: "/rings-campaign.webp",
     imageAlt: "טבעות יהלום וזהב מתוך Bridal Collection של Maison Mana",
     pointsKeys: ["cp_wr_points_0", "cp_wr_points_1", "cp_wr_points_2"],
     sections: [
