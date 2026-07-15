@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Product, resolveProduct } from "@/lib/products";
-import { submitProductInquiry } from "@/app/products/[slug]/actions";
+import { canCheckoutProduct, Product, resolveProduct } from "@/lib/products";
 import { useLanguage } from "@/components/LanguageProvider";
-import type { StringKey } from "@/lib/i18n";
 
 export function ProductDetailClient({ product: sourceProduct }: { product: Product }) {
   const { t, locale } = useLanguage();
@@ -24,9 +22,7 @@ export function ProductDetailClient({ product: sourceProduct }: { product: Produ
   });
   const [textValues, setTextValues] = useState<Record<string, string>>({});
 
-  const [state, formAction, isPending] = useActionState(submitProductInquiry, { status: "idle" });
-  const isSuccess = state.status === "ok";
-  const errorText = (code: string) => t(code as StringKey);
+  const canCheckout = canCheckoutProduct(sourceProduct);
 
   const mainImage = product.images[currentImageIndex] ?? product.images[0];
 
@@ -39,14 +35,11 @@ export function ProductDetailClient({ product: sourceProduct }: { product: Produ
     }
   });
 
-  const productContextPayload = {
-    id: product.id,
-    slug: product.slug,
-    title: sourceProduct.title.he,
-    category: sourceProduct.category.he,
-    price: product.price,
-    priceLabel: product.priceLabel,
-  };
+  const optionParams = new URLSearchParams();
+  Object.entries(selectedOptions).forEach(([key, value]) => {
+    if (value) optionParams.set(key, value);
+  });
+  const checkoutHref = `/checkout/${product.slug}${optionParams.toString() ? `?${optionParams.toString()}` : ""}`;
 
   return (
     <section className="bg-paper min-h-screen pt-28 pb-16 md:pt-36 md:pb-24">
@@ -169,88 +162,32 @@ export function ProductDetailClient({ product: sourceProduct }: { product: Produ
               )}
 
               <div className="bg-paper-deep p-6 border border-rule/50">
-                <h3 className="display-he text-[1.5rem] text-ink mb-4">{t("prod_order_form_title")}</h3>
-
-                {isSuccess ? (
-                  <div className="text-center py-8">
-                    <p className="text-[1.25rem] text-ink mb-2">{t("prod_thanks_title")}</p>
-                    <p className="text-ink-soft">{t("prod_thanks_body")}</p>
+                {canCheckout ? (
+                  <div>
+                    <h3 className="display-he text-[1.5rem] text-ink mb-4">המשך להזמנה</h3>
+                    <p className="mb-6 text-[0.9375rem] leading-relaxed text-ink-soft">
+                      התאמות הפריט ופרטי המזמין יושלמו בעמוד ההזמנה, רגע לפני מעבר לתשלום המאובטח.
+                    </p>
+                    <Link href={checkoutHref} className="brass-disc brass-disc--solid flex w-full justify-center py-3">
+                      להמשך להזמנה
+                    </Link>
+                    <Link href="/inquiry" className="mt-4 inline-flex text-[0.875rem] text-ink-mute hover:text-ink">
+                      יש לכם שאלה לפני ההזמנה?
+                    </Link>
                   </div>
                 ) : (
-                  <form action={formAction} className="flex flex-col gap-4">
-                    <input type="hidden" name="originPage" value={`/products/${product.slug}`} />
-                    <input type="hidden" name="product" value={JSON.stringify(productContextPayload)} />
-                    <input type="hidden" name="selectedOptions" value={JSON.stringify(selectedOptions)} />
-
-                    {state.status === "error" && !state.field && (
-                      <p className="text-red-700 text-[0.875rem]">{errorText(state.message)}</p>
-                    )}
-
-                    <div>
-                      <input
-                        type="text"
-                        name="fullName"
-                        placeholder={t("prod_ph_full_name")}
-                        className={`w-full border bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none focus:ring-0 ${
-                          state.status === "error" && state.field === "fullName" ? "border-red-700" : "border-rule focus:border-ink"
-                        }`}
-                        required
-                      />
-                      {state.status === "error" && state.field === "fullName" && (
-                        <p className="text-red-700 text-[0.8125rem] mt-1">{errorText(state.message)}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder={t("prod_ph_phone")}
-                        className={`w-full border bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none focus:ring-0 ${
-                          state.status === "error" && state.field === "phone" ? "border-red-700" : "border-rule focus:border-ink"
-                        }`}
-                        required
-                        dir="ltr"
-                        style={{ textAlign: locale === "he" ? "right" : "left" }}
-                      />
-                      {state.status === "error" && state.field === "phone" && (
-                        <p className="text-red-700 text-[0.8125rem] mt-1">{errorText(state.message)}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder={t("prod_ph_email")}
-                        className={`w-full border bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:outline-none focus:ring-0 ${
-                          state.status === "error" && state.field === "email" ? "border-red-700" : "border-rule focus:border-ink"
-                        }`}
-                        dir="ltr"
-                        style={{ textAlign: locale === "he" ? "right" : "left" }}
-                      />
-                      {state.status === "error" && state.field === "email" && (
-                        <p className="text-red-700 text-[0.8125rem] mt-1">{errorText(state.message)}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <textarea
-                        name="message"
-                        placeholder={t("prod_ph_notes")}
-                        rows={3}
-                        className="w-full border border-rule bg-paper px-4 py-3 text-[1rem] text-ink placeholder:text-ink-mute focus:border-ink focus:outline-none focus:ring-0 resize-none"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={isPending}
-                      className="brass-disc brass-disc--solid w-full mt-2 py-3 disabled:opacity-50"
+                  <div>
+                    <h3 className="display-he text-[1.5rem] text-ink mb-4">לבירור והזמנה</h3>
+                    <p className="mb-6 text-[0.9375rem] leading-relaxed text-ink-soft">
+                      פריט זה זמין כעת להזמנה אישית דרך נציג Maison MANA. נשמח לתאם את ההתאמות, הזמינות ומועד האספקה בשיחה קצרה.
+                    </p>
+                    <Link
+                      href={`/inquiry?product=${product.slug}`}
+                      className="brass-disc brass-disc--solid flex w-full justify-center py-3"
                     >
-                      {isPending ? t("prod_sending") : t("prod_submit")}
-                    </button>
-                  </form>
+                      לבירור והזמנה
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>

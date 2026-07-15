@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { CollectionPage } from "@/lib/collection-pages";
-import { getFeaturedProductsByCategory, resolveProduct, type Product } from "@/lib/products";
+import { canCheckoutProduct, getFeaturedProductsByCategory, resolveProduct, type Product } from "@/lib/products";
 
 export function CollectionSeoPage({
   page,
@@ -284,7 +284,9 @@ function CollectionProductPreview({
   }
 
   if (visibleProducts.length === 1) {
-    const product = resolveProduct(visibleProducts[0], locale);
+    const sourceProduct = visibleProducts[0];
+    const product = resolveProduct(sourceProduct, locale);
+    const canCheckout = canCheckoutProduct(sourceProduct);
     const image = product.images[0];
 
     return (
@@ -329,8 +331,8 @@ function CollectionProductPreview({
               </div>
 
               <div className="mt-9 flex flex-wrap gap-4">
-                <Link href={`/products/${product.slug}`} className="brass-disc brass-disc--solid">
-                  {t("prod_view_order" as any)}
+                <Link href={canCheckout ? `/checkout/${product.slug}` : `/products/${product.slug}`} className="brass-disc brass-disc--solid">
+                  {canCheckout ? "לרכישה" : t("prod_view_order" as any)}
                 </Link>
                 <Link href={ctaHref} className="brass-disc">
                   {ctaLabel}

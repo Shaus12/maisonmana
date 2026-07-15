@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Product, resolveProduct } from "@/lib/products";
+import { canCheckoutProduct, Product, resolveProduct } from "@/lib/products";
 import { useLanguage } from "@/components/LanguageProvider";
 import { useState } from "react";
 
@@ -10,6 +10,7 @@ export function ProductFeature({ product: sourceProduct }: { product: Product })
   const { t, locale } = useLanguage();
   const product = resolveProduct(sourceProduct, locale);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const canCheckout = canCheckoutProduct(sourceProduct);
 
   const mainImage = product.images[currentIndex] ?? product.images[0];
 
@@ -91,10 +92,10 @@ export function ProductFeature({ product: sourceProduct }: { product: Product })
 
             <div className="mt-auto">
               <Link
-                href={`/inquiry?product=${product.slug}`}
+                href={canCheckout ? `/checkout/${product.slug}` : `/inquiry?product=${product.slug}`}
                 className="brass-disc brass-disc--solid w-full text-center flex justify-center"
               >
-                {product.ctaLabel}
+                {canCheckout ? "לרכישה" : product.ctaLabel}
               </Link>
             </div>
           </div>

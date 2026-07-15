@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Product, resolveProduct } from "@/lib/products";
+import { canCheckoutProduct, Product, resolveProduct } from "@/lib/products";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { StringKey } from "@/lib/i18n";
 
@@ -39,6 +39,7 @@ export function ProductGrid({
           {products.map((sourceProduct) => {
             const product = resolveProduct(sourceProduct, locale);
             const firstImage = product.images[0];
+            const canCheckout = canCheckoutProduct(sourceProduct);
 
             const optionsSummary = product.options && product.options.length > 0
               ? `${t("prod_options_label")}: ${product.options.map((opt) => opt.label).join(", ")}`
@@ -89,10 +90,10 @@ export function ProductGrid({
 
                   <div className="mt-auto pt-2 md:pt-4">
                     <Link
-                      href={`/products/${product.slug}`}
+                      href={canCheckout ? `/checkout/${product.slug}` : `/products/${product.slug}`}
                       className="brass-disc brass-disc--solid flex w-full justify-center px-3 py-2 text-center text-[0.8125rem] md:py-3 md:text-[0.9375rem]"
                     >
-                      {t("prod_view_order")}
+                      {canCheckout ? "לרכישה" : t("prod_view_order")}
                     </Link>
                   </div>
                 </div>

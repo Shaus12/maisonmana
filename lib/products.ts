@@ -44,6 +44,8 @@ export type Product = {
   collection?: string;
   price: number;
   priceLabel: string;
+  paymentUrl?: string;
+  isPurchasable?: boolean;
   shortDescription: Localized;
   specs: ProductSpec[];
   images: ProductImage[];
@@ -69,6 +71,8 @@ export type ResolvedProduct = {
   category: string;
   price: number;
   priceLabel: string;
+  paymentUrl?: string;
+  isPurchasable?: boolean;
   shortDescription: string;
   specs: ResolvedProductSpec[];
   images: { src: string; alt: string }[];
@@ -88,6 +92,8 @@ export function resolveProduct(product: Product, locale: Locale): ResolvedProduc
     category: L(product.category),
     price: product.price,
     priceLabel: product.priceLabel,
+    paymentUrl: product.paymentUrl,
+    isPurchasable: product.isPurchasable,
     shortDescription: L(product.shortDescription),
     specs: product.specs.map((s) => ({ label: L(s.label), value: L(s.value) })),
     images: product.images.map((img) => ({ src: img.src, alt: L(img.alt) })),
@@ -172,6 +178,8 @@ export const products: Record<string, Product> = {
     category: lv("טבעות יהלום", "Diamond Rings"),
     price: 4500,
     priceLabel: "₪4,500",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/c/payment/?cartid=2aaf26a3-56d3-44ef-8447-7f6e656eeae8",
+    isPurchasable: true,
     shortDescription: lv(
       "טבעת יהלום בעיצוב קלאסי עם אבן מרכזית 2 קראט יהלום מעבדה, בליווי אבני צד עדינות. שילוב נקי, יוקרתי ומדויק למראה אלגנטי ועל־זמני.",
       "A classic diamond ring with a 2 ct lab-grown center stone, accompanied by delicate side stones. A clean, refined, and precise combination for an elegant, timeless look."
@@ -214,6 +222,8 @@ export const products: Record<string, Product> = {
     category: lv("טבעות יהלום", "Diamond Rings"),
     price: 3900,
     priceLabel: "₪3,900",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxdna/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "טבעת יוקרתית בעיצוב מודרני ואלגנטי, עשויה זהב אדום 14K ומשובצת יהלומים טבעיים במשקל כולל של 1.10 קראט. היהלומים בדרגת D Color ו-VS1 Clarity, המעניקים לטבעת ברק יוצא דופן ומראה יוקרתי.",
       "A luxurious ring in a modern, elegant design, crafted in 14K rose gold and set with natural diamonds totaling 1.10 ct. The diamonds are D color and VS1 clarity, giving the ring exceptional brilliance and a refined look."
@@ -245,6 +255,8 @@ export const products: Record<string, Product> = {
     category: lv("טבעות יהלום", "Diamond Rings"),
     price: 1300,
     priceLabel: "₪1,300",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxdna/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "טבעת אלגנטית בעיצוב ייחודי מזהב אדום, משובצת יהלומי מעבדה במשקל כולל של 0.30 קראט, בדרגת D Color ו-VS1 Clarity. עיצוב נשי, יוקרתי ועל־זמני המתאים ללבישה יומיומית או כמתנה מיוחדת.",
       "An elegant ring in a distinctive rose gold design, set with lab-grown diamonds totaling 0.30 ct in D color and VS1 clarity. A feminine, refined, and timeless piece for everyday wear or a special gift."
@@ -276,6 +288,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי טניס", "Tennis Bracelets"),
     price: 4800,
     priceLabel: "₪4,800",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxdw9/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד טניס מרשים המשובץ יהלומים טבעיים בחיתוך עגול במשקל כולל של 1.00 קראט, באיכות F/VS, למראה יוקרתי ומיוחד.",
       "A striking tennis bracelet set with round natural diamonds, 1.00 ct total weight, in F/VS quality, for a luxurious and distinctive look."
@@ -310,6 +324,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי חצי טניס", "Half Tennis Bracelets"),
     price: 4000,
     priceLabel: "₪4,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxeob/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד חצי טניס עשוי זהב 14K בעיצוב יוקרתי וייחודי, משובץ 11 יהלומים במשקל 0.10 קראט כל אחד.",
       "A 14K gold half tennis bracelet in a refined, distinctive design, set with 11 diamonds of 0.10 ct each."
@@ -337,6 +353,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי יהלומים", "Diamond Bracelets"),
     price: 3000,
     priceLabel: "₪3,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxep4/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד זהב 14K בעיצוב יוקרתי המשובץ יהלום מרכזי במשקל 1.00 קראט, עם אפשרות בחירת צורת היהלום לפי העדפת הלקוח.",
       "A refined 14K gold bracelet set with a 1.00 ct center diamond, with the diamond shape chosen to your preference."
@@ -382,6 +400,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי בנגל", "Bangles"),
     price: 6200,
     priceLabel: "₪6,200",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxff3/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד בנגל קשיח עשוי זהב 14K בעיצוב יוקרתי וסגנון ייחודי, משובץ יהלום עגול במשקל 1.50 קראט.",
       "A rigid 14K gold bangle in a refined, distinctive style, set with a 1.50 ct round diamond."
@@ -409,6 +429,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי טבעת", "Hand Chains"),
     price: 4000,
     priceLabel: "₪4,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxg3u/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד טבעת משולב בסגנון ייחודי, משובץ יהלומים בסדר עולה בחיתוך מרקיזה למראה עדין ומרשים.",
       "A distinctive combined bracelet-and-ring piece, set with graduated marquise-cut diamonds for a delicate, striking look."
@@ -435,6 +457,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי טבעת", "Hand Chains"),
     price: 3400,
     priceLabel: "₪3,400",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxgqu/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד טבעת משולב בסגנון ייחודי, משובץ יהלומים בסדר עולה ויורד במשקל כולל של 0.50 קראט.",
       "A distinctive combined bracelet-and-ring piece, set with graduated diamonds, 0.50 ct total weight."
@@ -460,6 +484,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי חצי טניס", "Half Tennis Bracelets"),
     price: 3790,
     priceLabel: "₪3,790",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxnwv/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד זהב 14K בעיצוב יוקרתי של חצי טניס, משובץ יהלומים במשקלים שונים למראה מדורג ויוקרתי.",
       "A refined 14K gold half tennis bracelet, set with diamonds of varying weights for a graduated, luxurious look."
@@ -485,6 +511,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי בנגל", "Bangles"),
     price: 7200,
     priceLabel: "₪7,200",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxnyg/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד קשיח עשוי זהב 14K בעיצוב ייחודי, עם שתי אותיות משובצות יהלומים בתוספת יהלום לב מרכזי.",
       "A rigid 14K gold bangle in a distinctive design, with two diamond-set initials and a heart-shaped center diamond."
@@ -513,6 +541,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי טניס", "Tennis Bracelets"),
     price: 6200,
     priceLabel: "₪6,200",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxoji/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד טניס יוקרתי עשוי זהב 14K, משובץ יהלומים בתוספת תליון יהלום מרקיזה למראה ייחודי ובולט.",
       "A luxurious 14K gold tennis bracelet, set with diamonds and finished with a marquise diamond pendant for a distinctive, striking look."
@@ -540,6 +570,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי שם", "Name Bracelets"),
     price: 5790,
     priceLabel: "₪5,790",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxow9/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד קשיח עשוי זהב 14K עם תליון שם לבחירת הלקוח, משובץ יהלומים במשקל משתנה לפי השם.",
       "A rigid 14K gold bangle with a name pendant of your choice, set with diamonds — weight varies with the name."
@@ -568,6 +600,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי אותיות", "Initial Bracelets"),
     price: 6000,
     priceLabel: "₪6,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxox9/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד זהב 14K בעיצוב יוקרתי עם 8 יהלומים עגולים לאורך הצמיד, בתוספת אות משובצת יהלומים.",
       "A refined 14K gold bracelet with 8 round diamonds along its length, plus a diamond-set initial."
@@ -596,6 +630,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי אותיות", "Initial Bracelets"),
     price: 2500,
     priceLabel: "₪2,500",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxptg/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד זהב 14K בעיצוב יוקרתי עם תליון אות לבחירת הלקוח, משובץ יהלומים במשקל משתנה לפי האות.",
       "A refined 14K gold bracelet with an initial pendant of your choice, set with diamonds — weight varies with the letter."
@@ -622,6 +658,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי גורמט", "Curb Chain Bracelets"),
     price: 4000,
     priceLabel: "₪4,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxq1u/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד גורמט עשוי זהב 14K עם תליון שם לבחירת הלקוח, משובץ יהלומים במשקל משתנה לפי השם.",
       "A 14K gold curb chain bracelet with a name pendant of your choice, set with diamonds — weight varies with the name."
@@ -650,6 +688,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי טניס", "Tennis Bracelets"),
     price: 9600,
     priceLabel: "₪9,600",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxq58/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד טניס יוקרתי עשוי זהב 14K בעיצוב ייחודי ונדיר, משובץ יהלומים בחיתוך אובל במשקל כולל של 7.00 קראט.",
       "A luxurious 14K gold tennis bracelet in a rare, distinctive design, set with oval-cut diamonds, 7.00 ct total weight."
@@ -676,6 +716,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי טניס", "Tennis Bracelets"),
     price: 7290,
     priceLabel: "₪7,290",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxq91/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד טניס זהב 14K בעיצוב יוקרתי, משובץ יהלומים במשקל 1.00 קראט בתוספת אבן מרכזית עגולה במשקל 0.50 קראט.",
       "A refined 14K gold tennis bracelet set with 1.00 ct of diamonds, plus a 0.50 ct round center stone."
@@ -703,6 +745,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי חצי טניס", "Half Tennis Bracelets"),
     price: 4800,
     priceLabel: "₪4,800",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxqkt/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד חצי טניס עשוי זהב 14K בעיצוב יוקרתי וייחודי, עם פלטת זהב משובצת יהלומים במשקל כולל של 0.50 קראט.",
       "A 14K gold half tennis bracelet in a refined, distinctive design, with a diamond-set gold plate, 0.50 ct total weight."
@@ -728,6 +772,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי יהלומים", "Diamond Bracelets"),
     price: 1900,
     priceLabel: "₪1,900",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxqyg/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד עשוי זהב 14K, משובץ יהלום בחיתוך טיפה במשקל 0.50 קראט למראה עדין ויוקרתי.",
       "A 14K gold bracelet set with a 0.50 ct pear-cut diamond for a delicate, refined look."
@@ -754,6 +800,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי בנגל", "Bangles"),
     price: 7690,
     priceLabel: "₪7,690",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxr8o/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד בנגל קשיח עשוי זהב 14K, משובץ שני יהלומי לב במשקל 0.50 קראט כל אחד, בתוספת יהלומים משובצים לאורך הצמיד.",
       "A rigid 14K gold bangle set with two heart-shaped diamonds of 0.50 ct each, plus diamonds set along the bracelet."
@@ -781,6 +829,8 @@ export const products: Record<string, Product> = {
     category: lv("צמידי חצי טניס", "Half Tennis Bracelets"),
     price: 3000,
     priceLabel: "₪3,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zkxs7d/payment/",
+    isPurchasable: true,
     shortDescription: lv(
       "צמיד חצי טניס עשוי זהב 14K, משובץ יהלומים במשקל כולל של 0.50 קראט למראה נקי ועדין.",
       "A 14K gold half tennis bracelet, set with diamonds totaling 0.50 ct for a clean, delicate look."
@@ -820,6 +870,10 @@ const CATALOG_CATEGORY_GROUPS: Record<CatalogCategory, ProductGroup[]> = {
   "high-jewelry": [],
   signature: [],
 };
+
+export function canCheckoutProduct(product: Product): boolean {
+  return product.isPurchasable !== false && Boolean(product.paymentUrl);
+}
 
 const FEATURED_PRODUCT_SLUGS: Partial<Record<CatalogCategory, string[]>> = {
   rings: ["lab-diamond-ring-2-30ct"],

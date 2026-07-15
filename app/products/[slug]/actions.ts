@@ -1,5 +1,7 @@
 "use server";
 
+import { sendInquiryWebhook } from "@/lib/inquiry-webhook";
+
 export type ProductInquiryState =
   | { status: "idle" }
   | { status: "error"; message: string; field?: string }
@@ -64,14 +66,7 @@ export async function submitProductInquiry(
   };
 
   try {
-    await fetch(
-      "https://n8n.srv877545.hstgr.cloud/webhook/3d30f03a-5a30-4e3e-b175-a3e4fb4dd294",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
+    await sendInquiryWebhook(payload);
   } catch (err) {
     console.error("[Maison Mana · Product Webhook] failed to deliver", err);
   }
