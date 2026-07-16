@@ -168,6 +168,18 @@ const nameOption: ProductOption = {
   ),
 };
 
+const ringSizeOption: ProductOption = {
+  type: "select",
+  name: "ringSize",
+  label: lv("מידת טבעת", "Ring Size"),
+  options: [
+    same("44"), same("45"), same("46"), same("47"), same("48"), same("49"),
+    same("50"), same("51"), same("52"), same("53"), same("54"), same("55"),
+    same("56"), same("57"), same("58"), same("59"), same("60"), same("61"),
+    same("62"), same("63"), same("64"), same("65")
+  ],
+};
+
 // ─── Catalog ─────────────────────────────────────────────────
 
 export const products: Record<string, Product> = {
@@ -848,6 +860,330 @@ export const products: Record<string, Product> = {
     ctaLabel: CTA,
     options: [goldColorOption],
   },
+  "ring-product-02": {
+    id: "ring-product-02",
+    slug: "lab-grown-diamond-ring-round-oval-1-11ct",
+    group: "rings",
+    title: lv("טבעת יהלומי מעבדה 1.11 קראט", "1.11 ct Lab-Grown Diamond Ring"),
+    category: lv("טבעות", "Rings"),
+    price: 2900,
+    priceLabel: "₪2,900",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd26b/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת זהב 14 קראט משובצת 1.11 קראט יהלומי מעבדה בשילוב עדין של חיתוכים עגולים ואובליים, היוצרים יחד קו נוצץ ואלגנטי במיוחד. העיצוב המדויק מעניק לטבעת נוכחות מרשימה אך קלאסית.",
+      "A 14K gold ring set with 1.11 ct of lab-grown diamonds in a delicate mix of round and oval cuts, creating an exceptionally sparkling and elegant line."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב 14K", "14K Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("1.11") },
+      { label: lv("איכות", "Quality"), value: same("VS F-G") },
+      { label: CUT, value: lv("עגול ואובל", "Round & Oval") },
+    ],
+    images: [
+      { src: "/products/ring-product-02.jpg", alt: lv("טבעת יהלומי מעבדה 1.11 קראט של Maison MANA", "1.11 ct Lab-Grown Diamond Ring by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-03": {
+    id: "ring-product-03",
+    slug: "lab-grown-diamond-ring-round-1-00ct",
+    group: "rings",
+    title: lv("טבעת יהלומי מעבדה עגולים 1.00 קראט", "1.00 ct Round Lab-Grown Diamond Ring"),
+    category: lv("טבעות", "Rings"),
+    price: 3000,
+    priceLabel: "₪3,000",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd2i7/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת יוקרתית בעיצוב מודרני ואלגנטי, עשויה זהב צהוב 14K ומשובצת יהלומי מעבדה עגולים לאורך הקשת המרכזית ובשני קצוות הטבעת.",
+      "A luxurious ring in a modern and elegant design, crafted in 14K yellow gold and set with round lab-grown diamonds along the main arch and at both ends of the ring."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב צהוב 14K", "14K Yellow Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("1.00") },
+      { label: lv("איכות", "Quality"), value: same("D-F VVS") },
+      { label: CUT, value: lv("עגול", "Round") },
+    ],
+    images: [
+      { src: "/products/ring-product-03.jpg", alt: lv("טבעת יהלומי מעבדה עגולים 1.00 קראט של Maison MANA", "1.00 ct Round Lab-Grown Diamond Ring by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-04": {
+    id: "ring-product-04",
+    slug: "lab-grown-diamond-ring-round-0-45ct",
+    group: "rings",
+    title: lv("טבעת יהלומי מעבדה עגולים 0.45 קראט", "0.45 ct Round Lab-Grown Diamond Ring"),
+    category: lv("טבעות", "Rings"),
+    price: 3500,
+    priceLabel: "₪3,500",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd2mt/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת יוקרתית בעיצוב אלגנטי ועל־זמני, עשויה זהב צהוב 14K ומשובצת שורת יהלומי מעבדה עגולים היוצרים ברק רציף ומרשים.",
+      "A luxurious ring with an elegant and timeless design, crafted in 14K yellow gold and set with a row of round lab-grown diamonds that create a continuous, impressive brilliance."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב צהוב 14K", "14K Yellow Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.45") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS") },
+      { label: CUT, value: lv("עגול", "Round") },
+    ],
+    images: [
+      { src: "/products/ring-product-04.jpg", alt: lv("טבעת יהלומי מעבדה עגולים 0.45 קראט של Maison MANA", "0.45 ct Round Lab-Grown Diamond Ring by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-05": {
+    id: "ring-product-05",
+    slug: "lab-grown-diamond-screw-ring-0-15ct",
+    group: "rings",
+    title: lv("טבעת בורג משובצת יהלומים", "Diamond Screw Ring, 0.15 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 2900,
+    priceLabel: "₪2,900",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd35w/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת זהב 14K מעוצבת בסגנון ייחודי של בורג, משובצת יהלומי מעבדה למראה מודרני ויוקרתי.",
+      "A 14K gold ring featuring a unique screw-style design, set with lab-grown diamonds for a modern and luxurious look."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב 14K", "14K Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.15") },
+      { label: lv("איכות", "Quality"), value: same("D VS") },
+    ],
+    images: [
+      { src: "/products/ring-product-05.jpg", alt: lv("טבעת בורג משובצת יהלומים של Maison MANA", "Diamond Screw Ring, 0.15 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-06": {
+    id: "ring-product-06",
+    slug: "pear-diamond-spiral-ring-1-60ct",
+    group: "rings",
+    title: lv("טבעת ספירלה יהלומי טיפות", "Pear Diamond Spiral Ring, 1.60 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 4800,
+    priceLabel: "₪4,800",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd3px/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת ספירלה יוקרתית עם שני יהלומי טיפה מרכזיים, המשלבת עיצוב זורם עם נוכחות מרשימה.",
+      "A luxurious spiral ring featuring two center pear-shaped diamonds, combining a flowing design with an impressive presence."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב 14K", "14K Gold") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("1.60") },
+      { label: lv("איכות", "Quality"), value: same("D VS") },
+      { label: CUT, value: lv("טיפה", "Pear") },
+    ],
+    images: [
+      { src: "/products/ring-product-06.jpg", alt: lv("טבעת ספירלה יהלומי טיפות של Maison MANA", "Pear Diamond Spiral Ring, 1.60 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-07": {
+    id: "ring-product-07",
+    slug: "fire-diamond-ring-0-50ct",
+    group: "rings",
+    title: lv("טבעת האש שלי משובצת יהלומים", "My Fire Diamond Ring, 0.50 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 3200,
+    priceLabel: "₪3,200",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd3uo/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת בעיצוב ייחודי בהשראת להבות אש, משובצת יהלומי מעבדה למראה מודרני.",
+      "A uniquely designed ring inspired by flames of fire, set with lab-grown diamonds for a modern look."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב 14K", "14K Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.50") },
+      { label: lv("איכות", "Quality"), value: same("D VS") },
+    ],
+    images: [
+      { src: "/products/ring-product-07.jpg", alt: lv("טבעת האש שלי משובצת יהלומים של Maison MANA", "My Fire Diamond Ring, 0.50 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-08": {
+    id: "ring-product-08",
+    slug: "designer-diamond-ring-0-90ct",
+    group: "rings",
+    title: lv("טבעת יהלומים מעוצבת", "Designer Diamond Ring, 0.90 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 4300,
+    priceLabel: "₪4,300",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd4bn/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת פתוחה יוקרתית בעלת ארבע זרועות מעוגלות ואלמנט טיפה משובץ.",
+      "A luxurious open ring featuring four rounded bands and a set pear-shaped element."
+    ),
+    specs: [
+      { label: METAL, value: lv("רוז גולד 14K", "14K Rose Gold") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.90") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
+    ],
+    images: [
+      { src: "/products/ring-product-08.jpg", alt: lv("טבעת יהלומים מעוצבת של Maison MANA", "Designer Diamond Ring, 0.90 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-09": {
+    id: "ring-product-09",
+    slug: "pear-diamond-branch-ring-0-45ct",
+    group: "rings",
+    title: lv("טבעת משולבת יהלומי טיפה", "Pear Diamond Branch Ring, 0.45 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 2790,
+    priceLabel: "₪2,790",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd4jw/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת פתוחה ועדינה בשילוב יהלומים עגולים ומרקיזה, בהשראת ענפים פורחים.",
+      "A delicate open ring combining round and marquise diamonds, inspired by blooming branches."
+    ),
+    specs: [
+      { label: METAL, value: lv("רוז גולד 14K", "14K Rose Gold") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.45") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
+    ],
+    images: [
+      { src: "/products/ring-product-09.jpg", alt: lv("טבעת משולבת יהלומי טיפה של Maison MANA", "Pear Diamond Branch Ring, 0.45 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-10": {
+    id: "ring-product-10",
+    slug: "heart-diamond-spiral-ring-0-30ct",
+    group: "rings",
+    title: lv("טבעת ספירלה משובצת יהלום לב", "Heart Diamond Spiral Ring, 0.30 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 3200,
+    priceLabel: "₪3,200",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd4su/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת מינימליסטית בעיצוב פתוח עם יהלום לב מרכזי.",
+      "A minimalist open-design ring featuring a center heart-shaped diamond."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב צהוב 14K", "14K Yellow Gold") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.30") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
+      { label: CUT, value: lv("לב", "Heart") },
+    ],
+    images: [
+      { src: "/products/ring-product-10.jpg", alt: lv("טבעת ספירלה משובצת יהלום לב של Maison MANA", "Heart Diamond Spiral Ring, 0.30 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-11": {
+    id: "ring-product-11",
+    slug: "spiral-diamond-ring-1-00ct",
+    group: "rings",
+    title: lv("טבעת ספירלה משובצת יהלומים", "Spiral Diamond Ring, 1.00 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 4200,
+    priceLabel: "₪4,200",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd5fd/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת פתוחה בעיצוב מודרני עם יהלומים עגולים בגדלים משתנים.",
+      "A modern open-design ring with round diamonds in varying sizes."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב לבן 14K", "14K White Gold") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("1.00") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
+    ],
+    images: [
+      { src: "/products/ring-product-11.jpg", alt: lv("טבעת ספירלה משובצת יהלומים של Maison MANA", "Spiral Diamond Ring, 1.00 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-12": {
+    id: "ring-product-12",
+    slug: "pear-diamond-open-ring-1-00ct",
+    group: "rings",
+    title: lv("טבעת יהלומי טיפה", "Pear Diamond Open Ring, 1.00 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 5400,
+    priceLabel: "₪5,400",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd5dh/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת פתוחה יוקרתית בשילוב יהלומי טיפה.",
+      "A luxurious open ring combining pear-shaped diamonds."
+    ),
+    specs: [
+      { label: METAL, value: lv("רוז גולד 14K", "14K Rose Gold") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("1.00") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
+      { label: CUT, value: lv("טיפה", "Pear") },
+    ],
+    images: [
+      { src: "/products/ring-product-12.jpg", alt: lv("טבעת יהלומי טיפה של Maison MANA", "Pear Diamond Open Ring, 1.00 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  },
+  "ring-product-13": {
+    id: "ring-product-13",
+    slug: "half-eternity-diamond-ring-0-30ct",
+    group: "rings",
+    title: lv("טבעת חצי איטרניטי משובצת יהלומים", "Half Eternity Diamond Ring, 0.30 ct"),
+    category: lv("טבעות", "Rings"),
+    price: 1600,
+    priceLabel: "₪1,600",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/znd5j8/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "טבעת נצח קלאסית ועדינה, משובצת שורת יהלומי מעבדה לאורך חלקה העליון.",
+      "A classic and delicate eternity ring, set with a row of lab-grown diamonds along its top half."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב לבן 14K", "14K White Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: ct("0.30") },
+      { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
+    ],
+    images: [
+      { src: "/products/ring-product-13.jpg", alt: lv("טבעת חצי איטרניטי משובצת יהלומים של Maison MANA", "Half Eternity Diamond Ring, 0.30 ct by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+    options: [ringSizeOption],
+  }
 };
 
 export type CatalogCategory =
