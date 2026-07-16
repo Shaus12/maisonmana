@@ -883,7 +883,7 @@ export const products: Record<string, Product> = {
       { label: CUT, value: lv("עגול ואובל", "Round & Oval") },
     ],
     images: [
-      { src: "/products/ring-product-02.jpg", alt: lv("טבעת יהלומי מעבדה 1.11 קראט של Maison MANA", "1.11 ct Lab-Grown Diamond Ring by Maison MANA") },
+      { src: "/products/ring-product-02.JPG", alt: lv("טבעת יהלומי מעבדה 1.11 קראט של Maison MANA", "1.11 ct Lab-Grown Diamond Ring by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -911,7 +911,7 @@ export const products: Record<string, Product> = {
       { label: CUT, value: lv("עגול", "Round") },
     ],
     images: [
-      { src: "/products/ring-product-03.jpg", alt: lv("טבעת יהלומי מעבדה עגולים 1.00 קראט של Maison MANA", "1.00 ct Round Lab-Grown Diamond Ring by Maison MANA") },
+      { src: "/products/ring-product-03.JPG", alt: lv("טבעת יהלומי מעבדה עגולים 1.00 קראט של Maison MANA", "1.00 ct Round Lab-Grown Diamond Ring by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -939,7 +939,7 @@ export const products: Record<string, Product> = {
       { label: CUT, value: lv("עגול", "Round") },
     ],
     images: [
-      { src: "/products/ring-product-04.jpg", alt: lv("טבעת יהלומי מעבדה עגולים 0.45 קראט של Maison MANA", "0.45 ct Round Lab-Grown Diamond Ring by Maison MANA") },
+      { src: "/products/ring-product-04.JPG", alt: lv("טבעת יהלומי מעבדה עגולים 0.45 קראט של Maison MANA", "0.45 ct Round Lab-Grown Diamond Ring by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -966,7 +966,7 @@ export const products: Record<string, Product> = {
       { label: lv("איכות", "Quality"), value: same("D VS") },
     ],
     images: [
-      { src: "/products/ring-product-05.jpg", alt: lv("טבעת בורג משובצת יהלומים של Maison MANA", "Diamond Screw Ring, 0.15 ct by Maison MANA") },
+      { src: "/products/ring-product-05.JPG", alt: lv("טבעת בורג משובצת יהלומים של Maison MANA", "Diamond Screw Ring, 0.15 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -993,7 +993,7 @@ export const products: Record<string, Product> = {
       { label: CUT, value: lv("טיפה", "Pear") },
     ],
     images: [
-      { src: "/products/ring-product-06.jpg", alt: lv("טבעת ספירלה יהלומי טיפות של Maison MANA", "Pear Diamond Spiral Ring, 1.60 ct by Maison MANA") },
+      { src: "/products/ring-product-06.JPG", alt: lv("טבעת ספירלה יהלומי טיפות של Maison MANA", "Pear Diamond Spiral Ring, 1.60 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1020,7 +1020,7 @@ export const products: Record<string, Product> = {
       { label: lv("איכות", "Quality"), value: same("D VS") },
     ],
     images: [
-      { src: "/products/ring-product-07.jpg", alt: lv("טבעת האש שלי משובצת יהלומים של Maison MANA", "My Fire Diamond Ring, 0.50 ct by Maison MANA") },
+      { src: "/products/ring-product-07.JPG", alt: lv("טבעת האש שלי משובצת יהלומים של Maison MANA", "My Fire Diamond Ring, 0.50 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1046,7 +1046,7 @@ export const products: Record<string, Product> = {
       { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
     ],
     images: [
-      { src: "/products/ring-product-08.jpg", alt: lv("טבעת יהלומים מעוצבת של Maison MANA", "Designer Diamond Ring, 0.90 ct by Maison MANA") },
+      { src: "/products/ring-product-08.JPG", alt: lv("טבעת יהלומים מעוצבת של Maison MANA", "Designer Diamond Ring, 0.90 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1072,7 +1072,7 @@ export const products: Record<string, Product> = {
       { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
     ],
     images: [
-      { src: "/products/ring-product-09.jpg", alt: lv("טבעת משולבת יהלומי טיפה של Maison MANA", "Pear Diamond Branch Ring, 0.45 ct by Maison MANA") },
+      { src: "/products/ring-product-09.JPG", alt: lv("טבעת משולבת יהלומי טיפה של Maison MANA", "Pear Diamond Branch Ring, 0.45 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1099,7 +1099,7 @@ export const products: Record<string, Product> = {
       { label: CUT, value: lv("לב", "Heart") },
     ],
     images: [
-      { src: "/products/ring-product-10.jpg", alt: lv("טבעת ספירלה משובצת יהלום לב של Maison MANA", "Heart Diamond Spiral Ring, 0.30 ct by Maison MANA") },
+      { src: "/products/ring-product-10.JPG", alt: lv("טבעת ספירלה משובצת יהלום לב של Maison MANA", "Heart Diamond Spiral Ring, 0.30 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1125,7 +1125,7 @@ export const products: Record<string, Product> = {
       { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
     ],
     images: [
-      { src: "/products/ring-product-11.jpg", alt: lv("טבעת ספירלה משובצת יהלומים של Maison MANA", "Spiral Diamond Ring, 1.00 ct by Maison MANA") },
+      { src: "/products/ring-product-11.JPG", alt: lv("טבעת ספירלה משובצת יהלומים של Maison MANA", "Spiral Diamond Ring, 1.00 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1152,7 +1152,7 @@ export const products: Record<string, Product> = {
       { label: CUT, value: lv("טיפה", "Pear") },
     ],
     images: [
-      { src: "/products/ring-product-12.jpg", alt: lv("טבעת יהלומי טיפה של Maison MANA", "Pear Diamond Open Ring, 1.00 ct by Maison MANA") },
+      { src: "/products/ring-product-12.JPG", alt: lv("טבעת יהלומי טיפה של Maison MANA", "Pear Diamond Open Ring, 1.00 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
@@ -1179,7 +1179,7 @@ export const products: Record<string, Product> = {
       { label: lv("איכות", "Quality"), value: same("D-F VS1-VVS2") },
     ],
     images: [
-      { src: "/products/ring-product-13.jpg", alt: lv("טבעת חצי איטרניטי משובצת יהלומים של Maison MANA", "Half Eternity Diamond Ring, 0.30 ct by Maison MANA") },
+      { src: "/products/ring-product-13.JPG", alt: lv("טבעת חצי איטרניטי משובצת יהלומים של Maison MANA", "Half Eternity Diamond Ring, 0.30 ct by Maison MANA") },
     ],
     availability: AVAILABLE,
     ctaLabel: CTA,
