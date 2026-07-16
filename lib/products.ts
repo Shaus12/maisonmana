@@ -31,7 +31,8 @@ export type ProductGroup =
   | "tennis"
   | "bangles"
   | "personalized"
-  | "bracelets";
+  | "bracelets"
+  | "necklaces";
 
 export type ProductImage = { src: string; alt: Localized };
 
@@ -1183,6 +1184,149 @@ export const products: Record<string, Product> = {
     availability: AVAILABLE,
     ctaLabel: CTA,
     options: [ringSizeOption],
+  },
+  "celeste-lab-diamond-necklace": {
+    id: "necklace-product-01",
+    slug: "celeste-lab-diamond-necklace",
+    group: "necklaces",
+    title: lv("שרשרת Celeste", "Celeste Necklace"),
+    category: lv("שרשראות יהלומים", "Diamond Necklaces"),
+    price: 3800,
+    priceLabel: "₪3,800",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zpn8yw/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "שרשרת יוקרתית בעיצוב אלגנטי ועל־זמני, עשויה זהב רוז 14K ומשובצת חמישה יהלומי מעבדה עגולים בגדלים מדורגים, היוצרים מראה סימטרי, מלא ברק ועדינות.",
+      "A luxurious necklace with an elegant and timeless design, crafted in 14K rose gold and set with five graduated round lab-grown diamonds, creating a symmetrical, sparkling, and delicate look."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב רוז 14K", "14K Rose Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: COLOR, value: same("D–F") },
+      { label: CLARITY, value: same("VS1–VVS2") },
+      { label: CUT, value: lv("עגול", "Round") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: lv("כ־1.00 קראט", "Approx. 1.00 ct") },
+      { label: lv("אורך שרשרת", "Necklace Length"), value: lv('45 ס"מ', "45 cm") },
+    ],
+    images: [
+      { src: "/products/necklace-product-01.JPG", alt: lv("שרשרת Celeste של Maison MANA", "Celeste Necklace by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+  },
+  "classic-solitaire-lab-diamond-necklace": {
+    id: "necklace-product-02",
+    slug: "classic-solitaire-lab-diamond-necklace",
+    group: "necklaces",
+    title: lv("שרשרת סוליטר קלאסית", "Classic Solitaire Necklace"),
+    category: lv("שרשראות יהלומים", "Diamond Necklaces"),
+    price: 2700,
+    priceLabel: "₪2,700",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zpn9b3/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "שרשרת סוליטר קלאסית ויוקרתית, עשויה זהב רוז 14K ומשובצת יהלום מעבדה עגול במרכז, למראה מינימליסטי ועל־זמני.",
+      "A classic and luxurious solitaire necklace, crafted in 14K rose gold and set with a round lab-grown center diamond for a minimalist and timeless look."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב רוז 14K", "14K Rose Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלום מעבדה", "Lab-grown diamond") },
+      { label: COLOR, value: same("D–F") },
+      { label: CLARITY, value: same("VS1–VVS2") },
+      { label: CUT, value: lv("עגול", "Round") },
+      { label: DIAMOND_WEIGHT, value: lv("כ־1.00 קראט", "Approx. 1.00 ct") },
+      { label: lv("אורך שרשרת", "Necklace Length"), value: lv('45 ס"מ', "45 cm") },
+    ],
+    images: [
+      { src: "/products/necklace-product-02.JPG", alt: lv("שרשרת סוליטר קלאסית של Maison MANA", "Classic Solitaire Necklace by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+  },
+  "mom-diamond-necklace": {
+    id: "necklace-product-03",
+    slug: "mom-diamond-necklace",
+    group: "necklaces",
+    title: lv("שרשרת MOM", "MOM Necklace"),
+    category: lv("שרשראות יהלומים", "Diamond Necklaces"),
+    price: 3500,
+    priceLabel: "₪3,500",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zpn9ek/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "שרשרת שם יוקרתית עשויה זהב לבן 14K ומשובצת יהלומי מעבדה לאורך כל אותיות הכיתוב MOM.",
+      "A luxurious name necklace crafted in 14K white gold and set with lab-grown diamonds along all the letters of the word MOM."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב לבן 14K", "14K White Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: COLOR, value: same("D–F") },
+      { label: CLARITY, value: same("VS1–VVS2") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: lv("כ־0.35 קראט", "Approx. 0.35 ct") },
+      { label: lv("אורך שרשרת", "Necklace Length"), value: lv('45 ס"מ', "45 cm") },
+    ],
+    images: [
+      { src: "/products/necklace-product-03.JPG", alt: lv("שרשרת MOM של Maison MANA", "MOM Necklace by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+  },
+  "flame-diamond-necklace": {
+    id: "necklace-product-04",
+    slug: "flame-diamond-necklace",
+    group: "necklaces",
+    title: lv("שרשרת להבה", "Flame Necklace"),
+    category: lv("שרשראות יהלומים", "Diamond Necklaces"),
+    price: 3500,
+    priceLabel: "₪3,500",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zpn9jo/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "שרשרת יוקרתית בעיצוב בלעדי בהשראת להבה, עשויה זהב צהוב 14K ומשובצת יהלומי מעבדה לאורך קווי הלהבה.",
+      "A luxurious necklace in an exclusive flame-inspired design, crafted in 14K yellow gold and set with lab-grown diamonds along the flame lines."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב צהוב 14K", "14K Yellow Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: COLOR, value: same("D–F") },
+      { label: CLARITY, value: same("VS1–VVS2") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: lv("כ־0.60 קראט", "Approx. 0.60 ct") },
+      { label: lv("אורך שרשרת", "Necklace Length"), value: lv('45 ס"מ', "45 cm") },
+    ],
+    images: [
+      { src: "/products/necklace-product-04.JPG", alt: lv("שרשרת להבה של Maison MANA", "Flame Necklace by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
+  },
+  "aurora-diamond-necklace": {
+    id: "necklace-product-05",
+    slug: "aurora-diamond-necklace",
+    group: "necklaces",
+    title: lv("שרשרת Aurora", "Aurora Necklace"),
+    category: lv("שרשראות יהלומים", "Diamond Necklaces"),
+    price: 5600,
+    priceLabel: "₪5,600",
+    paymentUrl: "https://pay.sumit.co.il/cozxmk/zkm4wo/zpn9gm/payment/",
+    isPurchasable: true,
+    shortDescription: lv(
+      "שרשרת יוקרתית בעיצוב אלגנטי ומעודן, עשויה זהב לבן 14K ומשובצת שורת יהלומי מעבדה עגולים ותלויים היוצרים תנועה עדינה וברק מכל זווית.",
+      "A luxurious necklace with an elegant and refined design, crafted in 14K white gold and set with a row of round suspended lab-grown diamonds creating delicate movement and brilliance from every angle."
+    ),
+    specs: [
+      { label: METAL, value: lv("זהב לבן 14K", "14K White Gold") },
+      { label: lv("סוג יהלומים", "Diamond Type"), value: lv("יהלומי מעבדה", "Lab-grown diamonds") },
+      { label: COLOR, value: same("D–F") },
+      { label: CLARITY, value: same("VS1–VVS2") },
+      { label: CUT, value: lv("עגול", "Round") },
+      { label: TOTAL_DIAMOND_WEIGHT, value: lv("כ־1.50 קראט", "Approx. 1.50 ct") },
+      { label: lv("אורך שרשרת", "Necklace Length"), value: lv('45 ס"מ', "45 cm") },
+    ],
+    images: [
+      { src: "/products/necklace-product-05.JPG", alt: lv("שרשרת Aurora של Maison MANA", "Aurora Necklace by Maison MANA") },
+    ],
+    availability: AVAILABLE,
+    ctaLabel: CTA,
   }
 };
 
@@ -1200,7 +1344,7 @@ const CATALOG_CATEGORY_GROUPS: Record<CatalogCategory, ProductGroup[]> = {
   rings: ["rings"],
   bracelets: ["tennis", "bangles", "personalized", "bracelets"],
   "tennis-bracelets": ["tennis"],
-  necklaces: [],
+  necklaces: ["necklaces"],
   earrings: [],
   mens: [],
   "high-jewelry": [],

@@ -13,9 +13,10 @@ const GROUP_LABEL_KEYS: Record<ProductGroup, StringKey> = {
   bangles: "group_bangles",
   personalized: "group_personalized",
   bracelets: "group_bracelets",
+  necklaces: "catalog_main_necklaces",
 };
 
-const GROUP_ORDER: ProductGroup[] = ["tennis", "bangles", "personalized", "bracelets", "rings"];
+const GROUP_ORDER: ProductGroup[] = ["tennis", "bangles", "personalized", "bracelets", "rings", "necklaces"];
 
 type CatalogCategory = "all" | "necklaces" | "rings" | "earrings" | "bracelets";
 type PriceFilter = "all" | "under-3000" | "3000-4999" | "5000-6999" | "7000-plus";
@@ -31,7 +32,7 @@ const MAIN_CATEGORIES: { id: CatalogCategory; labelKey: StringKey }[] = [
 
 const CATEGORY_GROUPS: Record<CatalogCategory, ProductGroup[]> = {
   all: GROUP_ORDER,
-  necklaces: [],
+  necklaces: ["necklaces"],
   rings: ["rings"],
   earrings: [],
   bracelets: ["tennis", "bangles", "personalized", "bracelets"],
