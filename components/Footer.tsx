@@ -40,13 +40,13 @@ export function Footer() {
   return (
     <footer className="mt-40 bg-paper-deep">
       <div className="optical-rule h-px w-full" />
-      <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-16 md:grid-cols-5 md:px-12 md:py-20">
-        <div className="md:col-span-2">
+      <div className="mx-auto grid max-w-[1440px] gap-12 px-6 py-16 lg:grid-cols-7 lg:gap-8 lg:px-12 lg:py-20">
+        <div className="lg:col-span-2">
           <p className="display-lat text-[2rem] leading-none text-ink">Maison Mana</p>
           <p className="mt-2 text-[0.6875rem] tracking-[0.22em] text-ink-mute uppercase">
             Atelier
           </p>
-          <p className="mt-8 max-w-md text-ink-soft text-[0.9375rem] leading-relaxed">
+          <p className="mt-8 max-w-sm text-ink-soft text-[0.9375rem] leading-relaxed">
             {t("footer_tagline")}
           </p>
         </div>
@@ -55,7 +55,7 @@ export function Footer() {
         <FooterGroup title={t("footer_services")} links={serviceLinks} />
         <FooterGroup title={t("footer_diamonds")} links={diamondLinks} />
 
-        <div className="md:col-span-2">
+        <div className="lg:col-span-2">
           <p className="section-label">{t("contact_maison")}</p>
           <address className="mt-4 not-italic text-[0.9375rem] text-ink leading-relaxed">
             {t("footer_address_1")}
@@ -82,7 +82,21 @@ export function Footer() {
 
       <div className="optical-rule h-px w-full" />
       <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-6 py-8 text-[0.75rem] text-ink-mute md:flex-row md:items-center md:justify-between md:px-12">
-        <p>© <bdi dir="ltr">{new Date().getFullYear()}</bdi> Maison Mana. {t("footer_rights")}</p>
+        <p>
+          © <bdi dir="ltr">{new Date().getFullYear()}</bdi> Maison Mana. {t("footer_rights")}
+          <span className="mx-2">|</span>
+          <span>
+            Built by{" "}
+            <a
+              href="https://futureproof-ai.tech/web"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-ink transition-colors underline underline-offset-2 font-medium"
+            >
+              FutureProofAI
+            </a>
+          </span>
+        </p>
         <p className="display-lat tracking-[0.18em] uppercase text-[0.6875rem]">
           Bespoke · Bridal · Made by Hand
         </p>
