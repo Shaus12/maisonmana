@@ -756,10 +756,9 @@ export function AtelierConfigurator() {
                 role="group"
                 aria-labelledby="atelier-step-title"
                 aria-label={locale === "he" ? "אפשרויות השלב הנוכחי" : "Current step options"}
-                tabIndex={0}
               >
                 {activeStepId === "type" && (
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,7rem),1fr))] gap-3">
                     {JEWELRY_TYPE_OPTIONS.map((opt) => (
                       <Pill key={opt.id} selected={jewelryType === opt.id} onClick={() => selectJewelryType(opt.id)} className="min-h-16 w-full text-start">
                         {locale === "he" ? opt.he : opt.en}
@@ -770,7 +769,7 @@ export function AtelierConfigurator() {
 
                 {activeStepId === "shape" && (
                   <>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,7rem),1fr))] gap-3">
                       {SHAPE_OPTIONS.map((opt) => (
                         <button
                           key={opt.id}
@@ -851,7 +850,7 @@ export function AtelierConfigurator() {
                 )}
 
                 {activeStepId === "carat" && (
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,7rem),1fr))] gap-3">
                     {CARAT_OPTIONS.map((opt) => (
                       <Pill key={opt.value} selected={carat === opt.value} onClick={() => setCarat(opt.value)} className="min-h-16 w-full text-center">
                         <bdi dir="ltr">{opt.label} ct</bdi>

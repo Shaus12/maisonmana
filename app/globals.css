@@ -479,16 +479,15 @@
 @media (max-width: 1023px) {
   .atelier-composer {
     display: flex;
-    height: calc(100svh - 4rem);
-    min-height: 0;
+    min-height: calc(100svh - 4rem);
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
     border-block: 1px solid var(--color-rule);
   }
 
-  @supports (height: 100dvh) {
+  @supports (min-height: 100dvh) {
     .atelier-composer {
-      height: calc(100dvh - 4rem);
+      min-height: calc(100dvh - 4rem);
     }
   }
 
@@ -518,7 +517,8 @@
   }
 
   .atelier-preview-stage {
-    height: clamp(260px, 34svh, 390px);
+    height: 30vh;
+    height: 30svh;
     min-height: 0;
     flex: 0 0 auto;
     padding: 0.25rem 0.75rem;
@@ -531,7 +531,8 @@
   }
 
   .atelier-composer.is-complete .atelier-preview-stage {
-    height: clamp(240px, 30svh, 330px);
+    height: 30vh;
+    height: 30svh;
   }
 
   .atelier-interaction-hint {
@@ -542,15 +543,13 @@
   }
 
   .atelier-controls-region {
-    min-height: 0;
-    flex: 1 1 auto;
-    overflow: hidden;
+    flex: 0 0 auto;
+    overflow: visible;
     padding: 0.7rem 1rem 0;
   }
 
   .atelier-wizard-panel {
-    height: 100%;
-    min-height: 0;
+    min-height: calc(70svh - 4rem);
   }
 
   .atelier-step-header {
@@ -585,15 +584,10 @@
   }
 
   .atelier-options-scroll {
-    min-height: 0;
+    min-height: auto;
     overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scroll-padding-block: 0.75rem 5rem;
-    padding: 0.35rem 0.2rem 1rem;
-    -webkit-overflow-scrolling: touch;
-    -webkit-mask-image: linear-gradient(to bottom, transparent, black 0.75rem, black calc(100% - 1rem), transparent);
-    mask-image: linear-gradient(to bottom, transparent, black 0.75rem, black calc(100% - 1rem), transparent);
+    overflow-y: visible;
+    padding: 0.2rem 0.2rem 1rem;
   }
 
   .atelier-options-scroll button {
@@ -624,6 +618,7 @@
     padding-top: 0.6rem;
     padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
     background: var(--color-paper);
+    box-shadow: 0 -0.5rem 1rem var(--color-paper);
   }
 
   .atelier-wizard-nav button {
