@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/components/LanguageProvider";
 
@@ -17,6 +17,9 @@ const COPY = {
     emailLabel: "כתובת אימייל",
     emailError: "נא להזין כתובת אימייל תקינה",
     modalSubmit: "יצירת הדמיה",
+    completionCta: "צרו הדמיה פוטוריאליסטית",
+    completionSupport: "ההדמיה תיווצר בהתאם לבחירות שלכם",
+    privacy: "כתובת האימייל משמשת ליצירת ההדמיה בלבד.",
     summaryPrefix: "הסיכום:",
     loadingTitle: "מרכיבים עבורך קונספט ראשוני",
     loadingBody: "אנחנו מתרגמים את הבחירות שלך להדמיה ויזואלית של התכשיט.",
@@ -45,6 +48,9 @@ const COPY = {
     emailLabel: "Email Address",
     emailError: "Please enter a valid email address",
     modalSubmit: "Create Preview",
+    completionCta: "Create a Photorealistic Preview",
+    completionSupport: "The preview will be created from your selections",
+    privacy: "Your email address is used only to create the preview.",
     summaryPrefix: "Summary:",
     loadingTitle: "Composing your initial concept",
     loadingBody: "We are translating your choices into a visual preview of the piece.",
@@ -89,6 +95,7 @@ interface AtelierRenderFlowProps {
   designSelections: Record<string, unknown>;
   designSummary: string;
   onResult?: (result: { imageUrl?: string; imageBase64?: string; mimeType: string }) => void;
+  presentation?: "default" | "completion";
 }
 
 // ── Component ─────────────────────────────────────────────────
@@ -96,6 +103,7 @@ export function AtelierRenderFlow({
   designSelections,
   designSummary,
   onResult,
+  presentation = "default",
 }: AtelierRenderFlowProps) {
   const { locale } = useLanguage();
   const c = COPY[locale];
@@ -104,6 +112,8 @@ export function AtelierRenderFlow({
   const [emailError, setEmailError] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Track when the modal opened for min-time check
   const formStartedAtRef = useRef<number | null>(null);
@@ -116,15 +126,45 @@ export function AtelierRenderFlow({
     }
   }, [stage]);
 
-  // Close modal on Escape
+  const closeModal = useCallback(() => {
+    setStage("idle");
+    window.requestAnimationFrame(() => triggerRef.current?.focus());
+  }, []);
+
+  // Keep keyboard focus inside the modal and close it on Escape.
   useEffect(() => {
     if (stage !== "modal") return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setStage("idle");
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeModal();
+        return;
+      }
+
+      if (e.key !== "Tab") return;
+      const focusable = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [stage]);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [stage, closeModal]);
 
   function validateEmail(v: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -214,6 +254,24 @@ export function AtelierRenderFlow({
 
   // ── Idle — main trigger button ────────────────────────────
   if (stage === "idle") {
+    if (presentation === "completion") {
+      return (
+        <div className="flex flex-col gap-3">
+          <p className="text-[0.8125rem] leading-relaxed text-ink-mute">
+            {c.completionSupport}
+          </p>
+          <button
+            ref={triggerRef}
+            type="button"
+            onClick={() => setStage("modal")}
+            className="brass-disc brass-disc--solid min-h-14 w-full justify-center"
+          >
+            {c.completionCta}
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className="mt-10 pt-8 border-t border-rule flex flex-col items-start gap-4">
         <p className="section-label">{c.idleLabel}</p>
@@ -221,6 +279,7 @@ export function AtelierRenderFlow({
           {c.idleBody}
         </p>
         <button
+          ref={triggerRef}
           type="button"
           onClick={() => setStage("modal")}
           className="brass-disc brass-disc--solid mt-2"
@@ -235,18 +294,18 @@ export function AtelierRenderFlow({
   if (stage === "modal") {
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-velvet/60 backdrop-blur-sm"
-        onClick={(e) => { if (e.target === e.currentTarget) setStage("idle"); }}
+        className="atelier-email-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-velvet/60 backdrop-blur-sm"
+        onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
         role="dialog"
         aria-modal="true"
         aria-label={c.modalAria}
       >
-        <div className="relative w-full max-w-md bg-paper border border-rule shadow-2xl px-8 py-10">
+        <div ref={modalRef} className="atelier-email-sheet relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto bg-paper border border-rule shadow-2xl px-7 py-9 sm:px-8 sm:py-10">
           {/* Close */}
           <button
             type="button"
             aria-label={c.close}
-            onClick={() => setStage("idle")}
+            onClick={closeModal}
             className="absolute start-5 top-5 text-ink-mute hover:text-ink transition-colors"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
@@ -320,6 +379,9 @@ export function AtelierRenderFlow({
               </button>
               <p className="text-center text-[0.75rem] text-ink-mute leading-relaxed">
                 {c.summaryPrefix} <span className="text-ink-soft" dir="ltr">{designSummary}</span>
+              </p>
+              <p className="text-center text-[0.75rem] leading-relaxed text-ink-mute">
+                {c.privacy}
               </p>
             </div>
           </form>

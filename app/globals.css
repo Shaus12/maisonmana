@@ -273,6 +273,18 @@
     animation: stageCrossfade 520ms var(--ease-quart) both;
   }
 
+  @keyframes atelierWizardStepIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .atelier-wizard-step {
+    animation: atelierWizardStepIn 220ms var(--ease-quart) both;
+  }
+
+  .atelier-completion-panel {
+    animation: atelierWizardStepIn 220ms var(--ease-quart) both;
+  }
+
   /* Hero buttons — flat, tactile, subtle */
   .hero-btn-solid {
     display: inline-flex;
@@ -435,4 +447,263 @@
 /* Safe area for sticky bottom bar on notched iPhones */
 .safe-bottom {
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+@keyframes atelierInteractionHintIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.atelier-interaction-hint {
+  animation: atelierInteractionHintIn 220ms var(--ease-quart) both;
+}
+
+.atelier-preview-stage > div:first-child > div:last-child {
+  direction: rtl;
+  font-size: 0;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.atelier-preview-stage > div:first-child > div:last-child::after {
+  content: "גררו כדי לסובב את התכשיט";
+  font-size: 0.75rem;
+}
+
+@media (max-width: 1023px) {
+  .atelier-composer {
+    display: flex;
+    height: calc(100svh - 4rem);
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border-block: 1px solid var(--color-rule);
+  }
+
+  @supports (height: 100dvh) {
+    .atelier-composer {
+      height: calc(100dvh - 4rem);
+    }
+  }
+
+  .atelier-preview-region {
+    min-height: 0;
+    flex: 0 0 auto;
+  }
+
+  .atelier-preview-collapse {
+    display: none;
+  }
+
+  .atelier-preview-content {
+    display: flex;
+    max-height: none !important;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .atelier-preview-mode {
+    flex: 0 0 auto;
+    padding-block: 0.35rem;
+  }
+
+  .atelier-preview-mode > div {
+    font-size: 0.75rem;
+  }
+
+  .atelier-preview-stage {
+    height: clamp(260px, 34svh, 390px);
+    min-height: 0;
+    flex: 0 0 auto;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .atelier-preview-stage > div:first-child {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .atelier-composer.is-complete .atelier-preview-stage {
+    height: clamp(240px, 30svh, 330px);
+  }
+
+  .atelier-interaction-hint {
+    bottom: 3.75rem;
+    max-width: calc(100% - 6rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .atelier-controls-region {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    padding: 0.7rem 1rem 0;
+  }
+
+  .atelier-wizard-panel {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .atelier-step-header {
+    flex: 0 0 auto;
+    margin-bottom: 0.55rem;
+  }
+
+  .atelier-step-header > [role="progressbar"] {
+    margin-top: 0.35rem;
+  }
+
+  .atelier-step-header > div:not([role="progressbar"]) {
+    max-width: 100%;
+    margin-top: 0.35rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to left, transparent, black 1rem, black calc(100% - 1rem), transparent);
+    mask-image: linear-gradient(to left, transparent, black 1rem, black calc(100% - 1rem), transparent);
+  }
+
+  .atelier-breadcrumb-chip:nth-last-child(n + 4) {
+    display: none;
+  }
+
+  .atelier-step-header h2 {
+    margin-top: 0.55rem;
+    font-size: 1.65rem;
+  }
+
+  .atelier-step-header h2 + p {
+    display: none;
+  }
+
+  .atelier-options-scroll {
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-block: 0.75rem 5rem;
+    padding: 0.35rem 0.2rem 1rem;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 0.75rem, black calc(100% - 1rem), transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 0.75rem, black calc(100% - 1rem), transparent);
+  }
+
+  .atelier-options-scroll button {
+    min-height: 44px;
+    padding-block: 0.65rem;
+  }
+
+  .atelier-options-scroll button.flex-col {
+    min-height: 5rem;
+    gap: 0.35rem;
+  }
+
+  .atelier-options-scroll button.flex-col svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .atelier-options-scroll .space-y-8 > :not(:first-child) {
+    margin-top: 1rem;
+  }
+
+  .atelier-wizard-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding-top: 0.6rem;
+    padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
+    background: var(--color-paper);
+  }
+
+  .atelier-wizard-nav button {
+    min-height: 48px;
+  }
+
+  .atelier-completion-panel {
+    height: 100%;
+    min-height: 0;
+    justify-content: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: 0.2rem;
+    scroll-padding-bottom: 1rem;
+  }
+
+  .atelier-completion-panel h2 {
+    margin-top: 0.35rem;
+    font-size: 1.7rem;
+  }
+
+  .atelier-completion-panel h2 + p {
+    margin-top: 0.45rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .atelier-completion-summary {
+    order: 6;
+    max-height: 8rem;
+    margin-top: 0.65rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  .atelier-completion-summary > div {
+    padding-block: 0.3rem;
+  }
+
+  .atelier-completion-panel .atelier-completion-summary + p {
+    order: 7;
+    margin-top: 0.6rem;
+  }
+
+  .atelier-completion-panel .atelier-completion-summary + p + div {
+    order: 4;
+    margin-top: 0.75rem;
+  }
+
+  .atelier-completion-panel > button:last-child {
+    order: 5;
+    margin-top: 0.65rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .atelier-email-modal {
+    align-items: flex-end;
+    padding: 0;
+    backdrop-filter: none;
+  }
+
+  .atelier-email-sheet {
+    max-height: min(82dvh, 36rem);
+    border-radius: 1.25rem 1.25rem 0 0;
+    border-bottom: 0;
+    padding: 2rem 1.5rem max(1.5rem, env(safe-area-inset-bottom));
+    scroll-padding-bottom: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-completion-panel {
+    animation: none;
+  }
+
+  .atelier-interaction-hint {
+    animation: none;
+    transform: translate(-50%, 0);
+  }
 }

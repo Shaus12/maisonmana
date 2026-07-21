@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
 import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
@@ -45,7 +45,7 @@ function ShapeIcon({ shape }: { shape: string }) {
   return (
     <svg
       viewBox="0 0 40 40"
-      className="h-7 w-7 mx-auto"
+      className="mx-auto h-8 w-8"
       aria-hidden
       fill="none"
       strokeWidth="1.5"
@@ -81,22 +81,6 @@ function ShapeIcon({ shape }: { shape: string }) {
   );
 }
 
-// ── Section header (Dynamic Hebrew Alphabet Steps) ───────────
-function SectionHead({ step, children }: { step: number; children: React.ReactNode }) {
-  const hebrewLetters = ["א", "ב", "ג", "ד", "ה", "ו", "ז"];
-  return (
-    <div className="flex items-baseline gap-4 border-t border-rule pt-5 mb-4 md:pt-10 md:mb-6">
-      <span
-        className="display-he text-[1.375rem] leading-none font-bold"
-        style={{ color: "oklch(0.74 0.110 78)" }}
-      >
-        {hebrewLetters[step - 1] || step}
-      </span>
-      <p className="section-label tracking-[0.14em]">{children}</p>
-    </div>
-  );
-}
-
 // ── Pill button ───────────────────────────────────────────────
 function Pill({
   selected,
@@ -114,73 +98,28 @@ function Pill({
       type="button"
       onClick={onClick}
       aria-pressed={selected}
-      className={`border px-4 py-2.5 text-[0.875rem] transition-all duration-[280ms] ${
+      className={`relative border px-4 py-4 text-[0.9375rem] leading-snug transition-[border-color,background-color,color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] ${
         selected
           ? "border-ink bg-paper-deep text-ink"
           : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
       } ${className}`}
     >
       {children}
+      {selected && (
+        <span aria-hidden className="absolute end-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-ink text-[0.625rem] leading-none text-paper">
+          ✓
+        </span>
+      )}
     </button>
   );
 }
 
-// ── Mobile horizontal scroll with arrows ─────────────────────
-function MobileScrollRow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  const updateArrows = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 2);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 2);
-  }, []);
-
-  const scroll = useCallback((dir: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.6;
-    el.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
-  }, []);
-
+function SelectionIndicator({ selected }: { selected: boolean }) {
+  if (!selected) return null;
   return (
-    <div className={`relative md:hidden ${className}`}>
-      {/* Left arrow */}
-      {canScrollLeft && (
-        <button
-          type="button"
-          onClick={() => scroll("left")}
-          aria-label="Scroll left"
-          className="absolute start-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-paper/90 border border-rule shadow-sm backdrop-blur-sm text-ink-mute hover:text-ink transition-colors"
-        >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 rtl:rotate-180">
-            <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
-          </svg>
-        </button>
-      )}
-      {/* Right arrow */}
-      {canScrollRight && (
-        <button
-          type="button"
-          onClick={() => scroll("right")}
-          aria-label="Scroll right"
-          className="absolute end-0 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-paper/90 border border-rule shadow-sm backdrop-blur-sm text-ink-mute hover:text-ink transition-colors"
-        >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 rtl:rotate-180">
-            <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
-          </svg>
-        </button>
-      )}
-      <div
-        ref={scrollRef}
-        onScroll={updateArrows}
-        className="flex gap-2.5 overflow-x-auto scroll-smooth scrollbar-hide px-1 py-1 -mx-1"
-      >
-        {children}
-      </div>
-    </div>
+    <span aria-hidden className="absolute end-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-ink text-[0.625rem] leading-none text-paper">
+      ✓
+    </span>
   );
 }
 
@@ -190,6 +129,80 @@ const POPULAR_BAND_IDS = [
 ] as const;
 
 const initialInquiryState: InquiryState = { status: "idle" };
+
+let hasSeenAtelierInteractionHint = false;
+
+type WizardStepId = "type" | "shape" | "setting" | "metal" | "band" | "carat" | "details";
+
+const WIZARD_COPY = {
+  he: {
+    type: { title: "בחרו את סוג התכשיט", instruction: "הבחירה קובעת אילו שלבים יוצגו בהמשך." },
+    shape: { title: "בחרו את צורת היהלום", instruction: "צורת האבן תתעדכן מיד בתצוגה." },
+    setting: { title: "בחרו את סגנון השיבוץ", instruction: "השיבוץ קובע כיצד האבן מתחברת לתכשיט." },
+    metal: { title: "בחרו את המתכת", instruction: "הגוון והגימור יתעדכנו מיד בתצוגה." },
+    band: { title: "בחרו את סגנון הלהקה", instruction: "אפשר לחזור ולשנות את המבנה בכל שלב." },
+    carat: { title: "בחרו את משקל היהלום", instruction: "משקל הקראט משפיע על נוכחות האבן בתצוגה." },
+    details: { title: "השלימו את פרטי היהלום", instruction: "בחרו מקור, צבע ורמת ניקיון." },
+    previous: "חזרה",
+    next: "המשך",
+    finish: "סיום העיצוב",
+    step: "שלב",
+    of: "מתוך",
+  },
+  en: {
+    type: { title: "Choose the jewelry type", instruction: "Your choice determines which steps appear next." },
+    shape: { title: "Choose the diamond shape", instruction: "The stone shape updates immediately in the preview." },
+    setting: { title: "Choose the setting", instruction: "The setting determines how the stone meets the piece." },
+    metal: { title: "Choose the metal", instruction: "The color and finish update immediately in the preview." },
+    band: { title: "Choose the band style", instruction: "You can return and change the construction at any time." },
+    carat: { title: "Choose the diamond weight", instruction: "Carat weight changes the stone's presence in the preview." },
+    details: { title: "Complete the diamond details", instruction: "Choose origin, color, and clarity." },
+    previous: "Back",
+    next: "Continue",
+    finish: "Finish Design",
+    step: "Step",
+    of: "of",
+  },
+} as const;
+
+const COMPLETION_COPY = {
+  he: {
+    eyebrow: "העיצוב שלכם מוכן",
+    title: "הפכו את העיצוב להדמיה מציאותית",
+    body: "יצרנו עבורכם מודל אינטראקטיבי בהתאם לבחירות שביצעתם. כעת ניתן ליצור הדמיה פוטוריאליסטית ראשונית של התכשיט.",
+    disclaimer: "ההדמיה היא המחשה ראשונית. הפרופורציות, השיבוץ והפרטים הסופיים יעברו התאמה מדויקת בפגישה האישית.",
+    edit: "חזרה לעריכת העיצוב",
+    labels: {
+      type: "סוג התכשיט",
+      shape: "צורת היהלום",
+      setting: "שיבוץ",
+      metal: "מתכת",
+      band: "סגנון הלהקה",
+      carat: "משקל",
+      origin: "מקור היהלום",
+      color: "צבע היהלום",
+      clarity: "ניקיון",
+    },
+  },
+  en: {
+    eyebrow: "Your design is ready",
+    title: "Turn Your Design into a Realistic Preview",
+    body: "We created an interactive model from your selections. You can now create an initial photorealistic preview of the jewelry.",
+    disclaimer: "The preview is an initial illustration. Proportions, setting, and final details will be refined during your personal appointment.",
+    edit: "Back to editing",
+    labels: {
+      type: "Jewelry type",
+      shape: "Diamond shape",
+      setting: "Setting",
+      metal: "Metal",
+      band: "Band style",
+      carat: "Weight",
+      origin: "Diamond origin",
+      color: "Diamond color",
+      clarity: "Clarity",
+    },
+  },
+} as const;
 
 export function AtelierConfigurator() {
   const { t, locale } = useLanguage();
@@ -208,6 +221,21 @@ export function AtelierConfigurator() {
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(true);
   const [renderResult, setRenderResult] = useState<{ imageUrl?: string; imageBase64?: string; mimeType: string } | null>(null);
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [wizardComplete, setWizardComplete] = useState(false);
+  const [showInteractionHint, setShowInteractionHint] = useState(false);
+
+  useEffect(() => {
+    if (hasSeenAtelierInteractionHint) return;
+
+    setShowInteractionHint(true);
+    const timer = window.setTimeout(() => {
+      hasSeenAtelierInteractionHint = true;
+      setShowInteractionHint(false);
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (renderResult) {
@@ -255,6 +283,24 @@ export function AtelierConfigurator() {
     : FANCY_COLOR_OPTIONS.find(c => c.id === color)?.en;
 
   const originLabel = origin === "natural" ? t("conf_origin_nat") : t("conf_origin_lab");
+  const clarityName = locale === "he"
+    ? CLARITY_OPTIONS.find((option) => option.value === clarity)?.he
+    : CLARITY_OPTIONS.find((option) => option.value === clarity)?.en;
+  const selectedCaratLabel = CARAT_OPTIONS.find((option) => option.value === carat)?.label ?? carat.toFixed(2);
+  const completionCopy = COMPLETION_COPY[locale];
+  const completionRows = ([
+    { label: completionCopy.labels.type, value: typeName, visible: true },
+    { label: completionCopy.labels.shape, value: shapeName, visible: jewelryType !== "bracelet" },
+    { label: completionCopy.labels.setting, value: settingName, visible: jewelryType === "ring" || jewelryType === "earring" },
+    { label: completionCopy.labels.metal, value: metalName, visible: true },
+    { label: completionCopy.labels.band, value: bandName, visible: jewelryType === "ring" },
+    { label: completionCopy.labels.carat, value: locale === "he" ? `${selectedCaratLabel} קראט` : `${selectedCaratLabel} ct`, visible: true },
+    { label: completionCopy.labels.origin, value: originLabel, visible: true },
+    { label: completionCopy.labels.color, value: colorName, visible: true },
+    { label: completionCopy.labels.clarity, value: clarityName, visible: true },
+  ] satisfies Array<{ label: string; value: string | undefined; visible: boolean }>)
+    .filter((row) => row.visible && Boolean(row.value))
+    .map((row) => ({ label: row.label, value: row.value as string }));
 
   const summaryShort = `${typeName} · ${carat.toFixed(2)} ct · ${metalName}`;
   const summaryFull = useMemo(() => {
@@ -278,8 +324,57 @@ export function AtelierConfigurator() {
     ? BAND_OPTIONS
     : BAND_OPTIONS.filter((b) => POPULAR_BAND_IDS.includes(b.id as typeof POPULAR_BAND_IDS[number]));
 
-  // Step counter logic
-  let currentStep = 1;
+  const visibleStepIds = useMemo<WizardStepId[]>(() => {
+    if (jewelryType === "ring") return ["type", "shape", "setting", "metal", "band", "carat", "details"];
+    if (jewelryType === "earring") return ["type", "shape", "setting", "metal", "carat", "details"];
+    if (jewelryType === "necklace") return ["type", "shape", "metal", "carat", "details"];
+    return ["type", "metal", "carat", "details"];
+  }, [jewelryType]);
+
+  useEffect(() => {
+    setActiveStepIndex((index) => Math.min(index, visibleStepIds.length - 1));
+  }, [visibleStepIds.length]);
+
+  const activeStepId = visibleStepIds[activeStepIndex];
+  const wizardCopy = WIZARD_COPY[locale];
+  const isFirstStep = activeStepIndex === 0;
+  const isFinalStep = activeStepIndex === visibleStepIds.length - 1;
+  const breadcrumbItems = visibleStepIds
+    .slice(0, wizardComplete ? activeStepIndex + 1 : activeStepIndex)
+    .flatMap((stepId) => {
+      if (stepId === "type") return [typeName];
+      if (stepId === "shape") return [shapeName];
+      if (stepId === "setting") return [settingName];
+      if (stepId === "metal") return [metalName];
+      if (stepId === "band") return [bandName];
+      if (stepId === "details") return [originLabel, colorName];
+      return [];
+    })
+    .filter((item): item is string => Boolean(item));
+
+  function dismissInteractionHint() {
+    if (!showInteractionHint) return;
+    hasSeenAtelierInteractionHint = true;
+    setShowInteractionHint(false);
+  }
+
+  function selectJewelryType(nextType: JewelryType) {
+    setJewelryType(nextType);
+    setWizardComplete(false);
+  }
+
+  function goToPreviousStep() {
+    setWizardComplete(false);
+    setActiveStepIndex((index) => Math.max(0, index - 1));
+  }
+
+  function goToNextStep() {
+    if (isFinalStep) {
+      setWizardComplete(true);
+      return;
+    }
+    setActiveStepIndex((index) => Math.min(visibleStepIds.length - 1, index + 1));
+  }
 
   async function handleDownloadImage(result: NonNullable<typeof renderResult>) {
     try {
@@ -456,17 +551,17 @@ export function AtelierConfigurator() {
   return (
     <div className="bg-paper">
       <div className="mx-auto max-w-[1440px]">
-        <div className="md:grid md:grid-cols-11">
+        <div className={`atelier-composer lg:grid lg:grid-cols-[minmax(0,1.65fr)_minmax(22rem,1fr)] lg:items-start ${wizardComplete ? "is-complete" : ""}`}>
 
           {/* ── LEFT: Sticky 3D Preview ──────────────────────── */}
-          <div className="md:col-span-5 md:sticky md:top-[5.5rem] md:self-start md:[height:calc(100dvh-5.5rem)]">
-            <div className="flex flex-col border-b md:border-b-0 md:border-e border-rule h-full">
+          <div className="atelier-preview-region lg:sticky lg:top-[5.5rem] lg:self-start lg:[height:calc(100dvh-5.5rem)]">
+            <div className="flex h-full flex-col border-b border-rule lg:border-b-0 lg:border-e">
 
               {/* Mobile: collapse/expand toggle */}
               <button
                 type="button"
                 onClick={() => setMobilePreviewOpen(!mobilePreviewOpen)}
-                className="md:hidden flex items-center justify-between border-b border-rule px-5 py-3 bg-paper-deep"
+                className="atelier-preview-collapse flex items-center justify-between border-b border-rule bg-paper-deep px-5 py-3 lg:hidden"
               >
                 <span className="text-[0.75rem] uppercase tracking-[0.14em] text-ink-mute">
                   {locale === "he" ? "תצוגה מקדימה" : "3D Preview"}
@@ -481,9 +576,9 @@ export function AtelierConfigurator() {
               </button>
 
               {/* Mobile: collapsible 3D area */}
-              <div className={`md:contents overflow-hidden transition-all duration-400 ease-in-out ${mobilePreviewOpen ? "max-h-[500px]" : "max-h-0"}`}>
+              <div className={`atelier-preview-content overflow-hidden transition-[max-height] duration-200 ease-out motion-reduce:transition-none lg:contents ${mobilePreviewOpen ? "max-h-[500px]" : "max-h-0"}`}>
                 {/* Skeleton toggle */}
-                <div className="flex justify-center border-b border-rule px-6 py-2.5 md:py-3">
+                <div className="atelier-preview-mode flex justify-center border-b border-rule px-6 py-2.5 lg:py-3">
                   <div className="flex rounded-full border border-rule p-0.5 text-[0.8125rem]">
                     <button
                       type="button"
@@ -508,8 +603,8 @@ export function AtelierConfigurator() {
 
                 {/* 3D stage */}
                 <div
-                  key={stageKey}
-                  className="stage-crossfade min-h-0 flex-1 overflow-hidden px-4 py-2 [min-height:220px] md:[min-height:0]"
+                  className="atelier-preview-stage relative min-h-0 flex-1 overflow-hidden px-4 py-2 [min-height:220px] lg:[min-height:0] lg:[&>div:first-child]:rounded-b-none"
+                  onPointerDownCapture={dismissInteractionHint}
                 >
                   <Ring3D
                     jewelryType={jewelryType}
@@ -521,11 +616,21 @@ export function AtelierConfigurator() {
                     diamondColor={FANCY_COLOR_OPTIONS.find(c => c.id === color)?.hex}
                     showSkeleton={showSkeleton}
                   />
+                  <div key={stageKey} aria-hidden className="stage-crossfade pointer-events-none absolute inset-0 bg-paper/0" />
+                  {showInteractionHint && (
+                    <div
+                      className="atelier-interaction-hint pointer-events-none absolute bottom-20 left-1/2 z-10 whitespace-nowrap rounded-full border border-paper/20 bg-ink/75 px-4 py-2 text-[0.75rem] text-paper shadow-sm backdrop-blur-sm"
+                      role="status"
+                    >
+                      <span aria-hidden className="me-1.5">↻</span>
+                      {locale === "he" ? "גררו כדי לסובב את התכשיט" : "Drag to rotate the jewelry"}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Live summary + CTA — desktop only (mobile gets sticky bar) */}
-              <div className="hidden md:block border-t border-rule px-8 py-6 bg-paper-deep">
+              <div className="mx-4 -mt-2 hidden rounded-b-xl border border-rule bg-paper-deep px-8 py-6 lg:block">
                 <p className="text-[0.6875rem] text-ink-mute tracking-[0.09em] uppercase">
                   {summaryShort}
                 </p>
@@ -545,517 +650,283 @@ export function AtelierConfigurator() {
                     </p>
                   </div>
 
-                  <a
-                    href="#atelier-lead"
-                    className="brass-disc brass-disc--solid whitespace-nowrap"
-                  >
-                    {t("conf_send")}
-                  </a>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── RIGHT: Scrollable Options ─────────────────────── */}
-          <div className="md:col-span-6 px-6 pb-20 md:px-12 md:pb-36">
+          {/* ── RIGHT: Step-by-step controls ──────────────────── */}
+          <div className="atelier-controls-region px-6 pb-20 pt-8 sm:px-8 lg:min-h-[calc(100dvh-5.5rem)] lg:border-s lg:border-rule lg:px-10 lg:pb-28 lg:pt-10 xl:px-12">
+            {wizardComplete ? (
+              <section
+                aria-labelledby="atelier-completion-title"
+                className="atelier-completion-panel mx-auto flex min-h-[34rem] max-w-[34rem] flex-col justify-center"
+              >
+                <p className="section-label">{completionCopy.eyebrow}</p>
+                <h2 id="atelier-completion-title" className="display-he mt-4 text-[2.125rem] leading-[1.12] text-ink md:text-[2.5rem]">
+                  {completionCopy.title}
+                </h2>
+                <p className="mt-4 text-[1rem] leading-relaxed text-ink-soft">
+                  {completionCopy.body}
+                </p>
 
-            {/* ── Step 1. Jewelry Type ── */}
-            <SectionHead step={currentStep++}>
-              {locale === "he" ? "סוג התכשיט" : "Jewelry Type"}
-            </SectionHead>
-            <div className="flex flex-wrap gap-2.5">
-              {JEWELRY_TYPE_OPTIONS.map((opt) => (
-                <Pill
-                  key={opt.id}
-                  selected={jewelryType === opt.id}
-                  onClick={() => setJewelryType(opt.id)}
-                >
-                  {locale === "he" ? opt.he : opt.en}
-                </Pill>
-              ))}
-            </div>
-
-            {/* ── Step 2. Diamond Shape (Only for Ring, Necklace, Earring) ── */}
-            {jewelryType !== "bracelet" && (
-              <>
-                <SectionHead step={currentStep++}>{t("conf_shape")}</SectionHead>
-                {/* Mobile: horizontal scroll */}
-                <MobileScrollRow>
-                  {SHAPE_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setShape(opt)}
-                      aria-pressed={shape.id === opt.id}
-                      className={`group flex flex-col items-center gap-2 border px-4 py-3.5 text-center transition-all duration-[280ms] shrink-0 min-w-[5rem] ${
-                        shape.id === opt.id
-                          ? "border-ink bg-paper-deep text-ink"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      <ShapeIcon shape={opt.id} />
-                      <span className="text-[0.75rem] tracking-[0.01em] leading-tight mt-1 whitespace-nowrap">
-                        {locale === "he" ? opt.he : opt.en}
-                      </span>
-                    </button>
+                <dl className="atelier-completion-summary mt-7 divide-y divide-rule border-y border-rule" aria-label={locale === "he" ? "סיכום הבחירות" : "Selection summary"}>
+                  {completionRows.map((row) => (
+                    <div key={row.label} className="grid grid-cols-[minmax(7rem,0.8fr)_minmax(0,1fr)] gap-4 py-2.5 text-[0.8125rem] leading-relaxed">
+                      <dt className="text-ink-mute">{row.label}</dt>
+                      <dd className="text-ink">{row.value}</dd>
+                    </div>
                   ))}
-                </MobileScrollRow>
-                {/* Desktop: grid */}
-                <div className="hidden md:grid grid-cols-5 gap-3">
-                  {SHAPE_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setShape(opt)}
-                      aria-pressed={shape.id === opt.id}
-                      className={`group flex flex-col items-center gap-2 border px-1.5 py-3.5 text-center transition-all duration-[280ms] ${
-                        shape.id === opt.id
-                          ? "border-ink bg-paper-deep text-ink"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      <ShapeIcon shape={opt.id} />
-                      <span className="text-[0.75rem] tracking-[0.01em] leading-tight mt-1">
-                        {locale === "he" ? opt.he : opt.en}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-                {shape && (
-                  <p className="mt-3 text-[0.8125rem] text-ink-mute">
-                    {locale === "he" ? shape.description : shape.descriptionEn}
-                  </p>
-                )}
-              </>
-            )}
+                </dl>
 
-            {/* ── Step 3. Setting (Only for Ring, Earring) ── */}
-            {jewelryType === "ring" && (
-              <>
-                <SectionHead step={currentStep++}>{t("conf_setting")}</SectionHead>
-                <div className="flex flex-wrap gap-2.5">
-                  {SETTING_OPTIONS.map((opt) => (
-                    <Pill
-                      key={opt.id}
-                      selected={setting.id === opt.id}
-                      onClick={() => setSetting(opt)}
-                    >
-                      {locale === "he" ? opt.he : opt.en}
-                    </Pill>
-                  ))}
-                </div>
-                {setting && (
-                  <p className="mt-3 text-[0.8125rem] text-ink-mute leading-snug">
-                    {locale === "he" ? setting.description : setting.descriptionEn}
-                  </p>
-                )}
-              </>
-            )}
+                <p className="mt-5 border-s border-brass/35 ps-3 text-[0.75rem] leading-relaxed text-ink-mute">
+                  {completionCopy.disclaimer}
+                </p>
 
-            {jewelryType === "earring" && (
-              <>
-                <SectionHead step={currentStep++}>{t("conf_setting")}</SectionHead>
-                <div className="flex flex-wrap gap-2.5">
-                  {EARRING_SETTING_OPTIONS.map((opt) => (
-                    <Pill
-                      key={opt.id}
-                      selected={earringSetting.id === opt.id}
-                      onClick={() => setEarringSetting(opt)}
-                    >
-                      {locale === "he" ? opt.he : opt.en}
-                    </Pill>
-                  ))}
-                </div>
-                {earringSetting && (
-                  <p className="mt-3 text-[0.8125rem] text-ink-mute leading-snug">
-                    {locale === "he" ? earringSetting.description : earringSetting.descriptionEn}
-                  </p>
-                )}
-              </>
-            )}
-
-            {/* ── Step 4. Metal (All Types) ── */}
-            <SectionHead step={currentStep++}>{t("conf_metal")}</SectionHead>
-            <div className="flex gap-7">
-              {METAL_OPTIONS.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setMetal(opt)}
-                  aria-pressed={metal.id === opt.id}
-                  className="group flex flex-col items-center gap-2 text-center"
-                >
-                  <span
-                    className={`block h-12 w-12 rounded-full transition-all duration-[280ms] ring-offset-[3px] ring-offset-paper ${
-                      metal.id === opt.id
-                        ? "ring-2 ring-ink scale-105"
-                        : "ring-0 scale-100 group-hover:scale-105"
-                    }`}
-                    style={{
-                      background: `radial-gradient(circle at 32% 28%, ${opt.glow}, ${opt.swatch} 52%, ${opt.ring})`,
+                <div className="mt-7">
+                  <AtelierRenderFlow
+                    presentation="completion"
+                    designSelections={{
+                      jewelryType,
+                      setting: jewelryType === "earring" ? earringSetting.id : setting.id,
+                      shape: shape.id,
+                      origin,
+                      carat,
+                      color,
+                      clarity,
+                      metal: metal.id,
+                      band: band.id,
                     }}
+                    designSummary={summaryFull}
+                    onResult={setRenderResult}
                   />
-                  <span
-                    className={`text-[0.75rem] tracking-[0.04em] transition-colors ${
-                      metal.id === opt.id ? "text-ink" : "text-ink-mute group-hover:text-ink-soft"
-                    }`}
-                  >
-                    {locale === "he" ? opt.he : opt.en}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {/* ── Step 5. Band Style (Only for Ring) ── */}
-            {jewelryType === "ring" && (
-              <>
-                <SectionHead step={currentStep++}>{t("conf_band")}</SectionHead>
-                <MobileScrollRow>
-                  {displayedBands.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setBand(opt)}
-                      aria-pressed={band.id === opt.id}
-                      className={`border px-4 py-3 text-start text-[0.8125rem] leading-snug transition-all duration-[280ms] shrink-0 whitespace-nowrap ${
-                        band.id === opt.id
-                          ? "border-ink bg-paper-deep text-ink"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      {locale === "he" ? opt.he : opt.en}
-                    </button>
-                  ))}
-                </MobileScrollRow>
-                <div className="hidden md:grid grid-cols-3 gap-2.5">
-                  {displayedBands.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setBand(opt)}
-                      aria-pressed={band.id === opt.id}
-                      className={`border px-4 py-3 text-start text-[0.8125rem] leading-snug transition-all duration-[280ms] ${
-                        band.id === opt.id
-                          ? "border-ink bg-paper-deep text-ink"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      {locale === "he" ? opt.he : opt.en}
-                    </button>
-                  ))}
                 </div>
-                {!showAllBands && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAllBands(true)}
-                    className="mt-3 text-[0.8125rem] text-ink-mute hairline-link"
-                  >
-                    {t("conf_show_all_bands")} ({BAND_OPTIONS.length - displayedBands.length} {t("conf_more")})
-                  </button>
-                )}
-                {band && (
-                  <p className="mt-3 text-[0.8125rem] text-ink-mute">
-                    {locale === "he" ? band.description : band.descriptionEn}
-                  </p>
-                )}
-              </>
-            )}
 
-            {/* ── Step 6. Specs (All Types) ── */}
-            <SectionHead step={currentStep++}>{t("conf_specs")}</SectionHead>
-
-            {/* Origin (Only if not a pure fancy diamond which is natural, but we can let them select for colorless/others) */}
-            <div className="flex gap-3 mb-8">
-              {(["lab-grown", "natural"] as const).map((id) => (
                 <button
-                  key={id}
                   type="button"
-                  onClick={() => setOrigin(id)}
-                  aria-pressed={origin === id}
-                  className={`flex-1 border px-4 py-3.5 text-start transition-all duration-[280ms] ${
-                    origin === id
-                      ? "border-ink bg-paper-deep text-ink"
-                      : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                  }`}
+                  onClick={() => setWizardComplete(false)}
+                  className="mt-5 self-start text-[0.8125rem] text-ink-mute underline decoration-rule underline-offset-4 transition-colors duration-200 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60"
                 >
-                  <span className="block text-[0.875rem] leading-snug">
-                    {id === "lab-grown" ? t("conf_origin_lab") : t("conf_origin_nat")}
-                  </span>
-                  <span className="mt-1 block text-[0.75rem] text-ink-mute leading-snug">
-                    {id === "lab-grown" ? t("conf_origin_lab_desc") : t("conf_origin_nat_desc")}
-                  </span>
+                  {completionCopy.edit}
                 </button>
-              ))}
-            </div>
-
-            {/* Carat */}
-            <p className="section-label mb-3">{t("conf_carat")}</p>
-            <MobileScrollRow className="mb-8">
-              {CARAT_OPTIONS.map((opt) => (
-                <Pill
-                  key={opt.value}
-                  selected={carat === opt.value}
-                  onClick={() => setCarat(opt.value)}
-                  className="shrink-0 whitespace-nowrap"
+              </section>
+            ) : (
+            <section aria-labelledby="atelier-step-title" className="atelier-wizard-panel mx-auto flex min-h-[34rem] max-w-[34rem] flex-col">
+              <header className="atelier-step-header mb-9 text-start">
+                <p className="text-[0.875rem] font-medium tracking-[0.06em] text-ink-soft" aria-live="polite">
+                  {wizardCopy.step} {activeStepIndex + 1} {wizardCopy.of} {visibleStepIds.length}
+                </p>
+                <div
+                  className="mt-4 h-0.5 overflow-hidden bg-rule"
+                  role="progressbar"
+                  aria-label={`${wizardCopy.step} ${activeStepIndex + 1} ${wizardCopy.of} ${visibleStepIds.length}`}
+                  aria-valuemin={1}
+                  aria-valuemax={visibleStepIds.length}
+                  aria-valuenow={activeStepIndex + 1}
                 >
-                  <bdi dir="ltr">{opt.label} ct</bdi>
-                </Pill>
-              ))}
-            </MobileScrollRow>
-            <div className="hidden md:flex flex-wrap gap-2 mb-8">
-              {CARAT_OPTIONS.map((opt) => (
-                <Pill
-                  key={opt.value}
-                  selected={carat === opt.value}
-                  onClick={() => setCarat(opt.value)}
-                >
-                  <bdi dir="ltr">{opt.label} ct</bdi>
-                </Pill>
-              ))}
-            </div>
-
-            {/* Color + Clarity */}
-            <div className="grid grid-cols-1 gap-8">
-              {/* Fancy Colors */}
-              <div>
-                <p className="section-label mb-3">{locale === "he" ? "צבע היהלום (טבעי + מעבדה)" : "Diamond Color (Natural + Lab)"}</p>
-                <MobileScrollRow>
-                  {FANCY_COLOR_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setColor(opt.id)}
-                      aria-pressed={color === opt.id}
-                      className={`flex items-center gap-2.5 border px-3.5 py-2.5 text-[0.8125rem] transition-all duration-[280ms] shrink-0 whitespace-nowrap ${
-                        color === opt.id
-                          ? "border-ink bg-paper-deep text-ink font-medium"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      <span
-                        className="inline-block h-4.5 w-4.5 rounded-full border border-rule-soft"
-                        style={{
-                          backgroundColor: opt.hex,
-                          boxShadow: "0 1px 3px rgba(0,0,0,0.1) inset"
-                        }}
-                      />
-                      <span className="display-he">
-                        {locale === "he" ? opt.he : opt.en}
-                      </span>
-                    </button>
-                  ))}
-                </MobileScrollRow>
-                <div className="hidden md:flex flex-wrap gap-2.5">
-                  {FANCY_COLOR_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setColor(opt.id)}
-                      aria-pressed={color === opt.id}
-                      className={`flex items-center gap-2.5 border px-3.5 py-2.5 text-[0.8125rem] transition-all duration-[280ms] ${
-                        color === opt.id
-                          ? "border-ink bg-paper-deep text-ink font-medium"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      <span
-                        className="inline-block h-4.5 w-4.5 rounded-full border border-rule-soft"
-                        style={{
-                          backgroundColor: opt.hex,
-                          boxShadow: "0 1px 3px rgba(0,0,0,0.1) inset"
-                        }}
-                      />
-                      <span className="display-he">
-                        {locale === "he" ? opt.he : opt.en}
-                      </span>
-                    </button>
-                  ))}
+                  <div
+                    className="h-full bg-ink-soft/70 transition-[width] duration-300 ease-out motion-reduce:transition-none"
+                    style={{ width: `${((activeStepIndex + 1) / visibleStepIds.length) * 100}%` }}
+                  />
                 </div>
+                {breadcrumbItems.length > 0 && (
+                  <div
+                    className="mt-3 flex flex-wrap gap-1.5"
+                    dir={locale === "he" ? "rtl" : "ltr"}
+                    aria-label={locale === "he" ? "הבחירות שהושלמו" : "Completed selections"}
+                  >
+                    {breadcrumbItems.map((item, index) => (
+                      <span key={`${item}-${index}`} className="atelier-breadcrumb-chip rounded-full bg-paper-deep px-2.5 py-1 text-[0.75rem] leading-none text-ink-mute">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <h2 id="atelier-step-title" className="display-he mt-6 text-[2.125rem] leading-[1.12] text-ink md:text-[2.5rem]">
+                  {wizardCopy[activeStepId].title}
+                </h2>
+                <p className="mt-3 text-[1.0625rem] leading-relaxed text-ink-soft">
+                  {wizardCopy[activeStepId].instruction}
+                </p>
+              </header>
+
+              <div
+                key={activeStepId}
+                className="atelier-options-scroll atelier-wizard-step flex-1"
+                role="group"
+                aria-labelledby="atelier-step-title"
+                aria-label={locale === "he" ? "אפשרויות השלב הנוכחי" : "Current step options"}
+                tabIndex={0}
+              >
+                {activeStepId === "type" && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {JEWELRY_TYPE_OPTIONS.map((opt) => (
+                      <Pill key={opt.id} selected={jewelryType === opt.id} onClick={() => selectJewelryType(opt.id)} className="min-h-16 w-full text-start">
+                        {locale === "he" ? opt.he : opt.en}
+                      </Pill>
+                    ))}
+                  </div>
+                )}
+
+                {activeStepId === "shape" && (
+                  <>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                      {SHAPE_OPTIONS.map((opt) => (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setShape(opt)}
+                          aria-pressed={shape.id === opt.id}
+                          className={`relative flex min-h-28 flex-col items-center justify-center gap-3 border px-4 py-5 text-center transition-[border-color,background-color,color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] ${shape.id === opt.id ? "border-ink bg-paper-deep text-ink" : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"}`}
+                        >
+                          <SelectionIndicator selected={shape.id === opt.id} />
+                          <ShapeIcon shape={opt.id} />
+                          <span className="text-[0.8125rem] font-medium leading-tight">{locale === "he" ? opt.he : opt.en}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-4 text-[0.8125rem] leading-relaxed text-ink-mute">{locale === "he" ? shape.description : shape.descriptionEn}</p>
+                  </>
+                )}
+
+                {activeStepId === "setting" && (
+                  <>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {(jewelryType === "earring" ? EARRING_SETTING_OPTIONS : SETTING_OPTIONS).map((opt) => {
+                        const selected = jewelryType === "earring" ? earringSetting.id === opt.id : setting.id === opt.id;
+                        return (
+                          <Pill
+                            key={opt.id}
+                            selected={selected}
+                            onClick={() => jewelryType === "earring" ? setEarringSetting(opt as typeof EARRING_SETTING_OPTIONS[number]) : setSetting(opt as SettingOption)}
+                            className="min-h-16 w-full text-start"
+                          >
+                            {locale === "he" ? opt.he : opt.en}
+                          </Pill>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-4 text-[0.8125rem] leading-relaxed text-ink-mute">
+                      {jewelryType === "earring"
+                        ? (locale === "he" ? earringSetting.description : earringSetting.descriptionEn)
+                        : (locale === "he" ? setting.description : setting.descriptionEn)}
+                    </p>
+                  </>
+                )}
+
+                {activeStepId === "metal" && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {METAL_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setMetal(opt)}
+                        aria-pressed={metal.id === opt.id}
+                        className={`relative flex min-h-28 items-center gap-5 border px-5 py-5 text-start transition-[border-color,background-color,color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] ${metal.id === opt.id ? "border-ink bg-paper-deep text-ink" : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"}`}
+                      >
+                        <SelectionIndicator selected={metal.id === opt.id} />
+                        <span className="block h-12 w-12 shrink-0 rounded-full border border-rule-soft" style={{ background: `radial-gradient(circle at 32% 28%, ${opt.glow}, ${opt.swatch} 52%, ${opt.ring})` }} />
+                        <span className="text-[0.875rem] font-medium leading-snug">{locale === "he" ? opt.he : opt.en}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {activeStepId === "band" && (
+                  <>
+                    <div className="grid grid-cols-2 gap-3">
+                      {displayedBands.map((opt) => (
+                        <Pill key={opt.id} selected={band.id === opt.id} onClick={() => setBand(opt)} className="min-h-16 w-full text-start">
+                          {locale === "he" ? opt.he : opt.en}
+                        </Pill>
+                      ))}
+                    </div>
+                    {!showAllBands && (
+                      <button type="button" onClick={() => setShowAllBands(true)} className="mt-5 hairline-link text-[0.8125rem] text-ink-mute">
+                        {t("conf_show_all_bands")} ({BAND_OPTIONS.length - displayedBands.length} {t("conf_more")})
+                      </button>
+                    )}
+                    <p className="mt-4 text-[0.8125rem] leading-relaxed text-ink-mute">{locale === "he" ? band.description : band.descriptionEn}</p>
+                  </>
+                )}
+
+                {activeStepId === "carat" && (
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    {CARAT_OPTIONS.map((opt) => (
+                      <Pill key={opt.value} selected={carat === opt.value} onClick={() => setCarat(opt.value)} className="min-h-16 w-full text-center">
+                        <bdi dir="ltr">{opt.label} ct</bdi>
+                      </Pill>
+                    ))}
+                  </div>
+                )}
+
+                {activeStepId === "details" && (
+                  <div className="space-y-8">
+                    <div>
+                      <p className="section-label mb-3">{locale === "he" ? "מקור היהלום" : "Diamond Origin"}</p>
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {(["lab-grown", "natural"] as const).map((id) => (
+                          <Pill key={id} selected={origin === id} onClick={() => setOrigin(id)} className="min-h-24 w-full text-start">
+                            <span className="block pe-4">
+                              <span className="block text-[0.875rem]">{id === "lab-grown" ? t("conf_origin_lab") : t("conf_origin_nat")}</span>
+                              <span className="mt-1 block text-[0.75rem] leading-relaxed text-ink-mute">{id === "lab-grown" ? t("conf_origin_lab_desc") : t("conf_origin_nat_desc")}</span>
+                            </span>
+                          </Pill>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="section-label mb-3">{locale === "he" ? "צבע היהלום" : "Diamond Color"}</p>
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        {FANCY_COLOR_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setColor(opt.id)}
+                            aria-pressed={color === opt.id}
+                            className={`relative flex min-h-16 items-center gap-3 border px-4 py-4 text-start text-[0.875rem] transition-[border-color,background-color,color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] ${color === opt.id ? "border-ink bg-paper-deep text-ink" : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"}`}
+                          >
+                            <SelectionIndicator selected={color === opt.id} />
+                            <span className="h-4 w-4 shrink-0 rounded-full border border-rule-soft" style={{ backgroundColor: opt.hex }} />
+                            <span>{locale === "he" ? opt.he : opt.en}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="section-label mb-3">{t("conf_clarity")}</p>
+                      <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+                        {CLARITY_OPTIONS.map((opt) => (
+                          <Pill key={opt.value} selected={clarity === opt.value} onClick={() => setClarity(opt.value)} className="min-h-14 w-full px-2 text-center text-[0.8125rem]">
+                            <bdi dir="ltr">{opt.value}</bdi>
+                          </Pill>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Clarity */}
-              <div>
-                <p className="section-label mb-3">{t("conf_clarity")}</p>
-                <MobileScrollRow>
-                  {CLARITY_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setClarity(opt.value)}
-                      aria-pressed={clarity === opt.value}
-                      className={`border px-3.5 py-2 text-[0.75rem] transition-all duration-[280ms] shrink-0 ${
-                        clarity === opt.value
-                          ? "border-ink bg-paper-deep text-ink"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      <bdi dir="ltr">{opt.value}</bdi>
-                    </button>
-                  ))}
-                </MobileScrollRow>
-                <div className="hidden md:flex flex-wrap gap-2">
-                  {CLARITY_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setClarity(opt.value)}
-                      aria-pressed={clarity === opt.value}
-                      className={`border px-3.5 py-2 text-[0.75rem] transition-all duration-[280ms] ${
-                        clarity === opt.value
-                          ? "border-ink bg-paper-deep text-ink"
-                          : "border-rule text-ink-mute hover:border-ink-mute hover:text-ink-soft"
-                      }`}
-                    >
-                      <bdi dir="ltr">{opt.value}</bdi>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Full summary row */}
-            <div className="mt-16 border-t border-rule pt-10">
-              <p className="section-label mb-2">{t("conf_summary_label")}</p>
-              <p className="text-[0.9375rem] text-ink leading-relaxed">{summaryFull}</p>
-            </div>
-
-            <AtelierRenderFlow
-              designSelections={{
-                jewelryType,
-                setting: jewelryType === "earring" ? earringSetting.id : setting.id,
-                shape: shape.id,
-                origin,
-                carat,
-                color,
-                clarity,
-                metal: metal.id,
-                band: band.id,
-              }}
-              designSummary={summaryFull}
-              onResult={setRenderResult}
-            />
-
-            <div id="atelier-lead" className="scroll-mt-28 mt-16 border-t border-rule pt-10 mb-24 md:mb-0">
-              {leadState.status === "ok" ? (
-                <div className="vellum px-6 py-10 text-center">
-                  <p className="section-label">Maison Mana</p>
-                  <h2 className="display-he mt-4 text-[2rem] leading-tight text-ink">
-                    {t("inq_success_title")}
-                  </h2>
-                  <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
-                    {locale === "he" ? "נחזור אליך תוך יום עסקים אחד לתיאום פגישה פרטית." : "We will get back to you within one business day to arrange a private meeting."}
-                  </p>
-                  <p className="mt-8 text-[0.6875rem] tracking-[0.18em] uppercase text-ink-mute display-lat">
-                    Reference&nbsp;·&nbsp;<bdi dir="ltr">{leadState.reference}</bdi>
-                  </p>
-                </div>
-              ) : (
-                <form action={leadAction} className="vellum px-6 py-8 md:px-8 md:py-10">
-                  <input type="hidden" name="intent" value="bespoke" />
-                  <input type="hidden" name="bespoke" value={summaryFull} />
-                  <header className="mb-8">
-                    <p className="section-label">{locale === "he" ? "פגישה פרטית" : "Private Meeting"}</p>
-                    <h2 className="display-he mt-3 text-[1.875rem] leading-tight text-ink">
-                      {locale === "he" ? "שליחת ההדמיה לאטלייה" : "Send the Preview to the Atelier"}
-                    </h2>
-                    <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
-                      {locale === "he" ? "הפרטים יישלחו יחד עם סיכום הבחירות כדי שנוכל להכין שיחה מדויקת." : "Your details will be sent together with the choice summary so we can prepare a precise conversation."}
-                    </p>
-                  </header>
-
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <AtelierField
-                      name="name"
-                      label={t("inq_field_name")}
-                      required
-                      autoComplete="name"
-                      error={leadState.status === "error" && leadState.field === "name" ? t(leadState.message as any) : undefined}
-                    />
-                    <AtelierField
-                      name="phone"
-                      label={t("inq_field_phone")}
-                      inputMode="tel"
-                      autoComplete="tel"
-                      dir="ltr"
-                      error={leadState.status === "error" && leadState.field === "phone" ? t(leadState.message as any) : undefined}
-                    />
-                    <AtelierField
-                      name="email"
-                      label={t("inq_field_email")}
-                      type="email"
-                      autoComplete="email"
-                      dir="ltr"
-                      error={leadState.status === "error" && leadState.field === "email" ? t(leadState.message as any) : undefined}
-                    />
-                    <AtelierField
-                      name="preferred"
-                      label={locale === "he" ? "מועד מבוקש" : "Preferred time"}
-                      placeholder={locale === "he" ? "לדוגמה: שלישי בערב" : "e.g. Tuesday evening"}
-                    />
-                  </div>
-
-                  <label className="mt-8 block">
-                    <span className="section-label mb-3 block">{locale === "he" ? "הערות קצרות" : "Short notes"}</span>
-                    <textarea
-                      name="message"
-                      rows={3}
-                      placeholder={locale === "he" ? "מה חשוב שנדע לפני הפגישה?" : "What should we know before the meeting?"}
-                      className="block w-full resize-y border-0 border-b border-rule bg-transparent py-3 text-[1rem] leading-relaxed text-ink placeholder:text-ink-mute focus:border-brass focus:outline-none"
-                    />
-                  </label>
-
-                  {leadState.status === "error" && !leadState.field && (
-                    <p className="mt-5 text-[0.875rem] italic text-ink-soft">{t(leadState.message as any)}</p>
-                  )}
-
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-5">
-                    <p className="max-w-sm text-[0.75rem] leading-relaxed text-ink-mute">
-                      {locale === "he" ? "הפרטים משמשים לתיאום הפגישה בלבד." : "Your details are used to arrange the meeting only."}
-                    </p>
-                    <AtelierSubmitButton />
-                  </div>
-                </form>
-              )}
-            </div>
+              <nav dir="ltr" aria-label={locale === "he" ? "ניווט בין שלבי העיצוב" : "Design step navigation"} className="atelier-wizard-nav mt-12 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 border-t border-rule pt-7">
+                <button
+                  type="button"
+                  dir={locale === "he" ? "rtl" : "ltr"}
+                  onClick={goToPreviousStep}
+                  disabled={isFirstStep}
+                  className={`min-h-12 px-5 text-[0.875rem] transition-[color,border-color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 active:scale-[0.98] ${isFirstStep ? "invisible" : "border border-rule text-ink-soft hover:border-ink-mute hover:text-ink"}`}
+                >
+                  {wizardCopy.previous}
+                </button>
+                <button type="button" dir={locale === "he" ? "rtl" : "ltr"} onClick={goToNextStep} className="brass-disc brass-disc--solid min-h-14 w-full justify-center whitespace-nowrap text-[0.9375rem] active:scale-[0.98]">
+                  {isFinalStep ? wizardCopy.finish : wizardCopy.next}
+                </button>
+              </nav>
+            </section>
+            )}
           </div>
         </div>
       </div>
 
-      {/* ── Mobile sticky bottom bar ──────────────────────── */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-rule bg-paper-deep/95 backdrop-blur-md px-5 py-3 safe-bottom">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-[0.6875rem] text-ink-mute tracking-[0.06em] uppercase truncate">
-              {summaryShort}
-            </p>
-            <p className="font-display text-[1.125rem] leading-tight text-ink mt-0.5">
-              {locale === "he" ? "לפי דרישה" : "Upon Request"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => {
-                setMobilePreviewOpen(true);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-rule text-ink-mute hover:text-ink transition-colors"
-              aria-label={locale === "he" ? "תצוגה מקדימה" : "Preview"}
-            >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4.5 w-4.5">
-                <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-                <path fillRule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-              </svg>
-            </button>
-            <a
-              href="#atelier-lead"
-              className="brass-disc brass-disc--solid text-[0.8125rem] px-5 py-2.5"
-            >
-              {t("conf_send")}
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

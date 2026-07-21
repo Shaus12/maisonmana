@@ -9,10 +9,10 @@ export function StudioPageContent() {
 
   return (
     <section className="bg-paper">
-      <div className="mx-auto max-w-[1440px] px-6 pt-28 pb-10 md:px-12 md:pt-36 md:pb-12">
+      <div className="mx-auto max-w-[1440px] px-5 pb-4 pt-24 md:px-12 md:pb-12 md:pt-36">
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-5">
-            <div className="mb-8">
+            <div className="mb-3 md:mb-8">
               <Link
                 href="/collections"
                 className="inline-flex items-center gap-2 text-[0.875rem] text-ink-mute hover:text-ink transition-colors"
@@ -24,11 +24,11 @@ export function StudioPageContent() {
               </Link>
             </div>
             <p className="section-label">{t("studio_page_label")}</p>
-            <h1 className="display-lat mt-6 text-[2.75rem] leading-[1.05] text-ink md:text-[4.25rem]">
+            <h1 className="display-lat mt-2 text-[2rem] leading-[1.05] text-ink md:mt-6 md:text-[4.25rem]">
               {t("studio_page_heading")}
             </h1>
           </div>
-          <div className="md:col-span-6 md:col-start-7 md:self-end editorial">
+          <div className="hidden md:col-span-6 md:col-start-7 md:block md:self-end editorial">
             <p>{t("studio_page_body")}</p>
           </div>
         </div>

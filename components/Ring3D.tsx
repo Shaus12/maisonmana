@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useMemo, useState, useEffect } from "react";
+import React, { useRef, useMemo, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Float, ContactShadows, PresentationControls } from "@react-three/drei";
+import { Environment, Float, ContactShadows, Lightformer, MeshTransmissionMaterial, PresentationControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { DiamondShape } from "@/lib/pieces";
 import type { MetalOption, JewelryType } from "@/lib/atelier-options";
@@ -25,6 +25,69 @@ function getMetalColor(metalId: string): string {
     case "platinum":    return "#E5E4E2";
     default:            return "#E5B80B";
   }
+}
+
+const METAL_PRESETS: Record<string, { color: string; roughness: number; envMapIntensity: number; clearcoat: number }> = {
+  "yellow-gold": { color: "#E2B53C", roughness: 0.23, envMapIntensity: 2.25, clearcoat: 0.14 },
+  "white-gold":  { color: "#F0EEE9", roughness: 0.24, envMapIntensity: 2.45, clearcoat: 0.1 },
+  "rose-gold":   { color: "#CF8D82", roughness: 0.22, envMapIntensity: 2.25, clearcoat: 0.14 },
+  platinum:       { color: "#E7E8E9", roughness: 0.23, envMapIntensity: 2.4, clearcoat: 0.08 },
+};
+
+function MetalMaterial({ metalId, textured = false, skeleton = false }: { metalId: string; textured?: boolean; skeleton?: boolean }) {
+  const preset = METAL_PRESETS[metalId] ?? {
+    color: getMetalColor(metalId),
+    roughness: 0.18,
+    envMapIntensity: 2.15,
+    clearcoat: 0.18,
+  };
+  return (
+    <meshPhysicalMaterial
+      color={preset.color}
+      metalness={1}
+      roughness={skeleton ? 0.25 : textured ? 0.22 : preset.roughness}
+      envMapIntensity={skeleton ? 1.35 : preset.envMapIntensity}
+      clearcoat={skeleton ? 0.05 : preset.clearcoat}
+      clearcoatRoughness={0.3}
+    />
+  );
+}
+
+function GemMaterial({ color, small = false }: { color: string; small?: boolean }) {
+  if (small) {
+    return <meshPhysicalMaterial color={color} metalness={0} roughness={0.025} transmission={0.96} ior={2.42} thickness={0.08} envMapIntensity={1.65} clearcoat={0.35} />;
+  }
+  return (
+    <MeshTransmissionMaterial
+      color={color}
+      transmission={0.98}
+      roughness={0.015}
+      ior={2.42}
+      thickness={0.32}
+      chromaticAberration={0.012}
+      anisotropy={0.04}
+      distortion={0.015}
+      distortionScale={0.08}
+      temporalDistortion={0}
+      samples={4}
+      resolution={256}
+    />
+  );
+}
+
+function StudioEnvironment({ skeleton }: { skeleton: boolean }) {
+  return (
+    <Environment resolution={128} background={false} frames={1}>
+      {/* A neutral cyclorama fill prevents fully metallic surfaces from
+          reflecting the virtual scene's default black between light cards. */}
+      <color attach="background" args={[skeleton ? "#d2ccc4" : "#a39a90"]} />
+      <Lightformer form="rect" intensity={skeleton ? 3.2 : 4.8} color="#ffffff" scale={[5, 8, 1]} position={[-5, 1, 3]} rotation={[0, 0.55, 0]} />
+      <Lightformer form="rect" intensity={skeleton ? 3.0 : 4.4} color="#fffdfa" scale={[5, 8, 1]} position={[5, 1, 3]} rotation={[0, -0.55, 0]} />
+      <Lightformer form="rect" intensity={skeleton ? 2.6 : 3.8} color="#ffffff" scale={[7, 3, 1]} position={[0, 6, 1]} rotation={[Math.PI / 2, 0, 0]} />
+      <Lightformer form="rect" intensity={1.6} color="#f5f1eb" scale={[3, 3, 1]} position={[0, 0, 5]} />
+      <Lightformer form="rect" intensity={0.5} color="#6f6a64" scale={[1.2, 7, 1]} position={[0, 1, -4]} rotation={[0, Math.PI, 0]} />
+    </Environment>
+  );
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -126,16 +189,7 @@ function Diamond({ size, shape, color, rotation = [0, 0, 0] }: { size: number; s
 
   return (
     <mesh castShadow geometry={geometry} scale={scale} rotation={rotation}>
-      <meshPhysicalMaterial
-        color={color}
-        roughness={0}
-        metalness={0.05}
-        transmission={1.0}
-        ior={2.42}
-        thickness={size}
-        clearcoat={1}
-        clearcoatRoughness={0}
-      />
+      <GemMaterial color={color} />
     </mesh>
   );
 }
@@ -154,7 +208,6 @@ function RingModel({
   diamondColor: string;
   shape: DiamondShape;
 }) {
-  const color = getMetalColor(metalId);
   const size = 0.4 + carat * 0.1;
   const ringRef = useRef<THREE.Group>(null);
   const geometry = useMemo(() => createBandGeometry(band), [band]);
@@ -174,13 +227,7 @@ function RingModel({
     <group ref={ringRef} dispose={null}>
       {/* Band */}
       <mesh castShadow receiveShadow geometry={geometry}>
-        <meshStandardMaterial
-          color={color}
-          metalness={1}
-          roughness={band === "hammered" || band === "vintage-scroll" ? 0.20 : 0.05}
-          envMapIntensity={2}
-          flatShading={band === "hammered"}
-        />
+        <MetalMaterial metalId={metalId} textured={band === "hammered" || band === "vintage-scroll"} skeleton={showSkeleton} />
       </mesh>
 
       {/* Pave stones on band */}
@@ -196,8 +243,8 @@ function RingModel({
               <mesh key={i} position={[px, py, 0]} rotation={[Math.PI / 2, angle, 0]}>
                 <cylinderGeometry args={[0.04, showSkeleton ? 0.04 : 0, 0.02, 8]} />
                 {showSkeleton
-                  ? <meshBasicMaterial color="#111" />
-                  : <meshPhysicalMaterial color="#ffffff" transmission={0.9} ior={2.42} roughness={0} thickness={0.05} />
+                  ? <MetalMaterial metalId={metalId} skeleton />
+                  : <GemMaterial color="#ffffff" small />
                 }
               </mesh>
             );
@@ -217,7 +264,7 @@ function RingModel({
                 rotation={[-x * 0.18, 0, -z * 0.18]}
               >
                 <cylinderGeometry args={[0.025, 0.018, prongHeight]} />
-                <meshStandardMaterial color={color} metalness={1} roughness={0.05} />
+                <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
               </mesh>
             ))
           )
@@ -227,7 +274,7 @@ function RingModel({
         {setting === "bezel" && (
           <mesh position={[0, size * 0.15, 0]}>
             <cylinderGeometry args={[size * 0.68, size * 0.58, size * 0.55, 32]} />
-            <meshStandardMaterial color={color} metalness={1} roughness={0.05} />
+            <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
           </mesh>
         )}
 
@@ -236,7 +283,7 @@ function RingModel({
           <group position={[0, size * 0.5, 0]}>
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <torusGeometry args={[size * 0.58, 0.02, 16, 32]} />
-              <meshStandardMaterial color={color} metalness={1} roughness={0.05} />
+              <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
             </mesh>
             {Array.from({ length: 12 }).map((_, i) => {
               const a = (i / 12) * Math.PI * 2;
@@ -248,8 +295,8 @@ function RingModel({
                 >
                   <cylinderGeometry args={[0.018, showSkeleton ? 0.018 : 0, 0.01, 8]} />
                   {showSkeleton
-                    ? <meshBasicMaterial color="#111" />
-                    : <meshPhysicalMaterial color="#ffffff" transmission={0.9} ior={2.42} roughness={0} thickness={0.05} />
+                    ? <MetalMaterial metalId={metalId} skeleton />
+                    : <GemMaterial color="#ffffff" small />
                   }
                 </mesh>
               );
@@ -269,7 +316,7 @@ function RingModel({
                 {!showSkeleton && (
                   <mesh>
                     <octahedronGeometry args={[size * 0.32, 0]} />
-                    <meshPhysicalMaterial color="#ffffff" transmission={1} ior={2.42} roughness={0} thickness={0.08} />
+                    <GemMaterial color="#ffffff" small />
                   </mesh>
                 )}
                 {[-1, 1].flatMap(sx =>
@@ -280,7 +327,7 @@ function RingModel({
                       rotation={[-sx * 0.18, 0, -sz * 0.18]}
                     >
                       <cylinderGeometry args={[0.014, 0.010, 0.28]} />
-                      <meshStandardMaterial color={color} metalness={1} roughness={0.05} />
+                      <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
                     </mesh>
                   ))
                 )}
@@ -312,7 +359,6 @@ function NecklaceModel({
   diamondColor: string;
   shape: DiamondShape;
 }) {
-  const color = getMetalColor(metalId);
   const size = 0.4 + carat * 0.1;
   const isExtruded = ["pear", "marquise", "heart"].includes(shape);
   const diamondRotation: [number, number, number] = isExtruded
@@ -334,7 +380,7 @@ function NecklaceModel({
       {/* Chain */}
       <mesh castShadow receiveShadow>
         <tubeGeometry args={[chainCurve, 64, 0.016, 8, false]} />
-        <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+        <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
       </mesh>
 
       {/* Pendant Setting */}
@@ -342,13 +388,13 @@ function NecklaceModel({
         {/* Bail Loop */}
         <mesh position={[0, 0.08, -0.02]} rotation={[0, 0, 0]}>
           <torusGeometry args={[0.06, 0.014, 8, 16]} />
-          <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+          <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
         </mesh>
 
         {/* Basket */}
         <mesh position={[0, -0.08, 0]}>
           <cylinderGeometry args={[size * 0.55, size * 0.45, size * 0.25, 16]} />
-          <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+          <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
         </mesh>
 
         {/* Prongs */}
@@ -360,7 +406,7 @@ function NecklaceModel({
               rotation={[-x * 0.1, 0, -z * 0.1]}
             >
               <cylinderGeometry args={[0.018, 0.012, size * 0.55]} />
-              <meshStandardMaterial color={color} metalness={1} roughness={0.05} />
+              <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
             </mesh>
           ))
         )}
@@ -387,14 +433,12 @@ function BraceletModel({
   showSkeleton: boolean;
   diamondColor: string;
 }) {
-  const color = getMetalColor(metalId);
-
   return (
     <group rotation={[Math.PI / 2.3, 0, 0]} position={[0, -0.2, 0]}>
       {/* Bracelet Band */}
       <mesh castShadow receiveShadow>
         <torusGeometry args={[1.35, 0.05, 16, 96]} />
-        <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+        <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
       </mesh>
 
       {/* Tennis Diamonds */}
@@ -408,20 +452,14 @@ function BraceletModel({
             {/* Setting basket */}
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <cylinderGeometry args={[0.065, 0.05, 0.06, 8]} />
-              <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+              <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
             </mesh>
 
             {/* Diamond */}
             {!showSkeleton && (
               <mesh position={[0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry args={[0.055, 0, 0.065, 8]} />
-                <meshPhysicalMaterial
-                  color={diamondColor}
-                  transmission={0.9}
-                  ior={2.42}
-                  roughness={0}
-                  thickness={0.03}
-                />
+                <GemMaterial color={diamondColor} small />
               </mesh>
             )}
           </group>
@@ -444,7 +482,6 @@ function EarringsModel({
   diamondColor: string;
   shape: DiamondShape;
 }) {
-  const color = getMetalColor(metalId);
   const size = 0.4 + carat * 0.1;
   const isExtruded = ["pear", "marquise", "heart"].includes(shape);
   const diamondRotation: [number, number, number] = isExtruded
@@ -460,7 +497,7 @@ function EarringsModel({
               {/* Hoop Ring */}
               <mesh rotation={[0, Math.PI / 2, 0]}>
                 <torusGeometry args={[0.45, 0.035, 12, 48]} />
-                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+                <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
               </mesh>
 
               {/* Front Pavé Diamonds */}
@@ -471,13 +508,7 @@ function EarringsModel({
                 return (
                   <mesh key={idx} position={[0, hy, hx]} rotation={[0, 0, angle]}>
                     <cylinderGeometry args={[0.025, 0, 0.03, 8]} />
-                    <meshPhysicalMaterial
-                      color={diamondColor}
-                      transmission={0.9}
-                      ior={2.42}
-                      roughness={0}
-                      thickness={0.015}
-                    />
+                    <GemMaterial color={diamondColor} small />
                   </mesh>
                 );
               })}
@@ -488,17 +519,17 @@ function EarringsModel({
               {/* backing post */}
               <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -0.15]}>
                 <cylinderGeometry args={[0.012, 0.012, 0.25]} />
-                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+                <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
               </mesh>
               <mesh position={[0, 0, -0.25]}>
                 <cylinderGeometry args={[0.06, 0.06, 0.02]} />
-                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+                <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
               </mesh>
 
               {/* Basket */}
               <mesh position={[0, 0, -0.02]}>
                 <cylinderGeometry args={[size * 0.55, size * 0.45, size * 0.25, 16]} />
-                <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+                <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
               </mesh>
 
               {/* Prongs */}
@@ -510,7 +541,7 @@ function EarringsModel({
                     rotation={[-px * 0.1, 0, -pz * 0.1]}
                   >
                     <cylinderGeometry args={[0.018, 0.012, size * 0.55]} />
-                    <meshStandardMaterial color={color} metalness={1} roughness={0.1} />
+                    <MetalMaterial metalId={metalId} skeleton={showSkeleton} />
                   </mesh>
                 ))
               )}
@@ -573,14 +604,36 @@ export function Ring3D({
   const [arrowRotX, setArrowRotX] = useState(0);
   const STEP = Math.PI / 6; // 30° per tap
 
+  const camera = {
+    ring:     { position: [0, 0.24, 5.8] as [number, number, number], fov: 40 },
+    necklace: { position: [0, 0.05, 5.4] as [number, number, number], fov: 40 },
+    bracelet: { position: [0, 0.05, 5.2] as [number, number, number], fov: 39 },
+    earring:  { position: [0, 0.05, 5.0] as [number, number, number], fov: 39 },
+  }[jewelryType];
+
+  const openingRotation: [number, number, number] = {
+    ring: [0.82, -0.32, 0.03],
+    necklace: [0.08, -0.2, 0],
+    bracelet: [0.12, -0.35, 0.05],
+    earring: [0.08, -0.28, 0],
+  }[jewelryType] as [number, number, number];
+
+  const shadowY = jewelryType === "necklace" ? -1.02 : jewelryType === "earring" ? -0.85 : -1.42;
+  const studioBackground = showSkeleton
+    ? "radial-gradient(circle at 50% 42%, #F6F3EE 0%, #E7E2DA 52%, #D4CDC3 100%)"
+    : "radial-gradient(circle at 50% 42%, #F3EFE8 0%, #DED8CF 55%, #C8C0B5 100%)";
+
   return (
-    <div className="w-[96%] mx-auto h-[40vh] min-h-[300px] md:w-full md:h-[64vh] md:min-h-[440px] relative rounded-xl overflow-hidden bg-[#161314] cursor-grab active:cursor-grabbing shadow-inner">
+    <div
+      className="w-[96%] mx-auto h-[40vh] min-h-[300px] md:w-full md:h-[64vh] md:min-h-[440px] relative rounded-xl overflow-hidden cursor-grab active:cursor-grabbing shadow-inner touch-none overscroll-contain select-none"
+      style={{ background: studioBackground }}
+    >
       {/* Rotation arrow buttons */}
       <button
         type="button"
         onClick={() => setArrowRotY(r => r + STEP)}
         aria-label="Rotate left"
-        className="absolute start-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+        className="absolute start-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
@@ -590,7 +643,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotY(r => r - STEP)}
         aria-label="Rotate right"
-        className="absolute end-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+        className="absolute end-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
@@ -600,7 +653,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotX(r => Math.max(r - STEP, -Math.PI / 3))}
         aria-label="Tilt up"
-        className="absolute top-3 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+        className="absolute top-3 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832l-3.71 3.938a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z" clipRule="evenodd" />
@@ -610,7 +663,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotX(r => Math.min(r + STEP, Math.PI / 3))}
         aria-label="Tilt down"
-        className="absolute bottom-10 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-white/60 hover:text-white/90 hover:bg-white/20 transition-all active:scale-90"
+        className="absolute bottom-10 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -619,7 +672,7 @@ export function Ring3D({
 
       <React.Suspense
         fallback={
-          <div className="absolute inset-0 flex items-center justify-center text-[#E1D1C1]/50 text-sm tracking-widest">
+          <div className="absolute inset-0 flex items-center justify-center text-stone-700/50 text-sm tracking-widest">
             Loading 3D Studio…
           </div>
         }
@@ -628,30 +681,19 @@ export function Ring3D({
           key={jewelryType}
           shadows
           dpr={[1, 1.5]}
-          camera={{
-            position:
-              jewelryType === "ring"
-                ? [0, 0.05, 5.8]
-                : jewelryType === "necklace"
-                ? [0, -0.25, 3.8]
-                : jewelryType === "bracelet"
-                ? [0, -0.1, 5.2]
-                : [0, 0, 4.6], // earring
-            fov: jewelryType === "ring" ? 42 : 38
-          }}
+          gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+          camera={camera}
         >
-          <color attach="background" args={["#161314"]} />
-
-          <ambientLight intensity={0.35} />
-          <spotLight position={[4, 8, 5]}  angle={0.22} penumbra={1} intensity={2.2} castShadow />
-          <spotLight position={[-5, 4, -4]} angle={0.22} penumbra={1} intensity={0.9} color="#E1D1C1" />
+          <ambientLight intensity={showSkeleton ? 0.85 : 0.55} color="#fffaf3" />
+          <directionalLight position={[0, 3, 5]} intensity={showSkeleton ? 0.75 : 0.55} color="#ffffff" />
+          <StudioEnvironment skeleton={showSkeleton} />
 
           <PresentationControls
             global={false}
-            rotation={[0.12, -Math.PI / 4, 0]}
+            rotation={openingRotation}
             polar={[-Math.PI / 3, Math.PI / 3]}
             azimuth={[-Math.PI, Math.PI]}
-            snap={true}
+            snap={false}
           >
             <RotatableGroup rotY={arrowRotY} rotX={arrowRotX}>
             <Float rotationIntensity={0.15} floatIntensity={0.08} speed={1.4}>
@@ -698,18 +740,17 @@ export function Ring3D({
           </PresentationControls>
 
           <ContactShadows
-            position={[0, -1.4, 0]}
-            opacity={0.55}
-            scale={10}
-            blur={2.8}
-            far={4}
-            color="#000000"
+            position={[0, shadowY, 0]}
+            opacity={showSkeleton ? 0.14 : 0.2}
+            scale={7}
+            blur={4.5}
+            far={3.5}
+            color="#756d64"
           />
-          <Environment preset="studio" />
         </Canvas>
       </React.Suspense>
 
-      <div className="absolute bottom-4 left-0 right-0 text-center text-[0.65rem] text-[#E1D1C1]/40 pointer-events-none tracking-[0.2em] uppercase">
+      <div className="absolute bottom-4 left-0 right-0 text-center text-[0.65rem] text-stone-700/45 pointer-events-none tracking-[0.2em] uppercase">
         Drag or use arrows · 3D Studio
       </div>
     </div>

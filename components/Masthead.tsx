@@ -30,7 +30,7 @@ export function Masthead() {
 
   return (
     <header className={`masthead-fixed${showSolid ? " is-scrolled" : ""}`}>
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 md:px-12 md:py-6">
+      <div className={`mx-auto flex max-w-[1440px] items-center justify-between px-6 md:px-12 md:py-6 ${pathname === "/atelier" ? "py-3" : "py-5"}`}>
 
         {/* Wordmark */}
         <Link href="/" className="flex flex-col items-start gap-1">

@@ -1,16 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
 
 export function WhatsAppButton() {
   const { locale } = useLanguage();
+  const pathname = usePathname();
 
   return (
     <a
       href="https://wa.me/972507099933"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full bg-ink px-5 py-3 text-paper shadow-lg border border-rule/20 hover:scale-105 active:scale-95 transition-all duration-[300ms] ease-out group"
+      className={`fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full bg-ink px-5 py-3 text-paper shadow-lg border border-rule/20 hover:scale-105 active:scale-95 transition-all duration-[300ms] ease-out group ${pathname === "/atelier" ? "max-lg:hidden" : ""}`}
       aria-label={locale === "he" ? "התכתבות פרטית בוואטסאפ" : "Private WhatsApp Inquiry"}
     >
       {/* Minimalist WhatsApp SVG Icon */}
