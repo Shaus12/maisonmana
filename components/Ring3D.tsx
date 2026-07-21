@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useMemo, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useEffect, useRef, useMemo, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Float, ContactShadows, Lightformer, MeshTransmissionMaterial, PresentationControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { DiamondShape } from "@/lib/pieces";
@@ -578,6 +578,29 @@ function RotatableGroup({ rotY, rotX, children }: { rotY: number; rotX: number; 
   return <group ref={groupRef}>{children}</group>;
 }
 
+function ResponsiveCamera({
+  compact,
+  position,
+}: {
+  compact: boolean;
+  position: [number, number, number];
+}) {
+  const camera = useThree((state) => state.camera);
+
+  useEffect(() => {
+    if (compact) {
+      camera.position.set(0, position[1] + 0.24, position[2] + 0.25);
+      camera.lookAt(0, position[1] + 0.08, 0);
+    } else {
+      camera.position.set(...position);
+      camera.lookAt(0, position[1], 0);
+    }
+    camera.updateProjectionMatrix();
+  }, [camera, compact, position]);
+
+  return null;
+}
+
 // ─────────────────────────────────────────────────────────────
 // Exported 3D Component
 // ─────────────────────────────────────────────────────────────
@@ -590,6 +613,7 @@ export function Ring3D({
   carat,
   diamondColor = "#ffffff",
   showSkeleton = false,
+  compact = false,
 }: {
   jewelryType?: JewelryType;
   shape: DiamondShape;
@@ -599,17 +623,18 @@ export function Ring3D({
   carat: number;
   diamondColor?: string;
   showSkeleton?: boolean;
+  compact?: boolean;
 }) {
   const [arrowRotY, setArrowRotY] = useState(0);
   const [arrowRotX, setArrowRotX] = useState(0);
   const STEP = Math.PI / 6; // 30° per tap
 
-  const camera = {
+  const camera = useMemo(() => ({
     ring:     { position: [0, 0.24, 5.8] as [number, number, number], fov: 40 },
     necklace: { position: [0, 0.05, 5.4] as [number, number, number], fov: 40 },
     bracelet: { position: [0, 0.05, 5.2] as [number, number, number], fov: 39 },
     earring:  { position: [0, 0.05, 5.0] as [number, number, number], fov: 39 },
-  }[jewelryType];
+  }[jewelryType]), [jewelryType]);
 
   const openingRotation: [number, number, number] = {
     ring: [0.82, -0.32, 0.03],
@@ -625,7 +650,8 @@ export function Ring3D({
 
   return (
     <div
-      className="w-[96%] mx-auto h-[40vh] min-h-[300px] md:w-full md:h-[64vh] md:min-h-[440px] relative rounded-xl overflow-hidden cursor-grab active:cursor-grabbing shadow-inner touch-none overscroll-contain select-none"
+      className="atelier-3d-studio relative mx-auto h-full w-full overflow-hidden rounded-xl shadow-inner cursor-grab active:cursor-grabbing touch-none overscroll-contain select-none"
+      data-compact={compact ? "true" : "false"}
       style={{ background: studioBackground }}
     >
       {/* Rotation arrow buttons */}
@@ -633,7 +659,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotY(r => r + STEP)}
         aria-label="Rotate left"
-        className="absolute start-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
+        className="atelier-rotation-control atelier-rotation-control--left"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
@@ -643,7 +669,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotY(r => r - STEP)}
         aria-label="Rotate right"
-        className="absolute end-3 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
+        className="atelier-rotation-control atelier-rotation-control--right"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
@@ -653,7 +679,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotX(r => Math.max(r - STEP, -Math.PI / 3))}
         aria-label="Tilt up"
-        className="absolute top-3 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
+        className="atelier-rotation-control atelier-rotation-control--up"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832l-3.71 3.938a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z" clipRule="evenodd" />
@@ -663,7 +689,7 @@ export function Ring3D({
         type="button"
         onClick={() => setArrowRotX(r => Math.min(r + STEP, Math.PI / 3))}
         aria-label="Tilt down"
-        className="absolute bottom-10 start-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/45 backdrop-blur-sm border border-stone-700/15 text-stone-700/65 hover:text-stone-900 hover:bg-white/70 transition-all active:scale-90"
+        className="atelier-rotation-control atelier-rotation-control--down"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -684,6 +710,7 @@ export function Ring3D({
           gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
           camera={camera}
         >
+          <ResponsiveCamera compact={compact} position={camera.position} />
           <ambientLight intensity={showSkeleton ? 0.85 : 0.55} color="#fffaf3" />
           <directionalLight position={[0, 3, 5]} intensity={showSkeleton ? 0.75 : 0.55} color="#ffffff" />
           <StudioEnvironment skeleton={showSkeleton} />
@@ -750,7 +777,7 @@ export function Ring3D({
         </Canvas>
       </React.Suspense>
 
-      <div className="absolute bottom-4 left-0 right-0 text-center text-[0.65rem] text-stone-700/45 pointer-events-none tracking-[0.2em] uppercase">
+      <div className="atelier-3d-studio-label absolute bottom-4 left-0 right-0 text-center text-[0.65rem] text-stone-700/45 pointer-events-none tracking-[0.2em] uppercase">
         Drag or use arrows · 3D Studio
       </div>
     </div>

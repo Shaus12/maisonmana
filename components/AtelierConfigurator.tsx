@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
@@ -224,6 +224,24 @@ export function AtelierConfigurator() {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [wizardComplete, setWizardComplete] = useState(false);
   const [showInteractionHint, setShowInteractionHint] = useState(false);
+  const [mobilePreviewCompact, setMobilePreviewCompact] = useState(false);
+  const mobilePreviewThresholdRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const threshold = mobilePreviewThresholdRef.current;
+    if (!threshold || !window.matchMedia("(max-width: 1023px)").matches) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const passedTopEdge = !entry.isIntersecting && entry.boundingClientRect.top < 64;
+        setMobilePreviewCompact((current) => current === passedTopEdge ? current : passedTopEdge);
+      },
+      { rootMargin: "-64px 0px 0px 0px", threshold: 0 },
+    );
+
+    observer.observe(threshold);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (hasSeenAtelierInteractionHint) return;
@@ -552,9 +570,10 @@ export function AtelierConfigurator() {
     <div className="bg-paper">
       <div className="mx-auto max-w-[1440px]">
         <div className={`atelier-composer lg:grid lg:grid-cols-[minmax(0,1.65fr)_minmax(22rem,1fr)] lg:items-start ${wizardComplete ? "is-complete" : ""}`}>
+          <div ref={mobilePreviewThresholdRef} className="atelier-preview-threshold" aria-hidden />
 
           {/* ── LEFT: Sticky 3D Preview ──────────────────────── */}
-          <div className="atelier-preview-region lg:sticky lg:top-[5.5rem] lg:self-start lg:[height:calc(100dvh-5.5rem)]">
+          <div className={`atelier-preview-region lg:sticky lg:top-[5.5rem] lg:self-start lg:[height:calc(100dvh-5.5rem)] ${mobilePreviewCompact && !wizardComplete ? "is-compact" : ""}`}>
             <div className="flex h-full flex-col border-b border-rule lg:border-b-0 lg:border-e">
 
               {/* Mobile: collapse/expand toggle */}
@@ -615,6 +634,7 @@ export function AtelierConfigurator() {
                     carat={carat}
                     diamondColor={FANCY_COLOR_OPTIONS.find(c => c.id === color)?.hex}
                     showSkeleton={showSkeleton}
+                    compact={mobilePreviewCompact && !wizardComplete}
                   />
                   <div key={stageKey} aria-hidden className="stage-crossfade pointer-events-none absolute inset-0 bg-paper/0" />
                   {showInteractionHint && (

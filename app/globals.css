@@ -464,6 +464,67 @@
   animation: atelierInteractionHintIn 220ms var(--ease-quart) both;
 }
 
+.atelier-preview-threshold {
+  display: none;
+}
+
+.atelier-rotation-control {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(68 64 60 / 0.15);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.45);
+  color: rgb(68 64 60 / 0.65);
+  backdrop-filter: blur(4px);
+  transition: color 200ms, background-color 200ms, transform 200ms;
+}
+
+.atelier-rotation-control:hover {
+  background: rgb(255 255 255 / 0.7);
+  color: rgb(28 25 23);
+}
+
+.atelier-rotation-control:active {
+  scale: 0.9;
+}
+
+.atelier-rotation-control--left {
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.atelier-rotation-control--right {
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.atelier-rotation-control--up {
+  left: 50%;
+  top: 0.75rem;
+  transform: translateX(-50%);
+}
+
+.atelier-rotation-control--down {
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 1024px) {
+  .atelier-3d-studio {
+    width: 100%;
+    height: 64vh;
+    min-height: 440px;
+  }
+}
+
 .atelier-preview-stage > div:first-child > div:last-child {
   direction: rtl;
   font-size: 0;
@@ -492,8 +553,19 @@
   }
 
   .atelier-preview-region {
+    position: sticky;
+    top: 4rem;
+    z-index: 20;
     min-height: 0;
     flex: 0 0 auto;
+    background: var(--color-paper);
+  }
+
+  .atelier-preview-threshold {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin-bottom: -1px;
   }
 
   .atelier-preview-collapse {
@@ -517,11 +589,11 @@
   }
 
   .atelier-preview-stage {
-    height: 30vh;
-    height: 30svh;
+    height: clamp(290px, 35svh, 380px);
     min-height: 0;
     flex: 0 0 auto;
     padding: 0.25rem 0.75rem;
+    transition: height 220ms var(--ease-quart);
   }
 
   .atelier-preview-stage > div:first-child {
@@ -531,12 +603,49 @@
   }
 
   .atelier-composer.is-complete .atelier-preview-stage {
-    height: 30vh;
-    height: 30svh;
+    height: clamp(290px, 35svh, 380px);
+  }
+
+  .atelier-preview-region.is-compact .atelier-preview-stage {
+    height: clamp(175px, 22svh, 205px);
+  }
+
+  .atelier-3d-studio-label {
+    display: none;
+  }
+
+  .atelier-rotation-control {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .atelier-rotation-control--left {
+    left: 0.75rem;
+  }
+
+  .atelier-rotation-control--right {
+    right: 0.75rem;
+  }
+
+  .atelier-rotation-control--up {
+    top: 0.75rem;
+  }
+
+  .atelier-rotation-control--down {
+    bottom: 0.75rem;
+  }
+
+  .atelier-preview-region.is-compact .atelier-rotation-control svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .atelier-preview-region.is-compact .atelier-interaction-hint {
+    display: none;
   }
 
   .atelier-interaction-hint {
-    bottom: 3.75rem;
+    bottom: 4.25rem;
     max-width: calc(100% - 6rem);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -700,5 +809,9 @@
   .atelier-interaction-hint {
     animation: none;
     transform: translate(-50%, 0);
+  }
+
+  .atelier-preview-stage {
+    transition: none;
   }
 }
