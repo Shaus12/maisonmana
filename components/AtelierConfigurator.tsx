@@ -841,7 +841,7 @@ export function AtelierConfigurator() {
 
                 {activeStepId === "setting" && (
                   <>
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="grid grid-cols-2 gap-3">
                       {(jewelryType === "earring" ? EARRING_SETTING_OPTIONS : SETTING_OPTIONS).map((opt) => {
                         const selected = jewelryType === "earring" ? earringSetting.id === opt.id : setting.id === opt.id;
                         return (
@@ -914,7 +914,7 @@ export function AtelierConfigurator() {
                   <div className="space-y-8">
                     <div>
                       <p className="section-label mb-3">{locale === "he" ? "מקור היהלום" : "Diamond Origin"}</p>
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <div className="grid grid-cols-2 gap-3">
                         {(["lab-grown", "natural"] as const).map((id) => (
                           <Pill key={id} selected={origin === id} onClick={() => setOrigin(id)} className="min-h-24 w-full text-start">
                             <span className="block pe-4">
