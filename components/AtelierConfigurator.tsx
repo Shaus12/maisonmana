@@ -967,7 +967,7 @@ export function AtelierConfigurator() {
                 >
                   {wizardCopy.previous}
                 </button>
-                <button type="button" dir={locale === "he" ? "rtl" : "ltr"} onClick={goToNextStep} className="brass-disc brass-disc--solid min-h-14 w-full justify-center whitespace-nowrap text-[0.9375rem] active:scale-[0.98]">
+                <button type="button" dir={locale === "he" ? "rtl" : "ltr"} onClick={goToNextStep} className="brass-disc brass-disc--solid min-h-12 w-full justify-center whitespace-nowrap text-[0.875rem] lg:min-h-14 lg:text-[0.9375rem] active:scale-[0.98]">
                   {isFinalStep ? wizardCopy.finish : wizardCopy.next}
                 </button>
               </nav>
@@ -1032,7 +1032,7 @@ function MobileOptionPager({
         >
           ‹
         </button>
-        <div className="flex items-center gap-2" aria-label={`${page + 1} / ${pageCount}`}>
+        <div className="flex items-center" aria-label={`${page + 1} / ${pageCount}`}>
           {Array.from({ length: pageCount }, (_, index) => (
             <button
               key={index}
@@ -1040,8 +1040,13 @@ function MobileOptionPager({
               onClick={() => changePage(index)}
               aria-label={`${locale === "he" ? "עמוד" : "Page"} ${index + 1}`}
               aria-current={page === index ? "page" : undefined}
-              className={`h-2.5 w-2.5 rounded-full border border-ink-soft ${page === index ? "bg-ink-soft" : "bg-transparent"}`}
-            />
+              className="atelier-page-dot flex h-8 w-8 items-center justify-center"
+            >
+              <span
+                aria-hidden
+                className={`block h-2 w-2 rounded-full border border-ink-soft transition-[width,background-color] duration-200 ${page === index ? "w-5 bg-ink-soft" : "bg-transparent"}`}
+              />
+            </button>
           ))}
         </div>
         <button

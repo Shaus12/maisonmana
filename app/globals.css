@@ -384,6 +384,16 @@
 }
 .is-scrolled .masthead-mobile-btn { color: oklch(0.94 0.018 82); }
 
+@media (max-width: 767px) {
+  .masthead-fixed {
+    background: oklch(0.14 0.006 75 / 0.98);
+    border-bottom-color: oklch(0.30 0.010 75 / 0.6);
+    box-shadow: 0 0.5rem 1.5rem oklch(0.10 0.006 75 / 0.12);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+}
+
 /* ─── Scroll reveal system ───────────────────────────────────────────── */
 .reveal {
   opacity: 0;
@@ -707,6 +717,11 @@
     animation: atelierWizardStepIn 180ms var(--ease-quart) both;
   }
 
+  .atelier-option-pager .atelier-page-dot {
+    min-height: 2rem;
+    padding-block: 0;
+  }
+
   .atelier-options-scroll button {
     min-height: 44px;
     padding-block: 0.65rem;
@@ -732,7 +747,8 @@
     z-index: 30;
     flex: 0 0 auto;
     margin-top: 0;
-    padding-top: 0.6rem;
+    column-gap: 0.75rem;
+    padding-top: 0.4rem;
     padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
     background: var(--color-paper);
     box-shadow: 0 -0.5rem 1rem var(--color-paper);
@@ -740,6 +756,10 @@
 
   .atelier-wizard-nav button {
     min-height: 48px;
+  }
+
+  .atelier-wizard-nav .brass-disc {
+    padding-block: 0.625rem;
   }
 
   .atelier-completion-panel {
