@@ -233,10 +233,10 @@ export function AtelierConfigurator() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const passedTopEdge = !entry.isIntersecting && entry.boundingClientRect.top < 64;
+        const passedTopEdge = !entry.isIntersecting && entry.boundingClientRect.top < 320;
         setMobilePreviewCompact((current) => current === passedTopEdge ? current : passedTopEdge);
       },
-      { rootMargin: "-64px 0px 0px 0px", threshold: 0 },
+      { rootMargin: "-320px 0px 0px 0px", threshold: 0 },
     );
 
     observer.observe(threshold);
@@ -570,7 +570,26 @@ export function AtelierConfigurator() {
     <div className="bg-paper">
       <div className="mx-auto max-w-[1440px]">
         <div className={`atelier-composer lg:grid lg:grid-cols-[minmax(0,1.65fr)_minmax(22rem,1fr)] lg:items-start ${wizardComplete ? "is-complete" : ""}`}>
-          <div ref={mobilePreviewThresholdRef} className="atelier-preview-threshold" aria-hidden />
+          {!wizardComplete && (
+            <header className="atelier-mobile-progress" aria-label={locale === "he" ? "התקדמות בעיצוב" : "Design progress"}>
+              <p className="text-[0.875rem] font-medium tracking-[0.06em] text-ink-soft" aria-live="polite">
+                {wizardCopy.step} {activeStepIndex + 1} {wizardCopy.of} {visibleStepIds.length}
+              </p>
+              <div
+                className="mt-2 h-0.5 overflow-hidden bg-rule"
+                role="progressbar"
+                aria-label={`${wizardCopy.step} ${activeStepIndex + 1} ${wizardCopy.of} ${visibleStepIds.length}`}
+                aria-valuemin={1}
+                aria-valuemax={visibleStepIds.length}
+                aria-valuenow={activeStepIndex + 1}
+              >
+                <div
+                  className="h-full bg-ink-soft/70 transition-[width] duration-300 ease-out motion-reduce:transition-none"
+                  style={{ width: `${((activeStepIndex + 1) / visibleStepIds.length) * 100}%` }}
+                />
+              </div>
+            </header>
+          )}
 
           {/* ── LEFT: Sticky 3D Preview ──────────────────────── */}
           <div className={`atelier-preview-region lg:sticky lg:top-[5.5rem] lg:self-start lg:[height:calc(100dvh-5.5rem)] ${mobilePreviewCompact && !wizardComplete ? "is-compact" : ""}`}>
@@ -622,7 +641,7 @@ export function AtelierConfigurator() {
 
                 {/* 3D stage */}
                 <div
-                  className="atelier-preview-stage relative min-h-0 flex-1 overflow-hidden px-4 py-2 [min-height:220px] lg:[min-height:0] lg:[&>div:first-child]:rounded-b-none"
+                  className="atelier-preview-stage relative min-h-0 flex-1 overflow-hidden px-4 py-2 lg:[&>div:first-child]:rounded-b-none"
                   onPointerDownCapture={dismissInteractionHint}
                 >
                   <Ring3D
@@ -674,6 +693,7 @@ export function AtelierConfigurator() {
               </div>
             </div>
           </div>
+          <div ref={mobilePreviewThresholdRef} className="atelier-preview-threshold" aria-hidden />
 
           {/* ── RIGHT: Step-by-step controls ──────────────────── */}
           <div className="atelier-controls-region px-6 pb-20 pt-8 sm:px-8 lg:min-h-[calc(100dvh-5.5rem)] lg:border-s lg:border-rule lg:px-10 lg:pb-28 lg:pt-10 xl:px-12">
@@ -733,11 +753,11 @@ export function AtelierConfigurator() {
             ) : (
             <section aria-labelledby="atelier-step-title" className="atelier-wizard-panel mx-auto flex min-h-[34rem] max-w-[34rem] flex-col">
               <header className="atelier-step-header mb-9 text-start">
-                <p className="text-[0.875rem] font-medium tracking-[0.06em] text-ink-soft" aria-live="polite">
+                <p className="atelier-desktop-step-count text-[0.875rem] font-medium tracking-[0.06em] text-ink-soft" aria-live="polite">
                   {wizardCopy.step} {activeStepIndex + 1} {wizardCopy.of} {visibleStepIds.length}
                 </p>
                 <div
-                  className="mt-4 h-0.5 overflow-hidden bg-rule"
+                  className="atelier-desktop-progress mt-4 h-0.5 overflow-hidden bg-rule"
                   role="progressbar"
                   aria-label={`${wizardCopy.step} ${activeStepIndex + 1} ${wizardCopy.of} ${visibleStepIds.length}`}
                   aria-valuemin={1}
@@ -751,7 +771,7 @@ export function AtelierConfigurator() {
                 </div>
                 {breadcrumbItems.length > 0 && (
                   <div
-                    className="mt-3 flex flex-wrap gap-1.5"
+                    className="atelier-desktop-breadcrumbs mt-3 flex flex-wrap gap-1.5"
                     dir={locale === "he" ? "rtl" : "ltr"}
                     aria-label={locale === "he" ? "הבחירות שהושלמו" : "Completed selections"}
                   >

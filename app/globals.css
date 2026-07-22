@@ -468,6 +468,10 @@
   display: none;
 }
 
+.atelier-mobile-progress {
+  display: none;
+}
+
 .atelier-rotation-control {
   position: absolute;
   z-index: 10;
@@ -539,6 +543,8 @@
 
 @media (max-width: 1023px) {
   .atelier-composer {
+    --atelier-mobile-header-height: 4rem;
+    --atelier-preview-toggle-height: 2.25rem;
     display: flex;
     min-height: calc(100svh - 4rem);
     flex-direction: column;
@@ -554,10 +560,31 @@
 
   .atelier-preview-region {
     position: sticky;
-    top: 4rem;
+    top: var(--atelier-mobile-header-height);
     z-index: 20;
+    height: calc(var(--atelier-preview-toggle-height) + clamp(300px, 36svh, 390px));
     min-height: 0;
     flex: 0 0 auto;
+    background: var(--color-paper);
+    border-bottom: 1px solid var(--color-rule);
+    box-shadow: 0 0.5rem 1rem var(--color-paper);
+    transition: height 220ms var(--ease-quart);
+    isolation: isolate;
+  }
+
+  .atelier-preview-region.is-compact {
+    height: calc(var(--atelier-preview-toggle-height) + clamp(190px, 23svh, 220px));
+  }
+
+  .atelier-preview-region > div {
+    height: 100%;
+    background: var(--color-paper);
+  }
+
+  .atelier-mobile-progress {
+    display: block;
+    flex: 0 0 auto;
+    padding: 0.55rem 1rem 0.65rem;
     background: var(--color-paper);
   }
 
@@ -574,12 +601,15 @@
 
   .atelier-preview-content {
     display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
     max-height: none !important;
     flex-direction: column;
     overflow: visible;
   }
 
   .atelier-preview-mode {
+    height: var(--atelier-preview-toggle-height);
     flex: 0 0 auto;
     padding-block: 0.35rem;
   }
@@ -589,11 +619,10 @@
   }
 
   .atelier-preview-stage {
-    height: clamp(290px, 35svh, 380px);
+    height: auto;
     min-height: 0;
     flex: 0 0 auto;
     padding: 0.25rem 0.75rem;
-    transition: height 220ms var(--ease-quart);
   }
 
   .atelier-preview-stage > div:first-child {
@@ -603,11 +632,11 @@
   }
 
   .atelier-composer.is-complete .atelier-preview-stage {
-    height: clamp(290px, 35svh, 380px);
+    height: auto;
   }
 
   .atelier-preview-region.is-compact .atelier-preview-stage {
-    height: clamp(175px, 22svh, 205px);
+    height: auto;
   }
 
   .atelier-3d-studio-label {
@@ -666,6 +695,12 @@
     margin-bottom: 0.55rem;
   }
 
+  .atelier-desktop-step-count,
+  .atelier-desktop-progress,
+  .atelier-desktop-breadcrumbs {
+    display: none;
+  }
+
   .atelier-step-header > [role="progressbar"] {
     margin-top: 0.35rem;
   }
@@ -696,7 +731,7 @@
     min-height: auto;
     overflow-x: hidden;
     overflow-y: visible;
-    padding: 0.2rem 0.2rem 1rem;
+    padding: 0.2rem 0.2rem max(5.5rem, calc(4.75rem + env(safe-area-inset-bottom)));
   }
 
   .atelier-options-scroll button {
@@ -721,7 +756,7 @@
   .atelier-wizard-nav {
     position: sticky;
     bottom: 0;
-    z-index: 10;
+    z-index: 30;
     flex: 0 0 auto;
     margin-top: 0;
     padding-top: 0.6rem;
@@ -812,6 +847,10 @@
   }
 
   .atelier-preview-stage {
+    transition: none;
+  }
+
+  .atelier-preview-region {
     transition: none;
   }
 }
