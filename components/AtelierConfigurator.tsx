@@ -224,24 +224,7 @@ export function AtelierConfigurator() {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [wizardComplete, setWizardComplete] = useState(false);
   const [showInteractionHint, setShowInteractionHint] = useState(false);
-  const [mobilePreviewCompact, setMobilePreviewCompact] = useState(false);
-  const mobilePreviewThresholdRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const threshold = mobilePreviewThresholdRef.current;
-    if (!threshold || !window.matchMedia("(max-width: 1023px)").matches) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const passedTopEdge = !entry.isIntersecting && entry.boundingClientRect.top < 320;
-        setMobilePreviewCompact((current) => current === passedTopEdge ? current : passedTopEdge);
-      },
-      { rootMargin: "-320px 0px 0px 0px", threshold: 0 },
-    );
-
-    observer.observe(threshold);
-    return () => observer.disconnect();
-  }, []);
+  const [shapePage, setShapePage] = useState(0);
 
   useEffect(() => {
     if (hasSeenAtelierInteractionHint) return;
@@ -357,6 +340,14 @@ export function AtelierConfigurator() {
   const wizardCopy = WIZARD_COPY[locale];
   const isFirstStep = activeStepIndex === 0;
   const isFinalStep = activeStepIndex === visibleStepIds.length - 1;
+  const shapePageCount = Math.ceil(SHAPE_OPTIONS.length / 6);
+  const visibleMobileShapes = SHAPE_OPTIONS.slice(shapePage * 6, shapePage * 6 + 6);
+
+  useEffect(() => {
+    if (activeStepId !== "shape") return;
+    const selectedIndex = SHAPE_OPTIONS.findIndex((option) => option.id === shape.id);
+    setShapePage(Math.max(0, Math.floor(selectedIndex / 6)));
+  }, [activeStepId, shape.id]);
   const breadcrumbItems = visibleStepIds
     .slice(0, wizardComplete ? activeStepIndex + 1 : activeStepIndex)
     .flatMap((stepId) => {
@@ -592,7 +583,7 @@ export function AtelierConfigurator() {
           )}
 
           {/* ── LEFT: Sticky 3D Preview ──────────────────────── */}
-          <div className={`atelier-preview-region lg:sticky lg:top-[5.5rem] lg:self-start lg:[height:calc(100dvh-5.5rem)] ${mobilePreviewCompact && !wizardComplete ? "is-compact" : ""}`}>
+          <div className="atelier-preview-region lg:sticky lg:top-[5.5rem] lg:self-start lg:[height:calc(100dvh-5.5rem)]">
             <div className="flex h-full flex-col border-b border-rule lg:border-b-0 lg:border-e">
 
               {/* Mobile: collapse/expand toggle */}
@@ -653,7 +644,6 @@ export function AtelierConfigurator() {
                     carat={carat}
                     diamondColor={FANCY_COLOR_OPTIONS.find(c => c.id === color)?.hex}
                     showSkeleton={showSkeleton}
-                    compact={mobilePreviewCompact && !wizardComplete}
                   />
                   <div key={stageKey} aria-hidden className="stage-crossfade pointer-events-none absolute inset-0 bg-paper/0" />
                   {showInteractionHint && (
@@ -693,8 +683,6 @@ export function AtelierConfigurator() {
               </div>
             </div>
           </div>
-          <div ref={mobilePreviewThresholdRef} className="atelier-preview-threshold" aria-hidden />
-
           {/* ── RIGHT: Step-by-step controls ──────────────────── */}
           <div className="atelier-controls-region px-6 pb-20 pt-8 sm:px-8 lg:min-h-[calc(100dvh-5.5rem)] lg:border-s lg:border-rule lg:px-10 lg:pb-28 lg:pt-10 xl:px-12">
             {wizardComplete ? (
@@ -809,7 +797,7 @@ export function AtelierConfigurator() {
 
                 {activeStepId === "shape" && (
                   <>
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,7rem),1fr))] gap-3">
+                    <div className="hidden gap-3 lg:grid lg:grid-cols-[repeat(auto-fit,minmax(min(100%,7rem),1fr))]">
                       {SHAPE_OPTIONS.map((opt) => (
                         <button
                           key={opt.id}
@@ -824,6 +812,29 @@ export function AtelierConfigurator() {
                         </button>
                       ))}
                     </div>
+                    <MobileOptionPager
+                      page={shapePage}
+                      pageCount={shapePageCount}
+                      onPageChange={setShapePage}
+                      locale={locale}
+                      label={locale === "he" ? "עמודי צורות יהלום" : "Diamond shape pages"}
+                    >
+                      <div className="grid grid-cols-3 gap-2.5">
+                        {visibleMobileShapes.map((opt) => (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            onClick={() => setShape(opt)}
+                            aria-pressed={shape.id === opt.id}
+                            className={`relative flex min-h-24 flex-col items-center justify-center gap-2 border px-2 py-3 text-center transition-[border-color,background-color,color,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] ${shape.id === opt.id ? "border-ink bg-paper-deep text-ink" : "border-rule text-ink-mute"}`}
+                          >
+                            <SelectionIndicator selected={shape.id === opt.id} />
+                            <ShapeIcon shape={opt.id} />
+                            <span className="text-[0.75rem] font-medium leading-tight">{locale === "he" ? opt.he : opt.en}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </MobileOptionPager>
                     <p className="mt-4 text-[0.8125rem] leading-relaxed text-ink-mute">{locale === "he" ? shape.description : shape.descriptionEn}</p>
                   </>
                 )}
@@ -966,6 +977,83 @@ export function AtelierConfigurator() {
         </div>
       </div>
 
+    </div>
+  );
+}
+
+function MobileOptionPager({
+  page,
+  pageCount,
+  onPageChange,
+  locale,
+  label,
+  children,
+}: {
+  page: number;
+  pageCount: number;
+  onPageChange: (page: number) => void;
+  locale: "he" | "en";
+  label: string;
+  children: React.ReactNode;
+}) {
+  const touchStartX = useRef<number | null>(null);
+  const previousLabel = locale === "he" ? "עמוד קודם" : "Previous page";
+  const nextLabel = locale === "he" ? "עמוד הבא" : "Next page";
+
+  function changePage(nextPage: number) {
+    onPageChange(Math.max(0, Math.min(pageCount - 1, nextPage)));
+  }
+
+  return (
+    <div
+      className="atelier-option-pager lg:hidden"
+      aria-label={label}
+      onTouchStart={(event) => {
+        touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+      }}
+      onTouchEnd={(event) => {
+        if (touchStartX.current === null) return;
+        const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
+        const delta = touchStartX.current - endX;
+        touchStartX.current = null;
+        if (Math.abs(delta) < 40) return;
+        const pageDirection = locale === "he" ? -Math.sign(delta) : Math.sign(delta);
+        changePage(page + pageDirection);
+      }}
+    >
+      <div key={page} className="atelier-option-page">{children}</div>
+      <div className="mt-2.5 flex items-center justify-center gap-3" dir="ltr">
+        <button
+          type="button"
+          onClick={() => changePage(page - 1)}
+          disabled={page === 0}
+          aria-label={previousLabel}
+          className="flex h-11 w-11 items-center justify-center text-lg text-ink-soft disabled:opacity-25"
+        >
+          ‹
+        </button>
+        <div className="flex items-center gap-2" aria-label={`${page + 1} / ${pageCount}`}>
+          {Array.from({ length: pageCount }, (_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => changePage(index)}
+              aria-label={`${locale === "he" ? "עמוד" : "Page"} ${index + 1}`}
+              aria-current={page === index ? "page" : undefined}
+              className={`h-2.5 w-2.5 rounded-full border border-ink-soft ${page === index ? "bg-ink-soft" : "bg-transparent"}`}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => changePage(page + 1)}
+          disabled={page === pageCount - 1}
+          aria-label={nextLabel}
+          className="flex h-11 w-11 items-center justify-center text-lg text-ink-soft disabled:opacity-25"
+        >
+          ›
+        </button>
+      </div>
     </div>
   );
 }

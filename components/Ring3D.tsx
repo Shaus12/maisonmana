@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useMemo, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import React, { useRef, useMemo, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Float, ContactShadows, Lightformer, MeshTransmissionMaterial, PresentationControls } from "@react-three/drei";
 import * as THREE from "three";
 import type { DiamondShape } from "@/lib/pieces";
@@ -578,29 +578,6 @@ function RotatableGroup({ rotY, rotX, children }: { rotY: number; rotX: number; 
   return <group ref={groupRef}>{children}</group>;
 }
 
-function ResponsiveCamera({
-  compact,
-  position,
-}: {
-  compact: boolean;
-  position: [number, number, number];
-}) {
-  const camera = useThree((state) => state.camera);
-
-  useEffect(() => {
-    if (compact) {
-      camera.position.set(0, position[1] + 0.24, position[2] + 0.25);
-      camera.lookAt(0, position[1] + 0.08, 0);
-    } else {
-      camera.position.set(...position);
-      camera.lookAt(0, position[1], 0);
-    }
-    camera.updateProjectionMatrix();
-  }, [camera, compact, position]);
-
-  return null;
-}
-
 // ─────────────────────────────────────────────────────────────
 // Exported 3D Component
 // ─────────────────────────────────────────────────────────────
@@ -613,7 +590,6 @@ export function Ring3D({
   carat,
   diamondColor = "#ffffff",
   showSkeleton = false,
-  compact = false,
 }: {
   jewelryType?: JewelryType;
   shape: DiamondShape;
@@ -623,7 +599,6 @@ export function Ring3D({
   carat: number;
   diamondColor?: string;
   showSkeleton?: boolean;
-  compact?: boolean;
 }) {
   const [arrowRotY, setArrowRotY] = useState(0);
   const [arrowRotX, setArrowRotX] = useState(0);
@@ -651,7 +626,6 @@ export function Ring3D({
   return (
     <div
       className="atelier-3d-studio relative mx-auto h-full w-full overflow-hidden rounded-xl shadow-inner cursor-grab active:cursor-grabbing touch-none overscroll-contain select-none"
-      data-compact={compact ? "true" : "false"}
       style={{ background: studioBackground }}
     >
       {/* Rotation arrow buttons */}
@@ -710,7 +684,6 @@ export function Ring3D({
           gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
           camera={camera}
         >
-          <ResponsiveCamera compact={compact} position={camera.position} />
           <ambientLight intensity={showSkeleton ? 0.85 : 0.55} color="#fffaf3" />
           <directionalLight position={[0, 3, 5]} intensity={showSkeleton ? 0.75 : 0.55} color="#ffffff" />
           <StudioEnvironment skeleton={showSkeleton} />
