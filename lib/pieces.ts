@@ -27,6 +27,7 @@ export type Metal = "yellow-gold" | "white-gold" | "rose-gold" | "platinum";
 
 export type Setting =
   | "solitaire"
+  | "halo"
   | "three-stone"
   | "hidden-halo"
   | "pave"

@@ -535,53 +535,109 @@
   display: none;
 }
 
-.atelier-rotation-control {
+/* ── Jewel Studio stage controls ─────────────────────────── */
+.atelier-studio-views {
   position: absolute;
+  inset-inline: 0;
+  top: 0.75rem;
   z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+.atelier-studio-chip {
+  pointer-events: auto;
+  min-height: 2rem;
+  border: 1px solid rgb(68 64 60 / 0.14);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.5);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  color: var(--color-ink-mute);
+  backdrop-filter: blur(6px);
+  transition: color 200ms, background-color 200ms, border-color 200ms;
+}
+
+.atelier-studio-chip:hover {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.75);
+}
+
+.atelier-studio-chip.is-active {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.atelier-studio-chip:focus-visible,
+.atelier-studio-action:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 2px;
+}
+
+.atelier-studio-footer {
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.atelier-studio-size {
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.55);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.75rem;
+  color: var(--color-ink);
+  backdrop-filter: blur(6px);
+}
+
+.atelier-studio-action {
+  pointer-events: auto;
   display: flex;
   width: 2.5rem;
   height: 2.5rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(68 64 60 / 0.15);
+  border: 1px solid rgb(68 64 60 / 0.14);
   border-radius: 9999px;
-  background: rgb(255 255 255 / 0.45);
-  color: rgb(68 64 60 / 0.65);
-  backdrop-filter: blur(4px);
-  transition: color 200ms, background-color 200ms, transform 200ms;
+  background: rgb(255 255 255 / 0.55);
+  color: var(--color-ink-soft);
+  backdrop-filter: blur(6px);
+  transition: color 200ms, background-color 200ms, transform 150ms;
 }
 
-.atelier-rotation-control:hover {
-  background: rgb(255 255 255 / 0.7);
-  color: rgb(28 25 23);
+.atelier-studio-action:hover {
+  background: rgb(255 255 255 / 0.85);
+  color: var(--color-ink);
 }
 
-.atelier-rotation-control:active {
-  scale: 0.9;
+.atelier-studio-action:active {
+  transform: scale(0.94);
 }
 
-.atelier-rotation-control--left {
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
+@keyframes atelierToastIn {
+  from { opacity: 0; transform: translate(-50%, 0.4rem); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-.atelier-rotation-control--right {
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.atelier-rotation-control--up {
+.atelier-studio-toast {
+  position: absolute;
+  bottom: 4rem;
   left: 50%;
-  top: 0.75rem;
-  transform: translateX(-50%);
-}
-
-.atelier-rotation-control--down {
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  z-index: 11;
+  border-radius: 9999px;
+  background: rgb(28 25 23 / 0.82);
+  padding: 0.45rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-paper);
+  animation: atelierToastIn 200ms var(--ease-quart) both;
 }
 
 @media (min-width: 1024px) {
@@ -590,18 +646,6 @@
     height: 64vh;
     min-height: 440px;
   }
-}
-
-.atelier-preview-stage > div:first-child > div:last-child {
-  direction: rtl;
-  font-size: 0;
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-.atelier-preview-stage > div:first-child > div:last-child::after {
-  content: "גררו כדי לסובב את התכשיט";
-  font-size: 0.75rem;
 }
 
 @media (max-width: 1023px) {
@@ -662,7 +706,7 @@
   }
 
   .atelier-preview-stage {
-    height: clamp(270px, 32svh, 340px);
+    height: clamp(300px, 40svh, 420px);
     min-height: 0;
     flex: 0 0 auto;
     padding: 0.25rem 0.75rem;
@@ -675,38 +719,22 @@
   }
 
   .atelier-composer.is-complete .atelier-preview-stage {
-    height: clamp(270px, 32svh, 340px);
+    height: clamp(300px, 40svh, 420px);
   }
 
-  .atelier-3d-studio-label {
-    display: none;
+  .atelier-studio-views {
+    top: 0.5rem;
   }
 
-  .atelier-rotation-control {
-    width: 2.75rem;
-    height: 2.75rem;
+  .atelier-studio-chip {
+    min-height: 1.85rem;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.6875rem;
   }
 
-  .atelier-rotation-control--left {
-    left: 0.75rem;
-  }
-
-  .atelier-rotation-control--right {
-    right: 0.75rem;
-  }
-
-  .atelier-rotation-control--up {
-    right: 0.75rem;
-    left: auto;
-    top: 0.75rem;
-    transform: none;
-  }
-
-  .atelier-rotation-control--down {
-    right: 0.75rem;
-    left: auto;
-    bottom: 0.75rem;
-    transform: none;
+  .atelier-studio-footer {
+    inset-inline: 0.5rem;
+    bottom: 0.5rem;
   }
 
   .atelier-interaction-hint {

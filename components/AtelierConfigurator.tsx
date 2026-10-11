@@ -6,17 +6,30 @@ import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
 import { submitInquiry, type InquiryState } from "@/app/inquiry/actions";
 import { AtelierRenderFlow } from "./AtelierRenderFlow";
+import {
+  decodeDesign,
+  encodeDesign,
+  formatGemSize,
+  gemDimensions,
+  lineBraceletLayout,
+  DEFAULT_RING_SIZE,
+  RING_SIZES,
+  type JewelDesign,
+  type StudioHandle,
+  type StudioView,
+} from "@/lib/jewel-studio/core";
 
-const Ring3D = dynamic(() => import("./Ring3D").then((mod) => mod.Ring3D), {
+const JewelStudio = dynamic(() => import("@/lib/jewel-studio/JewelStudio").then((mod) => mod.JewelStudio), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.2em] text-ink-mute">
-      Loading 3D preview...
+    <div className="flex h-full w-full items-center justify-center bg-[#efeae3] text-xs tracking-[0.2em] text-ink-mute">
+      <span className="animate-pulse">◇</span>
     </div>
   ),
 });
 import {
   SETTING_OPTIONS,
+  PENDANT_SETTING_OPTIONS,
   SHAPE_OPTIONS,
   METAL_OPTIONS,
   BAND_OPTIONS,
@@ -26,13 +39,13 @@ import {
   FANCY_COLOR_OPTIONS,
   estimatePriceILS,
   type SettingOption,
+  type PendantSettingOption,
   type ShapeOption,
   type MetalOption,
   type BandOption,
   type JewelryType,
   type FancyColorOption,
 } from "@/lib/atelier-options";
-import { formatPriceILS } from "@/lib/format";
 
 // ── Earring setting options ──────────────────────────────────
 const EARRING_SETTING_OPTIONS = [
@@ -204,6 +217,43 @@ const COMPLETION_COPY = {
   },
 } as const;
 
+const STUDIO_COPY = {
+  he: {
+    views: { hero: "מבט מלא", front: "חזית", side: "פרופיל", top: "מלמעלה" } as Record<StudioView, string>,
+    viewsLabel: "זווית צפייה",
+    stone: "גודל האבן",
+    mm: "מ״מ",
+    stones: "יהלומים",
+    save: "שמירת תמונה",
+    share: "שיתוף העיצוב",
+    copied: "הקישור הועתק",
+    shareTitle: "העיצוב שלי ב־Maison MANA",
+    hint: "גררו לסיבוב · צביטה לזום",
+    ringSize: "מידת טבעת (מידה אירופאית)",
+    ringSizeUnknown: "עדיין לא ידוע — נמדוד בפגישה",
+    ringSizeRow: "מידת טבעת",
+    designLink: "קישור לעיצוב",
+  },
+  en: {
+    views: { hero: "Hero", front: "Front", side: "Profile", top: "Top" } as Record<StudioView, string>,
+    viewsLabel: "Viewing angle",
+    stone: "Stone size",
+    mm: "mm",
+    stones: "diamonds",
+    save: "Save image",
+    share: "Share design",
+    copied: "Link copied",
+    shareTitle: "My Maison MANA design",
+    hint: "Drag to rotate · pinch to zoom",
+    ringSize: "Ring size (EU)",
+    ringSizeUnknown: "Not sure yet — we'll measure at the meeting",
+    ringSizeRow: "Ring size",
+    designLink: "Design link",
+  },
+} as const;
+
+const STUDIO_VIEWS: StudioView[] = ["hero", "front", "side", "top"];
+
 export function AtelierConfigurator() {
   const { t, locale } = useLanguage();
   const [leadState, leadAction] = useActionState(submitInquiry, initialInquiryState);
@@ -217,6 +267,13 @@ export function AtelierConfigurator() {
   const [clarity, setClarity]         = useState<typeof CLARITY_OPTIONS[number]["value"]>("VS1");
   const [metal, setMetal]             = useState<MetalOption>(METAL_OPTIONS[3]);
   const [band, setBand]               = useState<BandOption>(BAND_OPTIONS[0]);
+  const [pendantSetting, setPendantSetting] = useState<PendantSettingOption>(PENDANT_SETTING_OPTIONS[0]);
+  const [ringSize, setRingSize]       = useState<number | null>(null);
+  const [studioView, setStudioView]   = useState<StudioView>("hero");
+  const [shareNotice, setShareNotice] = useState(false);
+  const [designLink, setDesignLink]   = useState("");
+  const [urlReady, setUrlReady]       = useState(false);
+  const studioRef = useRef<StudioHandle>(null);
   const [showAllBands, setShowAllBands] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(true);
@@ -244,6 +301,85 @@ export function AtelierConfigurator() {
     }
   }, [renderResult]);
 
+  const design = useMemo<JewelDesign>(() => ({
+    type: jewelryType,
+    shape: shape.id,
+    carat,
+    gemColor: color,
+    metal: metal.id,
+    finish: "polished",
+    head: jewelryType === "ring" ? setting.id : jewelryType === "necklace" ? pendantSetting.id : undefined,
+    band: jewelryType === "ring" ? band.id : undefined,
+    earring: jewelryType === "earring" ? (earringSetting.id as "stud" | "hoop") : undefined,
+    ringSize: ringSize ?? DEFAULT_RING_SIZE,
+  }), [jewelryType, shape.id, carat, color, metal.id, setting.id, pendantSetting.id, band.id, earringSetting.id, ringSize]);
+
+  // Open a shared design straight from the link (?design=…&origin=…&clarity=…).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shared = decodeDesign(params.get("design"));
+    if (shared) {
+      setJewelryType(shared.type);
+      setShape(SHAPE_OPTIONS.find((o) => o.id === shared.shape) ?? SHAPE_OPTIONS[0]);
+      setCarat(CARAT_OPTIONS.reduce((best, o) => (Math.abs(o.value - shared.carat) < Math.abs(best - shared.carat) ? o.value : best), CARAT_OPTIONS[0].value));
+      setColor(shared.gemColor);
+      setMetal(METAL_OPTIONS.find((o) => o.id === shared.metal) ?? METAL_OPTIONS[3]);
+      const ringHead = SETTING_OPTIONS.find((o) => o.id === shared.head);
+      if (shared.type === "ring" && ringHead) setSetting(ringHead);
+      const pendantHead = PENDANT_SETTING_OPTIONS.find((o) => o.id === shared.head);
+      if (shared.type === "necklace" && pendantHead) setPendantSetting(pendantHead);
+      const sharedBand = BAND_OPTIONS.find((o) => o.id === shared.band);
+      if (sharedBand) {
+        setBand(sharedBand);
+        if (!POPULAR_BAND_IDS.includes(sharedBand.id as typeof POPULAR_BAND_IDS[number])) setShowAllBands(true);
+      }
+      const sharedEarring = EARRING_SETTING_OPTIONS.find((o) => o.id === shared.earring);
+      if (sharedEarring) setEarringSetting(sharedEarring);
+      if (shared.type === "ring") setRingSize(shared.ringSize ?? null);
+      const sharedOrigin = params.get("origin");
+      if (sharedOrigin === "natural" || sharedOrigin === "lab-grown") setOrigin(sharedOrigin);
+      const sharedClarity = CLARITY_OPTIONS.find((o) => o.value === params.get("clarity"));
+      if (sharedClarity) setClarity(sharedClarity.value);
+      setWizardComplete(true);
+    }
+    setUrlReady(true);
+  }, []);
+
+  // Keep the address bar shareable: it always describes the current design.
+  useEffect(() => {
+    if (!urlReady) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("design", encodeDesign(design));
+    url.searchParams.set("origin", origin);
+    url.searchParams.set("clarity", clarity);
+    window.history.replaceState(window.history.state, "", url);
+    setDesignLink(url.toString());
+  }, [design, origin, clarity, urlReady]);
+
+  function handleSaveImage() {
+    const data = studioRef.current?.capture();
+    if (!data) return;
+    const link = document.createElement("a");
+    link.href = data;
+    link.download = "maison-mana-design.png";
+    link.click();
+  }
+
+  async function handleShare() {
+    const url = designLink || window.location.href;
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({ title: STUDIO_COPY[locale].shareTitle, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setShareNotice(true);
+      window.setTimeout(() => setShareNotice(false), 2200);
+    } catch {
+      // The visitor dismissed the share sheet — nothing to do.
+    }
+  }
+
   const estimate = useMemo(
     () => estimatePriceILS({
       jewelryType,
@@ -269,7 +405,9 @@ export function AtelierConfigurator() {
 
   const settingName = jewelryType === "earring"
     ? (locale === "he" ? earringSetting.he : earringSetting.en)
-    : (locale === "he" ? setting.he : setting.id.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "));
+    : jewelryType === "necklace"
+    ? (locale === "he" ? pendantSetting.he : pendantSetting.en)
+    : (locale === "he" ? setting.he : setting.en);
 
   const metalName = locale === "he"
     ? metal.he
@@ -289,12 +427,15 @@ export function AtelierConfigurator() {
     : CLARITY_OPTIONS.find((option) => option.value === clarity)?.en;
   const selectedCaratLabel = CARAT_OPTIONS.find((option) => option.value === carat)?.label ?? carat.toFixed(2);
   const completionCopy = COMPLETION_COPY[locale];
+  const studioCopy = STUDIO_COPY[locale];
+  const ringSizeLabel = ringSize ? `${ringSize}` : studioCopy.ringSizeUnknown;
   const completionRows = ([
     { label: completionCopy.labels.type, value: typeName, visible: true },
     { label: completionCopy.labels.shape, value: shapeName, visible: jewelryType !== "bracelet" },
-    { label: completionCopy.labels.setting, value: settingName, visible: jewelryType === "ring" || jewelryType === "earring" },
+    { label: completionCopy.labels.setting, value: settingName, visible: jewelryType !== "bracelet" },
     { label: completionCopy.labels.metal, value: metalName, visible: true },
     { label: completionCopy.labels.band, value: bandName, visible: jewelryType === "ring" },
+    { label: studioCopy.ringSizeRow, value: ringSizeLabel, visible: jewelryType === "ring" },
     { label: completionCopy.labels.carat, value: locale === "he" ? `${selectedCaratLabel} קראט` : `${selectedCaratLabel} ct`, visible: true },
     { label: completionCopy.labels.origin, value: originLabel, visible: true },
     { label: completionCopy.labels.color, value: colorName, visible: true },
@@ -310,7 +451,9 @@ export function AtelierConfigurator() {
       parts.push(settingName);
       parts.push(bandName);
       parts.push(shapeName);
+      if (ringSize) parts.push(`${studioCopy.ringSizeRow} ${ringSize}`);
     } else if (jewelryType === "necklace") {
+      parts.push(settingName);
       parts.push(shapeName);
     } else if (jewelryType === "earring") {
       parts.push(settingName);
@@ -318,9 +461,17 @@ export function AtelierConfigurator() {
     }
     parts.push(`(${originLabel})`);
     return parts.join(" · ");
-  }, [jewelryType, typeName, carat, colorName, clarity, metalName, settingName, bandName, shapeName, originLabel]);
+  }, [jewelryType, typeName, carat, colorName, clarity, metalName, settingName, bandName, shapeName, originLabel, ringSize, studioCopy.ringSizeRow]);
 
-  const stageKey = `${jewelryType}-${setting.id}-${earringSetting.id}-${shape.id}-${metal.id}-${band.id}-${carat}-${color}`;
+  const stoneSizeLabel = useMemo((): { size: string; count?: number } | null => {
+    if (jewelryType === "bracelet") {
+      const layout = lineBraceletLayout(carat);
+      return { count: layout.count, size: layout.diameter.toFixed(1) };
+    }
+    if (jewelryType === "earring" && earringSetting.id === "hoop") return null;
+    return { size: formatGemSize(gemDimensions(shape.id, carat)) };
+  }, [jewelryType, carat, earringSetting.id, shape.id]);
+
   const displayedBands = showAllBands
     ? BAND_OPTIONS
     : BAND_OPTIONS.filter((b) => POPULAR_BAND_IDS.includes(b.id as typeof POPULAR_BAND_IDS[number]));
@@ -328,7 +479,7 @@ export function AtelierConfigurator() {
   const visibleStepIds = useMemo<WizardStepId[]>(() => {
     if (jewelryType === "ring") return ["type", "shape", "setting", "metal", "band", "carat", "details"];
     if (jewelryType === "earring") return ["type", "shape", "setting", "metal", "carat", "details"];
-    if (jewelryType === "necklace") return ["type", "shape", "metal", "carat", "details"];
+    if (jewelryType === "necklace") return ["type", "shape", "setting", "metal", "carat", "details"];
     return ["type", "metal", "carat", "details"];
   }, [jewelryType]);
 
@@ -494,7 +645,7 @@ export function AtelierConfigurator() {
             ) : (
               <form action={leadAction} className="vellum px-6 py-8 md:px-12 md:py-16 mx-auto max-w-2xl">
                 <input type="hidden" name="intent" value="bespoke" />
-                <input type="hidden" name="bespoke" value={summaryFull} />
+                <input type="hidden" name="bespoke" value={designLink ? `${summaryFull} · ${studioCopy.designLink}: ${designLink}` : summaryFull} />
                 <header className="mb-10 text-center">
                   <p className="section-label">{locale === "he" ? "פגישה פרטית" : "Private Meeting"}</p>
                   <h2 className="display-he mt-3 text-[1.875rem] leading-tight text-ink">
@@ -635,26 +786,72 @@ export function AtelierConfigurator() {
                   className="atelier-preview-stage relative min-h-0 flex-1 overflow-hidden px-4 py-2 lg:[&>div:first-child]:rounded-b-none"
                   onPointerDownCapture={dismissInteractionHint}
                 >
-                  <Ring3D
-                    jewelryType={jewelryType}
-                    shape={shape.id}
-                    metal={metal}
-                    setting={jewelryType === "earring" ? earringSetting.id : setting.id}
-                    band={band.id}
-                    carat={carat}
-                    diamondColor={FANCY_COLOR_OPTIONS.find(c => c.id === color)?.hex}
-                    showSkeleton={showSkeleton}
-                  />
-                  <div key={stageKey} aria-hidden className="stage-crossfade pointer-events-none absolute inset-0 bg-paper/0" />
-                  {showInteractionHint && (
-                    <div
-                      className="atelier-interaction-hint pointer-events-none absolute bottom-20 left-1/2 z-10 whitespace-nowrap rounded-full border border-paper/20 bg-ink/75 px-4 py-2 text-[0.75rem] text-paper shadow-sm backdrop-blur-sm"
-                      role="status"
-                    >
-                      <span aria-hidden className="me-1.5">↻</span>
-                      {locale === "he" ? "גררו כדי לסובב את התכשיט" : "Drag to rotate the jewelry"}
+                  <div className="atelier-3d-studio relative mx-auto h-full w-full select-none overflow-hidden rounded-xl">
+                    <JewelStudio
+                      ref={studioRef}
+                      design={design}
+                      view={studioView}
+                      showStones={!showSkeleton}
+                    />
+
+                    <div className="atelier-studio-views" role="group" aria-label={studioCopy.viewsLabel}>
+                      {STUDIO_VIEWS.map((v) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => setStudioView(v)}
+                          aria-pressed={studioView === v}
+                          className={`atelier-studio-chip ${studioView === v ? "is-active" : ""}`}
+                        >
+                          {studioCopy.views[v]}
+                        </button>
+                      ))}
                     </div>
-                  )}
+
+                    <div className="atelier-studio-footer">
+                      {stoneSizeLabel ? (
+                        <p className="atelier-studio-size">
+                          {stoneSizeLabel.count !== undefined ? (
+                            <>
+                              <bdi dir="ltr">{stoneSizeLabel.count}</bdi> {studioCopy.stones} · <bdi dir="ltr">{stoneSizeLabel.size}</bdi> {studioCopy.mm}
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-ink-mute">{studioCopy.stone} ≈ </span>
+                              <bdi dir="ltr">{stoneSizeLabel.size}</bdi> {studioCopy.mm}
+                            </>
+                          )}
+                        </p>
+                      ) : (
+                        <span />
+                      )}
+                      <div className="flex items-center gap-1.5">
+                        <button type="button" onClick={handleSaveImage} className="atelier-studio-action" aria-label={studioCopy.save} title={studioCopy.save}>
+                          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-[18px] w-[18px]" aria-hidden>
+                            <path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15.5h12" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                        <button type="button" onClick={handleShare} className="atelier-studio-action" aria-label={studioCopy.share} title={studioCopy.share}>
+                          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-[18px] w-[18px]" aria-hidden>
+                            <path d="M8.5 11.5l3-3m-4.6-.9l-1.2 1.2a3 3 0 004.2 4.2l1.2-1.2m1.8-5.6l1.2-1.2a3 3 0 00-4.2-4.2L8.7 3.9" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    {shareNotice && (
+                      <div className="atelier-studio-toast" role="status">{studioCopy.copied}</div>
+                    )}
+                    {showInteractionHint && (
+                      <div
+                        className="atelier-interaction-hint pointer-events-none absolute bottom-20 left-1/2 z-10 whitespace-nowrap rounded-full border border-paper/20 bg-ink/75 px-4 py-2 text-[0.75rem] text-paper shadow-sm backdrop-blur-sm"
+                        role="status"
+                      >
+                        <span aria-hidden className="me-1.5">↻</span>
+                        {studioCopy.hint}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -716,7 +913,7 @@ export function AtelierConfigurator() {
                     presentation="completion"
                     designSelections={{
                       jewelryType,
-                      setting: jewelryType === "earring" ? earringSetting.id : setting.id,
+                      setting: jewelryType === "earring" ? earringSetting.id : jewelryType === "necklace" ? pendantSetting.id : setting.id,
                       shape: shape.id,
                       origin,
                       carat,
@@ -842,23 +1039,27 @@ export function AtelierConfigurator() {
                 {activeStepId === "setting" && (
                   <>
                     <div className="grid grid-cols-2 gap-3">
-                      {(jewelryType === "earring" ? EARRING_SETTING_OPTIONS : SETTING_OPTIONS).map((opt) => {
-                        const selected = jewelryType === "earring" ? earringSetting.id === opt.id : setting.id === opt.id;
-                        return (
-                          <Pill
-                            key={opt.id}
-                            selected={selected}
-                            onClick={() => jewelryType === "earring" ? setEarringSetting(opt as typeof EARRING_SETTING_OPTIONS[number]) : setSetting(opt as SettingOption)}
-                            className="min-h-16 w-full text-start"
-                          >
-                            {locale === "he" ? opt.he : opt.en}
-                          </Pill>
-                        );
-                      })}
+                      {jewelryType === "earring" && EARRING_SETTING_OPTIONS.map((opt) => (
+                        <Pill key={opt.id} selected={earringSetting.id === opt.id} onClick={() => setEarringSetting(opt)} className="min-h-16 w-full text-start">
+                          {locale === "he" ? opt.he : opt.en}
+                        </Pill>
+                      ))}
+                      {jewelryType === "necklace" && PENDANT_SETTING_OPTIONS.map((opt) => (
+                        <Pill key={opt.id} selected={pendantSetting.id === opt.id} onClick={() => setPendantSetting(opt)} className="min-h-16 w-full text-start">
+                          {locale === "he" ? opt.he : opt.en}
+                        </Pill>
+                      ))}
+                      {jewelryType === "ring" && SETTING_OPTIONS.map((opt) => (
+                        <Pill key={opt.id} selected={setting.id === opt.id} onClick={() => setSetting(opt)} className="min-h-16 w-full text-start">
+                          {locale === "he" ? opt.he : opt.en}
+                        </Pill>
+                      ))}
                     </div>
                     <p className="mt-4 text-[0.8125rem] leading-relaxed text-ink-mute">
                       {jewelryType === "earring"
                         ? (locale === "he" ? earringSetting.description : earringSetting.descriptionEn)
+                        : jewelryType === "necklace"
+                        ? (locale === "he" ? pendantSetting.description : pendantSetting.descriptionEn)
                         : (locale === "he" ? setting.description : setting.descriptionEn)}
                     </p>
                   </>
@@ -943,6 +1144,21 @@ export function AtelierConfigurator() {
                         ))}
                       </div>
                     </div>
+                    {jewelryType === "ring" && (
+                      <label className="block">
+                        <span className="section-label mb-3 block">{studioCopy.ringSize}</span>
+                        <select
+                          value={ringSize ?? ""}
+                          onChange={(e) => setRingSize(e.target.value ? Number(e.target.value) : null)}
+                          className="block w-full border border-rule bg-transparent px-4 py-3.5 text-[0.9375rem] text-ink focus:border-ink focus:outline-none"
+                        >
+                          <option value="">{studioCopy.ringSizeUnknown}</option>
+                          {RING_SIZES.map((size) => (
+                            <option key={size} value={size}>{size}</option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
                     <div>
                       <p className="section-label mb-3">{t("conf_clarity")}</p>
                       <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">

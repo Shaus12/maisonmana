@@ -5,7 +5,7 @@ import type { DiamondShape, Metal, Setting } from "./pieces";
 // ── Option types ──────────────────────────────────────────────
 
 export type SettingOption = {
-  id: Extract<Setting, "solitaire" | "three-stone" | "hidden-halo" | "pave" | "bezel">;
+  id: Extract<Setting, "solitaire" | "halo" | "three-stone" | "hidden-halo" | "pave" | "bezel">;
   he: string;
   en: string;
   description: string;
@@ -52,10 +52,27 @@ export type CertOption   = { id: "GIA" | "IGI" | "HRD"; description: string; des
 
 export const SETTING_OPTIONS: SettingOption[] = [
   { id: "solitaire",    he: "סוליטר",        en: "Solitaire",    description: "אבן אחת. השתיקה היא העיצוב.",                                   descriptionEn: "One stone. The silence is the design." },
+  { id: "halo",         he: "הילה",          en: "Halo",         description: "שורת יהלומים זעירים סביב האבן. האור, כפול.",                    descriptionEn: "A frame of small diamonds around the stone — the light, doubled." },
   { id: "three-stone",  he: "שלוש אבנים",    en: "Three Stone",  description: "אבן מרכזית עם שתי לוויינות, סימטריה קלה.",                     descriptionEn: "A centre stone flanked by two satellites." },
   { id: "hidden-halo",  he: "הילה נסתרת",    en: "Hidden Halo",  description: "טבעת יהלומים מתחת לכותרת, נראית רק מהצד.",                    descriptionEn: "A diamond pavé ring beneath the crown — visible only from the side." },
   { id: "pave",         he: "פאווה",          en: "Pavé",         description: "להקה זרועה יהלומים, אור רציף סביב האצבע.",                     descriptionEn: "Diamonds set across the band — continuous light." },
   { id: "bezel",        he: "בזל",            en: "Bezel",        description: "מסגרת מתכת מלאה סביב האבן, קו נקי וצנוע.",                     descriptionEn: "A full metal frame around the stone — clean and understated." },
+];
+
+// ── Pendant settings ──────────────────────────────────────────
+
+export type PendantSettingOption = {
+  id: "solitaire" | "halo" | "bezel";
+  he: string;
+  en: string;
+  description: string;
+  descriptionEn: string;
+};
+
+export const PENDANT_SETTING_OPTIONS: PendantSettingOption[] = [
+  { id: "solitaire", he: "סוליטר", en: "Solitaire", description: "אבן אחת על ארבע ציפורניים, תלויה באוויר.",   descriptionEn: "One stone on four claws, suspended in air." },
+  { id: "halo",      he: "הילה",   en: "Halo",      description: "מסגרת יהלומים סביב התליון.",                  descriptionEn: "A frame of diamonds around the pendant." },
+  { id: "bezel",     he: "בזל",    en: "Bezel",     description: "מסגרת זהב מלאה. נקי, צמוד ובטוח.",            descriptionEn: "A full gold frame — clean, close and secure." },
 ];
 
 // ── Shapes ────────────────────────────────────────────────────
@@ -223,6 +240,7 @@ export function estimatePriceILS(opts: {
   if (opts.jewelryType === "ring") {
     const settingAdd = {
       solitaire: 6500,
+      halo: 12500,
       "three-stone": 14000,
       "hidden-halo": 11500,
       pave: 13000,
