@@ -6,3 +6,4 @@
 export { JewelStudio, DEFAULT_THEME, type JewelStudioProps } from "./JewelStudio";
 export type { LightingPreset } from "./scene/StudioLighting";
 export * from "./core";
+export { JewelTryOn, DEFAULT_TRYON_LABELS, type JewelTryOnProps, type TryOnLabels } from "./ar/JewelTryOn";

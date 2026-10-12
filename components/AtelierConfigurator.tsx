@@ -27,6 +27,7 @@ const JewelStudio = dynamic(() => import("@/lib/jewel-studio/JewelStudio").then(
     </div>
   ),
 });
+const JewelTryOn = dynamic(() => import("@/lib/jewel-studio/ar/JewelTryOn").then((mod) => mod.JewelTryOn), { ssr: false });
 import {
   SETTING_OPTIONS,
   PENDANT_SETTING_OPTIONS,
@@ -233,6 +234,7 @@ const STUDIO_COPY = {
     ringSizeUnknown: "עדיין לא ידוע — נמדוד בפגישה",
     ringSizeRow: "מידת טבעת",
     designLink: "קישור לעיצוב",
+    tryOn: "מדדו עליי",
   },
   en: {
     views: { hero: "Hero", front: "Front", side: "Profile", top: "Top" } as Record<StudioView, string>,
@@ -249,10 +251,46 @@ const STUDIO_COPY = {
     ringSizeUnknown: "Not sure yet — we'll measure at the meeting",
     ringSizeRow: "Ring size",
     designLink: "Design link",
+    tryOn: "Try it on",
   },
 } as const;
 
 const STUDIO_VIEWS: StudioView[] = ["hero", "front", "side", "top"];
+
+const TRY_ON_LABELS = {
+  he: {
+    title: "מדידה וירטואלית",
+    loading: "מכינים את המראה…",
+    hint: "הראו את גב כף היד למצלמה",
+    photoHint: "התמונה שלכם, עם הטבעת",
+    noHandInPhoto: "לא מצאנו יד בתמונה. נסו תמונה שבה גב כף היד נראה בבירור.",
+    privacy: "העיבוד נעשה במכשיר שלכם בלבד. שום תמונה לא נשלחת.",
+    close: "סגירה",
+    capture: "שמירת תמונה",
+    switchCamera: "החלפת מצלמה",
+    uploadPhoto: "שימוש בתמונה",
+    cameraDenied: "הגישה למצלמה נחסמה. אפשר להשתמש בתמונה של היד במקום.",
+    unsupported: "הדפדפן הזה לא יכול לפתוח מצלמה. אפשר להשתמש בתמונה של היד במקום.",
+    modelFailed: "לא הצלחנו לטעון את זיהוי היד. בדקו את החיבור ונסו שוב.",
+    backToCamera: "חזרה למצלמה",
+  },
+  en: {
+    title: "Virtual try-on",
+    loading: "Preparing the mirror…",
+    hint: "Show the back of your hand to the camera",
+    photoHint: "Your photo, with the ring on",
+    noHandInPhoto: "We couldn't find a hand in this photo. Try one with the back of the hand clearly visible.",
+    privacy: "Processed on your device only. No image is sent anywhere.",
+    close: "Close",
+    capture: "Save photo",
+    switchCamera: "Switch camera",
+    uploadPhoto: "Use a photo",
+    cameraDenied: "Camera access was blocked. You can use a photo of your hand instead.",
+    unsupported: "This browser can't open the camera. You can use a photo of your hand instead.",
+    modelFailed: "The hand tracker couldn't load. Check your connection and try again.",
+    backToCamera: "Back to camera",
+  },
+} as const;
 
 export function AtelierConfigurator() {
   const { t, locale } = useLanguage();
@@ -273,6 +311,7 @@ export function AtelierConfigurator() {
   const [shareNotice, setShareNotice] = useState(false);
   const [designLink, setDesignLink]   = useState("");
   const [urlReady, setUrlReady]       = useState(false);
+  const [tryOnOpen, setTryOnOpen]     = useState(false);
   const studioRef = useRef<StudioHandle>(null);
   const [showAllBands, setShowAllBands] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
@@ -826,6 +865,14 @@ export function AtelierConfigurator() {
                         <span />
                       )}
                       <div className="flex items-center gap-1.5">
+                        {jewelryType === "ring" && (
+                          <button type="button" onClick={() => setTryOnOpen(true)} className="atelier-studio-tryon">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-[18px] w-[18px]" aria-hidden>
+                              <path d="M7 9.5V4.75a1.25 1.25 0 012.5 0V9m0-.5V3.75a1.25 1.25 0 012.5 0V9m0-.25v-3.5a1.25 1.25 0 012.5 0v6.5c0 3.3-2.2 5.75-5.25 5.75-2.1 0-3.4-1-4.55-2.85L3.6 11.4a1.2 1.2 0 011.95-1.4L7 11.6" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            {studioCopy.tryOn}
+                          </button>
+                        )}
                         <button type="button" onClick={handleSaveImage} className="atelier-studio-action" aria-label={studioCopy.save} title={studioCopy.save}>
                           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-[18px] w-[18px]" aria-hidden>
                             <path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5M4 15.5h12" strokeLinecap="round" strokeLinejoin="round" />
@@ -1193,6 +1240,14 @@ export function AtelierConfigurator() {
         </div>
       </div>
 
+      {tryOnOpen && (
+        <JewelTryOn
+          design={design}
+          labels={TRY_ON_LABELS[locale]}
+          fileName="maison-mana-try-on.png"
+          onClose={() => setTryOnOpen(false)}
+        />
+      )}
     </div>
   );
 }

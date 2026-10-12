@@ -9,7 +9,8 @@ import { createContext, useContext, useLayoutEffect, useState, type ReactNode } 
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-export type LightingPreset = "studio" | "salon";
+/** "daylight" is for try-on over real camera frames: brighter, so stones read white. */
+export type LightingPreset = "studio" | "salon" | "daylight";
 
 const EnvContext = createContext<THREE.CubeTexture | null>(null);
 export const useStudioEnv = () => useContext(EnvContext);
@@ -84,7 +85,9 @@ function buildMetalStudio(preset: LightingPreset) {
 function buildGemStudio(preset: LightingPreset) {
   const scene = new THREE.Scene();
   const warm = preset === "salon";
-  scene.add(cyclorama(0.16, 0.14, 0.02));
+  const day = preset === "daylight";
+  const gain = day ? 1.7 : 1;
+  scene.add(day ? cyclorama(0.55, 0.42, 0.08) : cyclorama(0.16, 0.14, 0.02));
   const tone = warm ? "#fff0e0" : "#ffffff";
   const r = 20;
   const ring = (count: number, elevation: (i: number) => number, size: [number, number], intensity: (i: number) => number, phase = 0) => {
@@ -94,9 +97,9 @@ function buildGemStudio(preset: LightingPreset) {
       softbox(scene, size, [Math.cos(a) * r * Math.cos(e), r * Math.sin(e), Math.sin(a) * r * Math.cos(e)], intensity(i), tone);
     }
   };
-  ring(12, (i) => (i % 2 ? 0.42 : 0.78), [7, 10], (i) => (i % 2 ? 4 : 7));
+  ring(12, (i) => (i % 2 ? 0.42 : 0.78), [7, 10], (i) => (i % 2 ? 4 : 7) * gain);
   // Low ring: oblique views (a step-cut table seen from the side) catch light too.
-  ring(8, () => 0.1, [6, 4], () => 3, 0.5);
+  ring(8, () => 0.1, [6, 4], () => 3 * gain, 0.5);
   softbox(scene, [6, 6], [0, 20, 0], 1.6, tone); // dim zenith keeps a small dark obstruction
   softbox(scene, [4, 16], [-18, 2, 6], 4.5, tone);
   softbox(scene, [4, 16], [18, 2, 6], 4.5, tone);

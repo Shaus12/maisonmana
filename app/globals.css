@@ -931,3 +931,30 @@
   }
 
 }
+
+.atelier-studio-tryon {
+  pointer-events: auto;
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  background: var(--color-ink);
+  padding: 0 1rem;
+  font-size: 0.8125rem;
+  color: var(--color-paper);
+  transition: transform 150ms, opacity 200ms;
+}
+
+.atelier-studio-tryon:hover {
+  opacity: 0.88;
+}
+
+.atelier-studio-tryon:active {
+  transform: scale(0.96);
+}
+
+.atelier-studio-tryon:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 2px;
+}
